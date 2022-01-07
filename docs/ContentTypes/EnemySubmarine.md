@@ -6,8 +6,4 @@
 
 - **Required by core package:** Yes
 
-## Attributes
-
-
-
 This content type is created in the submarine editor.

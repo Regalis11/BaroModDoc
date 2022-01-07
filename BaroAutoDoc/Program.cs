@@ -105,18 +105,18 @@ foreach (var contentType in contentTypes)
     }
     markdown += "\n";
 
-    markdown += "## Attributes\n\n";
-
-    markdown += string.Join("\n", contentType.XmlAttributes.Select(a => a.ToBulletPoint()));
-    
-    markdown += "\n\n";
-
     if (contentType.IsSubmarineType)
     {
         markdown += "This content type is created in the submarine editor.";
     }
     else
     {
+        markdown += "## Attributes\n\n";
+
+        markdown += string.Join("\n", contentType.XmlAttributes.Select(a => a.ToBulletPoint()));
+    
+        markdown += "\n\n";
+
         XElement singularExample(int index = 0)
         {
             IEnumerable<XAttribute> attributes = new[]

@@ -1,6 +1,6 @@
 # Text
 
-<sup>Relevant files: [Shared:TextPack.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/Text/TextPack.cs) [Shared:TextFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/TextFile.cs)</sup>
+<sup>Relevant files: [Shared:TextFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/TextFile.cs) [Shared:TextPack.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/Text/TextPack.cs)</sup>
 
 **WARNING:** This file likely generated completely incorrectly!
 

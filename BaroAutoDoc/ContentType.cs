@@ -11,7 +11,7 @@ public record ContentType(
     string? MatchSingular,
     string? MatchPlural,
     ImmutableHashSet<string> ConstructedTypes,
-    ImmutableHashSet<string> RelevantFiles,
+    ImmutableArray<string> RelevantFiles,
     ImmutableArray<ContentType.XmlAttribute> XmlAttributes)
 {
     public record XmlAttribute(string Type, string Name)
