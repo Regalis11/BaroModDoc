@@ -97,7 +97,7 @@ foreach (var contentType in contentTypeFinder.ContentTypes)
     }
     else
     {
-        if (string.IsNullOrWhiteSpace(contentType.MatchSingular) && string.IsNullOrWhiteSpace(contentType.MatchSingular))
+        if (string.IsNullOrWhiteSpace(contentType.MatchSingular) && string.IsNullOrWhiteSpace(contentType.MatchPlural))
         {
             markdown += "**WARNING:** This file likely generated completely incorrectly!\n\n";
         }

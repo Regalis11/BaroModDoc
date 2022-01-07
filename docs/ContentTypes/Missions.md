@@ -2,8 +2,6 @@
 
 - **Required by core package:** Yes
 
-**WARNING:** This file likely generated completely incorrectly!
-
 ## Examples
 
 ### Example 1 - single mission

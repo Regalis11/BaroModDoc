@@ -2,8 +2,6 @@
 
 - **Required by core package:** No
 
-**WARNING:** This file likely generated completely incorrectly!
-
 ## Examples
 
 ### Example 1 - single EventManagerSetting
