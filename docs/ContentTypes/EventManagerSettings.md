@@ -6,11 +6,11 @@
 
 ## Examples
 
-### Example 1 - single EventManagerSettings
+### Example 1 - single EventManagerSetting
 
 ```xml
-<EventManagerSettings
-  identifier="myEventManagerSettings"
+<EventManagerSetting
+  identifier="myEventManagerSetting"
   TODO="add remaining attributes" />
 ```
 
@@ -18,11 +18,11 @@
 
 ```xml
 <EventManagerSettings>
-  <EventManagerSettings
-    identifier="myEventManagerSettings1"
+  <EventManagerSetting
+    identifier="myEventManagerSetting1"
     TODO="add remaining attributes" />
-  <EventManagerSettings
-    identifier="myEventManagerSettings2"
+  <EventManagerSetting
+    identifier="myEventManagerSetting2"
     TODO="add remaining attributes" />
 </EventManagerSettings>
 ```
@@ -31,11 +31,11 @@
 
 ```xml
 <override>
-  <EventManagerSettings
-    identifier="myEventManagerSettings1"
+  <EventManagerSetting
+    identifier="myEventManagerSetting1"
     TODO="add remaining attributes" />
-  <EventManagerSettings
-    identifier="myEventManagerSettings2"
+  <EventManagerSetting
+    identifier="myEventManagerSetting2"
     TODO="add remaining attributes" />
 </override>
 ```

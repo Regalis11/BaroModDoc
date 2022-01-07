@@ -6,11 +6,11 @@
 
 ## Examples
 
-### Example 1 - single LocationTypes
+### Example 1 - single locationtype
 
 ```xml
-<LocationTypes
-  identifier="myLocationTypes"
+<locationtype
+  identifier="mylocationtype"
   TODO="add remaining attributes" />
 ```
 
@@ -18,11 +18,11 @@
 
 ```xml
 <locationtypes>
-  <LocationTypes
-    identifier="myLocationTypes1"
+  <locationtype
+    identifier="mylocationtype1"
     TODO="add remaining attributes" />
-  <LocationTypes
-    identifier="myLocationTypes2"
+  <locationtype
+    identifier="mylocationtype2"
     TODO="add remaining attributes" />
 </locationtypes>
 ```
@@ -31,11 +31,11 @@
 
 ```xml
 <override>
-  <LocationTypes
-    identifier="myLocationTypes1"
+  <locationtype
+    identifier="mylocationtype1"
     TODO="add remaining attributes" />
-  <LocationTypes
-    identifier="myLocationTypes2"
+  <locationtype
+    identifier="mylocationtype2"
     TODO="add remaining attributes" />
 </override>
 ```

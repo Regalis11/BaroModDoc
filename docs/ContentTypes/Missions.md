@@ -6,11 +6,11 @@
 
 ## Examples
 
-### Example 1 - single Missions
+### Example 1 - single mission
 
 ```xml
-<Missions
-  identifier="myMissions"
+<mission
+  identifier="mymission"
   TODO="add remaining attributes" />
 ```
 
@@ -18,11 +18,11 @@
 
 ```xml
 <missions>
-  <Missions
-    identifier="myMissions1"
+  <mission
+    identifier="mymission1"
     TODO="add remaining attributes" />
-  <Missions
-    identifier="myMissions2"
+  <mission
+    identifier="mymission2"
     TODO="add remaining attributes" />
 </missions>
 ```
@@ -31,11 +31,11 @@
 
 ```xml
 <override>
-  <Missions
-    identifier="myMissions1"
+  <mission
+    identifier="mymission1"
     TODO="add remaining attributes" />
-  <Missions
-    identifier="myMissions2"
+  <mission
+    identifier="mymission2"
     TODO="add remaining attributes" />
 </override>
 ```

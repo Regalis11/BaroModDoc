@@ -6,11 +6,11 @@
 
 ## Examples
 
-### Example 1 - single LevelObjectPrefabs
+### Example 1 - single levelobject
 
 ```xml
-<LevelObjectPrefabs
-  identifier="myLevelObjectPrefabs"
+<levelobject
+  identifier="mylevelobject"
   TODO="add remaining attributes" />
 ```
 
@@ -18,11 +18,11 @@
 
 ```xml
 <levelobjects>
-  <LevelObjectPrefabs
-    identifier="myLevelObjectPrefabs1"
+  <levelobject
+    identifier="mylevelobject1"
     TODO="add remaining attributes" />
-  <LevelObjectPrefabs
-    identifier="myLevelObjectPrefabs2"
+  <levelobject
+    identifier="mylevelobject2"
     TODO="add remaining attributes" />
 </levelobjects>
 ```
@@ -31,11 +31,11 @@
 
 ```xml
 <override>
-  <LevelObjectPrefabs
-    identifier="myLevelObjectPrefabs1"
+  <levelobject
+    identifier="mylevelobject1"
     TODO="add remaining attributes" />
-  <LevelObjectPrefabs
-    identifier="myLevelObjectPrefabs2"
+  <levelobject
+    identifier="mylevelobject2"
     TODO="add remaining attributes" />
 </override>
 ```

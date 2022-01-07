@@ -39,9 +39,12 @@ foreach (var contentType in contentTypeFinder.ContentTypes)
     string? matchSingular = contentType.MatchSingular;
     string? matchPlural = contentType.MatchPlural;
 
-    if (contentType.Name.EndsWith("s") && string.IsNullOrWhiteSpace(matchPlural))
+    if (contentType.Name.EndsWith("s"))
     {
-        matchPlural = contentType.Name;
+        if (string.IsNullOrWhiteSpace(matchPlural))
+        {
+            matchPlural = contentType.Name;
+        }
     }
     else if (string.IsNullOrWhiteSpace(matchSingular))
     {
