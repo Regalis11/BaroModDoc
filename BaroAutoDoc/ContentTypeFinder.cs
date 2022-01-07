@@ -86,7 +86,7 @@ public class ContentTypeFinder : CSharpSyntaxWalker
             matchesPlural,
             constructedTypes.ToImmutableHashSet(),
             new[] { CurrentFile }.ToImmutableHashSet(),
-            ImmutableHashSet<ContentType.XmlAttribute>.Empty));
+            ImmutableArray<ContentType.XmlAttribute>.Empty));
         
         base.VisitClassDeclaration(node);
     }

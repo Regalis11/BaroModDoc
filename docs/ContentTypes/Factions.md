@@ -1,9 +1,11 @@
 # Factions
 
 <sup>Relevant files: [Shared:Factions.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/GameSession/Data/Factions.cs) [Shared:FactionsFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/FactionsFile.cs)</sup>
+
 - **Required by core package:** Yes
 
 ## Attributes
+
 
 
 ## Examples

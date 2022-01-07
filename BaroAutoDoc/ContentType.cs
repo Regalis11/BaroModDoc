@@ -12,7 +12,7 @@ public record ContentType(
     string? MatchPlural,
     ImmutableHashSet<string> ConstructedTypes,
     ImmutableHashSet<string> RelevantFiles,
-    ImmutableHashSet<ContentType.XmlAttribute> XmlAttributes)
+    ImmutableArray<ContentType.XmlAttribute> XmlAttributes)
 {
     public record XmlAttribute(string Type, string Name)
     {

@@ -1,19 +1,21 @@
 # CaveGenerationParameters
 
 <sup>Relevant files: [Shared:CaveGenerationParams.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/Map/Levels/CaveGenerationParams.cs) [Shared:CaveGenerationParametersFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/CaveGenerationParametersFile.cs)</sup>
+
 - **Required by core package:** Yes
 
 ## Attributes
 
-- `MaxBranchCount` : `int`
-- `MaxHeight` : `int`
-- `MaxWidth` : `int`
-- `MinBranchCount` : `int`
-- `DestructibleWallRatio` : `float`
-- `MinWidth` : `int`
-- `MinHeight` : `int`
-- `LevelObjectAmount` : `int`
 - `Commonness` : `float`
+- `MinWidth` : `int`
+- `MaxWidth` : `int`
+- `MinHeight` : `int`
+- `MaxHeight` : `int`
+- `MinBranchCount` : `int`
+- `MaxBranchCount` : `int`
+- `LevelObjectAmount` : `int`
+- `DestructibleWallRatio` : `float`
+
 ## Examples
 
 ### Example 1 - single cave

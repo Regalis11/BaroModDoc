@@ -13,7 +13,11 @@ public class SubElementRipper : CSharpSyntaxWalker
     public SubElementRipper(IReadOnlyList<ContentType> contentTypes)
     {
         this.contentTypes = contentTypes.ToArray();
-        this.typesToLookFor = contentTypes.SelectMany(t => t.ConstructedTypes).Distinct().ToImmutableHashSet();
+        this.typesToLookFor = contentTypes
+            .Where(t => t.ConstructedTypes.Count == 1)
+            .SelectMany(t => t.ConstructedTypes)
+            .Distinct()
+            .ToImmutableHashSet();
     }
 
     public override void VisitClassDeclaration(ClassDeclarationSyntax node)
@@ -35,7 +39,7 @@ public class SubElementRipper : CSharpSyntaxWalker
 
         contentTypes[ctIndex] = contentTypes[ctIndex] with
         {
-            XmlAttributes = contentTypes[ctIndex].XmlAttributes.Union(
+            XmlAttributes = contentTypes[ctIndex].XmlAttributes.AddRange(
                 serializableProperties.Select(p
                     => new ContentType.XmlAttribute(p.Type.ToString(), p.Identifier.ValueText))),
             RelevantFiles = contentTypes[ctIndex].RelevantFiles.Add(CurrentFile)

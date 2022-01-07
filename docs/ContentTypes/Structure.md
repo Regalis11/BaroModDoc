@@ -1,27 +1,29 @@
 # Structure
 
 <sup>Relevant files: [Shared:StructurePrefab.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/Map/StructurePrefab.cs) [Shared:StructureFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/StructureFile.cs)</sup>
+
 - **Required by core package:** Yes
 
 ## Attributes
 
-- `BodyWidth` : `float`
+- `Body` : `bool`
 - `BodyRotation` : `float`
-- `Platform` : `bool`
-- `Size` : `Vector2`
-- `StairAngle` : `float`
-- `Health` : `float`
+- `BodyWidth` : `float`
 - `BodyHeight` : `float`
 - `BodyOffset` : `Vector2`
-- `NoAITarget` : `bool`
-- `StairDirection` : `Direction`
-- `IndestructibleInOutposts` : `bool`
-- `TextureScale` : `Vector2`
-- `MinHealth` : `float`
+- `Platform` : `bool`
 - `AllowAttachItems` : `bool`
-- `DamageSound` : `string`
-- `Body` : `bool`
+- `MinHealth` : `float`
+- `Health` : `float`
+- `IndestructibleInOutposts` : `bool`
 - `CastShadow` : `bool`
+- `StairDirection` : `Direction`
+- `StairAngle` : `float`
+- `NoAITarget` : `bool`
+- `Size` : `Vector2`
+- `DamageSound` : `string`
+- `TextureScale` : `Vector2`
+
 ## Examples
 
 ### Example 1 - single Structure

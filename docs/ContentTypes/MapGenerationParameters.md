@@ -1,22 +1,24 @@
 # MapGenerationParameters
 
 <sup>Relevant files: [Shared:MapGenerationParametersFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/MapGenerationParametersFile.cs) [Shared:MapGenerationParams.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/Map/Map/MapGenerationParams.cs)</sup>
+
+**WARNING:** This file likely generated completely incorrectly!
+
 - **Required by core package:** No
 
 ## Attributes
 
-- `ConnectionIndicatorIterationMultiplier` : `float`
+- `DifficultyZones` : `int`
+- `Width` : `int`
 - `Height` : `int`
 - `SmallLevelConnectionLength` : `float`
-- `MinLocationDistance` : `float`
 - `LargeLevelConnectionLength` : `float`
-- `ConnectionIndicatorDisplacementMultiplier` : `float`
-- `VoronoiSiteVariance` : `Point`
 - `VoronoiSiteInterval` : `Point`
-- `DifficultyZones` : `int`
+- `VoronoiSiteVariance` : `Point`
 - `MinConnectionDistance` : `float`
-- `Width` : `int`
-**WARNING:** This file likely generated completely incorrectly!
+- `MinLocationDistance` : `float`
+- `ConnectionIndicatorIterationMultiplier` : `float`
+- `ConnectionIndicatorDisplacementMultiplier` : `float`
 
 ## Examples
 

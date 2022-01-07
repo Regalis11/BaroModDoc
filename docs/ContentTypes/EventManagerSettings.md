@@ -1,9 +1,11 @@
 # EventManagerSettings
 
-<sup>Relevant files: [Shared:EventManagerSettingsFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/EventManagerSettingsFile.cs) [Shared:EventManagerSettings.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/Events/EventManagerSettings.cs)</sup>
+<sup>Relevant files: [Shared:EventManagerSettings.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/Events/EventManagerSettings.cs) [Shared:EventManagerSettingsFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/EventManagerSettingsFile.cs)</sup>
+
 - **Required by core package:** No
 
 ## Attributes
+
 
 
 ## Examples

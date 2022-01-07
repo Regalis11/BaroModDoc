@@ -1,32 +1,34 @@
 # WreckAIConfig
 
-<sup>Relevant files: [Shared:WreckAIConfigFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/WreckAIConfigFile.cs) [Shared:WreckAIConfig.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/Characters/AI/Wreck/WreckAIConfig.cs)</sup>
+<sup>Relevant files: [Shared:WreckAIConfig.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/Characters/AI/Wreck/WreckAIConfig.cs) [Shared:WreckAIConfigFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/WreckAIConfigFile.cs)</sup>
+
 - **Required by core package:** Yes
 
 ## Attributes
 
-- `OffensiveAgent` : `string`
-- `BrainRoomVerticalWall` : `string`
-- `DeadEntityColorMultiplier` : `float`
-- `AgentSpawnCountDifficultyMultiplier` : `float`
 - `DefensiveAgent` : `Identifier`
-- `BrainRoomBackground` : `string`
-- `KillAgentsWhenEntityDies` : `bool`
-- `AgentSpawnDelayRandomFactor` : `float`
-- `DeadEntityColorFadeOutTime` : `float`
+- `OffensiveAgent` : `string`
+- `Brain` : `string`
 - `Spawner` : `string`
-- `MinAgentsPerBrainRoom` : `int`
+- `BrainRoomBackground` : `string`
+- `BrainRoomVerticalWall` : `string`
 - `BrainRoomHorizontalWall` : `string`
-- `MaxAgentsPerRoom` : `int`
-- `AgentSpawnDelayDifficultyMultiplier` : `float`
-- `MinAgentsInside` : `int`
-- `MaxAgentCount` : `int`
 - `AgentSpawnDelay` : `float`
+- `AgentSpawnDelayRandomFactor` : `float`
+- `AgentSpawnDelayDifficultyMultiplier` : `float`
+- `AgentSpawnCountDifficultyMultiplier` : `float`
+- `MinAgentsPerBrainRoom` : `int`
+- `MaxAgentsPerRoom` : `int`
 - `MinAgentsOutside` : `int`
 - `MaxAgentsOutside` : `int`
-- `Brain` : `string`
+- `MinAgentsInside` : `int`
 - `MaxAgentsInside` : `int`
+- `MaxAgentCount` : `int`
 - `MinWaterLevel` : `float`
+- `KillAgentsWhenEntityDies` : `bool`
+- `DeadEntityColorMultiplier` : `float`
+- `DeadEntityColorFadeOutTime` : `float`
+
 ## Examples
 
 ### Example 1 - single wreckaiconfig

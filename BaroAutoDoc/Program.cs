@@ -91,8 +91,14 @@ foreach (var contentType in contentTypes)
            + $"(https://github.com/Regalis11/Barotrauma/blob/master/{file})";
 
     string markdown = $"# {contentType.Name}\n\n"
-                      + $"<sup>Relevant files: {string.Join(" ", contentType.RelevantFiles.Select(fileLink))}</sup>\n"
-                      + $"- **Required by core package:** {(contentType.RequiredByCorePackage ? "Yes" : "No")}\n";
+                      + $"<sup>Relevant files: {string.Join(" ", contentType.RelevantFiles.Select(fileLink))}</sup>\n\n";
+    
+    if (string.IsNullOrWhiteSpace(contentType.MatchSingular) && string.IsNullOrWhiteSpace(contentType.MatchPlural))
+    {
+        markdown += "**WARNING:** This file likely generated completely incorrectly!\n\n";
+    }
+
+    markdown += $"- **Required by core package:** {(contentType.RequiredByCorePackage ? "Yes" : "No")}\n";
     if (contentType.AltNames is { Length: >0 } altNames)
     {
         markdown += $"- **Alternate names:** {string.Join(", ", altNames)}\n";
@@ -103,7 +109,7 @@ foreach (var contentType in contentTypes)
 
     markdown += string.Join("\n", contentType.XmlAttributes.Select(a => a.ToBulletPoint()));
     
-    markdown += "\n";
+    markdown += "\n\n";
 
     if (contentType.IsSubmarineType)
     {
@@ -135,11 +141,6 @@ foreach (var contentType in contentTypes)
                 element.Save(xmlWriter);
             }
             return $"```xml\n{xmlStringBuilder}\n```\n\n";
-        }
-
-        if (string.IsNullOrWhiteSpace(contentType.MatchSingular) && string.IsNullOrWhiteSpace(contentType.MatchPlural))
-        {
-            markdown += "**WARNING:** This file likely generated completely incorrectly!\n\n";
         }
 
         markdown += "## Examples\n\n"

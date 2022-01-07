@@ -1,13 +1,15 @@
 # Other
 
 <sup>Relevant files: [Shared:OtherFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/OtherFile.cs)</sup>
+
+**WARNING:** This file likely generated completely incorrectly!
+
 - **Required by core package:** No
 - **Alternate names:** None
 
 ## Attributes
 
 
-**WARNING:** This file likely generated completely incorrectly!
 
 ## Examples
 

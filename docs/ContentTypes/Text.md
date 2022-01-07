@@ -1,12 +1,14 @@
 # Text
 
-<sup>Relevant files: [Shared:TextFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/TextFile.cs) [Shared:TextPack.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/Text/TextPack.cs)</sup>
+<sup>Relevant files: [Shared:TextPack.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/Text/TextPack.cs) [Shared:TextFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/TextFile.cs)</sup>
+
+**WARNING:** This file likely generated completely incorrectly!
+
 - **Required by core package:** No
 
 ## Attributes
 
 
-**WARNING:** This file likely generated completely incorrectly!
 
 ## Examples
 

@@ -1,12 +1,14 @@
 # Sounds
 
 <sup>Relevant files: [Shared:SoundsFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/SoundsFile.cs)</sup>
+
+**WARNING:** This file likely generated completely incorrectly!
+
 - **Required by core package:** Yes
 
 ## Attributes
 
 
-**WARNING:** This file likely generated completely incorrectly!
 
 ## Examples
 
