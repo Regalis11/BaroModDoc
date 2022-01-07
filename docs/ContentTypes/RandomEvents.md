@@ -1,6 +1,6 @@
 # RandomEvents
 
-<sub>Relevant files: [Shared:RandomEventsFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/RandomEventsFile.cs) [Shared:EventPrefab.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource\Events\EventPrefab.cs)</sub>
+<sub>Relevant files: [Shared:RandomEventsFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/RandomEventsFile.cs) [Shared:EventPrefab.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/Events/EventPrefab.cs)</sub>
 - **Required by core package:** Yes
 
 ## Attributes

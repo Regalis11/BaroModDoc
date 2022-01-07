@@ -1,6 +1,6 @@
 # Orders
 
-<sub>Relevant files: [Shared:OrdersFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/OrdersFile.cs) [Shared:Order.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource\Characters\AI\Order.cs)</sub>
+<sub>Relevant files: [Shared:Order.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/Characters/AI/Order.cs) [Shared:OrdersFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/OrdersFile.cs)</sub>
 - **Required by core package:** Yes
 
 ## Attributes

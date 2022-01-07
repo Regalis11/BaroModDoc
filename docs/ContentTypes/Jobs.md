@@ -1,6 +1,6 @@
 # Jobs
 
-<sub>Relevant files: [Shared:JobPrefab.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource\Characters\Jobs\JobPrefab.cs) [Shared:JobsFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/JobsFile.cs)</sub>
+<sub>Relevant files: [Shared:JobsFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/JobsFile.cs) [Shared:JobPrefab.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/Characters/Jobs/JobPrefab.cs)</sub>
 - **Required by core package:** Yes
 
 ## Attributes

@@ -45,7 +45,7 @@ foreach (string p in srcPathParams)
     foreach (string f in Directory.GetFiles(srcPath, "*.cs", SearchOption.AllDirectories))
     {
         SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(File.ReadAllText(f));
-        subElementRipper.CurrentFile = f;
+        subElementRipper.CurrentFile = f.Replace('\\', '/');
         subElementRipper.Visit(syntaxTree.GetRoot());
     }
 }

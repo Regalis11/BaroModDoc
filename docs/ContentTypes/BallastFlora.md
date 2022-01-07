@@ -1,6 +1,6 @@
 # BallastFlora
 
-<sub>Relevant files: [Shared:BallastFloraFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/BallastFloraFile.cs) [Shared:BallastFloraPrefab.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource\Map\Creatures\BallastFloraPrefab.cs)</sub>
+<sub>Relevant files: [Shared:BallastFloraPrefab.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/Map/Creatures/BallastFloraPrefab.cs) [Shared:BallastFloraFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/BallastFloraFile.cs)</sub>
 - **Required by core package:** Yes
 - **Alternate names:** MapCreature
 

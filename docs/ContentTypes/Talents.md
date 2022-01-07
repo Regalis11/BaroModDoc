@@ -1,6 +1,6 @@
 # Talents
 
-<sub>Relevant files: [Shared:TalentPrefab.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource\Characters\Talents\TalentPrefab.cs) [Shared:TalentsFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/TalentsFile.cs)</sub>
+<sub>Relevant files: [Shared:TalentsFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/TalentsFile.cs) [Shared:TalentPrefab.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/Characters/Talents/TalentPrefab.cs)</sub>
 - **Required by core package:** Yes
 
 ## Attributes

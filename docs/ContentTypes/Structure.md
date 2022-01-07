@@ -1,27 +1,27 @@
 # Structure
 
-<sub>Relevant files: [Shared:StructurePrefab.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource\Map\StructurePrefab.cs) [Shared:StructureFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/StructureFile.cs)</sub>
+<sub>Relevant files: [Shared:StructureFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/StructureFile.cs) [Shared:StructurePrefab.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/Map/StructurePrefab.cs)</sub>
 - **Required by core package:** Yes
 
 ## Attributes
 
-- `MinHealth` : `float`
-- `BodyHeight` : `float`
-- `BodyRotation` : `float`
-- `BodyOffset` : `Vector2`
-- `TextureScale` : `Vector2`
 - `BodyWidth` : `float`
-- `Platform` : `bool`
 - `IndestructibleInOutposts` : `bool`
-- `Health` : `float`
-- `CastShadow` : `bool`
-- `StairAngle` : `float`
-- `DamageSound` : `string`
-- `StairDirection` : `Direction`
 - `Size` : `Vector2`
-- `NoAITarget` : `bool`
+- `StairAngle` : `float`
+- `BodyHeight` : `float`
+- `Platform` : `bool`
+- `TextureScale` : `Vector2`
+- `DamageSound` : `string`
+- `BodyOffset` : `Vector2`
 - `AllowAttachItems` : `bool`
+- `CastShadow` : `bool`
+- `StairDirection` : `Direction`
+- `NoAITarget` : `bool`
+- `MinHealth` : `float`
+- `Health` : `float`
 - `Body` : `bool`
+- `BodyRotation` : `float`
 ## Examples
 
 ### Example 1 - single Structure

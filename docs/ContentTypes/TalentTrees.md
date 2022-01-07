@@ -1,6 +1,6 @@
 # TalentTrees
 
-<sub>Relevant files: [Shared:TalentTree.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource\Characters\Talents\TalentTree.cs) [Shared:TalentTreesFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/TalentTreesFile.cs)</sub>
+<sub>Relevant files: [Shared:TalentTree.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/Characters/Talents/TalentTree.cs) [Shared:TalentTreesFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/TalentTreesFile.cs)</sub>
 - **Required by core package:** Yes
 
 ## Attributes

@@ -1,22 +1,22 @@
 # SkillSettings
 
-<sub>Relevant files: [Shared:SkillSettingsFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/SkillSettingsFile.cs) [Shared:SkillSettings.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource\Characters\SkillSettings.cs)</sub>
+<sub>Relevant files: [Shared:SkillSettingsFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/SkillSettingsFile.cs) [Shared:SkillSettings.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/Characters/SkillSettings.cs)</sub>
 - **Required by core package:** No
 
 ## Attributes
 
-- `SkillIncreasePerFriendlyHealed` : `float`
-- `SingleRoundSkillGainMultiplier` : `float`
-- `SkillIncreasePerCprRevive` : `float`
-- `MaximumOlympianSkill` : `float`
-- `SkillIncreasePerSabotage` : `float`
-- `SkillIncreasePerHostileDamage` : `float`
-- `SkillIncreasePerFabricatorRequiredSkill` : `float`
-- `SkillIncreasePerRepairedStructureDamage` : `float`
-- `SkillIncreasePerSecondWhenSteering` : `float`
-- `SkillIncreasePerSecondWhenOperatingTurret` : `float`
 - `AssistantSkillIncreaseMultiplier` : `float`
+- `SkillIncreasePerFriendlyHealed` : `float`
+- `SkillIncreasePerSecondWhenOperatingTurret` : `float`
+- `SkillIncreasePerFabricatorRequiredSkill` : `float`
+- `SingleRoundSkillGainMultiplier` : `float`
 - `SkillIncreasePerRepair` : `float`
+- `SkillIncreasePerRepairedStructureDamage` : `float`
+- `SkillIncreasePerSabotage` : `float`
+- `MaximumOlympianSkill` : `float`
+- `SkillIncreasePerSecondWhenSteering` : `float`
+- `SkillIncreasePerCprRevive` : `float`
+- `SkillIncreasePerHostileDamage` : `float`
 **WARNING:** This file likely generated completely incorrectly!
 
 ## Examples

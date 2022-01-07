@@ -1,6 +1,6 @@
 # Afflictions
 
-<sub>Relevant files: [Shared:AfflictionsFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/AfflictionsFile.cs) [Shared:AfflictionPrefab.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource\Characters\Health\Afflictions\AfflictionPrefab.cs)</sub>
+<sub>Relevant files: [Shared:AfflictionsFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/AfflictionsFile.cs) [Shared:AfflictionPrefab.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/Characters/Health/Afflictions/AfflictionPrefab.cs)</sub>
 - **Required by core package:** Yes
 
 ## Attributes

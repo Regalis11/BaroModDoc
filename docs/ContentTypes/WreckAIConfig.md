@@ -1,32 +1,32 @@
 # WreckAIConfig
 
-<sub>Relevant files: [Shared:WreckAIConfigFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/WreckAIConfigFile.cs) [Shared:WreckAIConfig.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource\Characters\AI\Wreck\WreckAIConfig.cs)</sub>
+<sub>Relevant files: [Shared:WreckAIConfigFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/WreckAIConfigFile.cs) [Shared:WreckAIConfig.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/Characters/AI/Wreck/WreckAIConfig.cs)</sub>
 - **Required by core package:** Yes
 
 ## Attributes
 
-- `AgentSpawnCountDifficultyMultiplier` : `float`
-- `AgentSpawnDelayRandomFactor` : `float`
 - `BrainRoomBackground` : `string`
-- `DeadEntityColorFadeOutTime` : `float`
-- `MaxAgentsInside` : `int`
-- `MinAgentsPerBrainRoom` : `int`
-- `BrainRoomVerticalWall` : `string`
-- `KillAgentsWhenEntityDies` : `bool`
-- `BrainRoomHorizontalWall` : `string`
 - `AgentSpawnDelayDifficultyMultiplier` : `float`
-- `MinAgentsInside` : `int`
-- `Spawner` : `string`
-- `Brain` : `string`
-- `DeadEntityColorMultiplier` : `float`
+- `DeadEntityColorFadeOutTime` : `float`
+- `AgentSpawnCountDifficultyMultiplier` : `float`
 - `MaxAgentCount` : `int`
-- `MaxAgentsPerRoom` : `int`
+- `Spawner` : `string`
+- `MinAgentsPerBrainRoom` : `int`
+- `OffensiveAgent` : `string`
+- `MaxAgentsOutside` : `int`
+- `MaxAgentsInside` : `int`
+- `Brain` : `string`
+- `BrainRoomHorizontalWall` : `string`
+- `MinAgentsOutside` : `int`
 - `MinWaterLevel` : `float`
 - `DefensiveAgent` : `Identifier`
-- `MaxAgentsOutside` : `int`
-- `OffensiveAgent` : `string`
+- `BrainRoomVerticalWall` : `string`
+- `MinAgentsInside` : `int`
 - `AgentSpawnDelay` : `float`
-- `MinAgentsOutside` : `int`
+- `KillAgentsWhenEntityDies` : `bool`
+- `MaxAgentsPerRoom` : `int`
+- `AgentSpawnDelayRandomFactor` : `float`
+- `DeadEntityColorMultiplier` : `float`
 ## Examples
 
 ### Example 1 - single wreckaiconfig
