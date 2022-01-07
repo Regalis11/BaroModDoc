@@ -1,6 +1,6 @@
 # Submarine
 
-<sub>Relevant files: [Shared:SubmarineFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/SubmarineFile.cs)</sub>
+<sup>Relevant files: [Shared:SubmarineFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/SubmarineFile.cs)</sup>
 - **Required by core package:** No
 
 ## Attributes

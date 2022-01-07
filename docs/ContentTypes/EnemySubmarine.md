@@ -1,6 +1,6 @@
 # EnemySubmarine
 
-<sub>Relevant files: [Shared:EnemySubmarineFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/EnemySubmarineFile.cs)</sub>
+<sup>Relevant files: [Shared:EnemySubmarineFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/EnemySubmarineFile.cs)</sup>
 - **Required by core package:** Yes
 
 ## Attributes

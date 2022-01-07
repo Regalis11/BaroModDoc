@@ -1,6 +1,6 @@
 # Corpses
 
-<sub>Relevant files: [Shared:CorpsePrefab.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/Characters/CorpsePrefab.cs) [Shared:CorpsesFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/CorpsesFile.cs)</sub>
+<sup>Relevant files: [Shared:CorpsesFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/CorpsesFile.cs) [Shared:CorpsePrefab.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/Characters/CorpsePrefab.cs)</sup>
 - **Required by core package:** Yes
 
 ## Attributes

@@ -1,6 +1,6 @@
 # UpgradeModules
 
-<sub>Relevant files: [Shared:UpgradePrefab.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/Upgrades/UpgradePrefab.cs) [Shared:UpgradeModulesFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/UpgradeModulesFile.cs)</sub>
+<sup>Relevant files: [Shared:UpgradePrefab.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/Upgrades/UpgradePrefab.cs) [Shared:UpgradeModulesFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/UpgradeModulesFile.cs)</sup>
 - **Required by core package:** Yes
 
 ## Attributes

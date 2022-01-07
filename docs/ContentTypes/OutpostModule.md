@@ -1,6 +1,6 @@
 # OutpostModule
 
-<sub>Relevant files: [Shared:OutpostModuleFIle.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/OutpostModuleFIle.cs)</sub>
+<sup>Relevant files: [Shared:OutpostModuleFIle.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/OutpostModuleFIle.cs)</sup>
 - **Required by core package:** No
 
 ## Attributes

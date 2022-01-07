@@ -1,6 +1,6 @@
 # RuinConfig
 
-<sub>Relevant files: [Shared:RuinGenerationParams.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/Map/Levels/Ruins/RuinGenerationParams.cs) [Shared:RuinConfigFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/RuinConfigFile.cs)</sub>
+<sup>Relevant files: [Shared:RuinGenerationParams.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/Map/Levels/Ruins/RuinGenerationParams.cs) [Shared:RuinConfigFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/RuinConfigFile.cs)</sup>
 - **Required by core package:** Yes
 
 ## Attributes

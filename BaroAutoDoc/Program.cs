@@ -91,7 +91,7 @@ foreach (var contentType in contentTypes)
            + $"(https://github.com/Regalis11/Barotrauma/blob/master/{file})";
 
     string markdown = $"# {contentType.Name}\n\n"
-                      + $"<sub>Relevant files: {string.Join(" ", contentType.RelevantFiles.Select(fileLink))}</sub>\n"
+                      + $"<sup>Relevant files: {string.Join(" ", contentType.RelevantFiles.Select(fileLink))}</sup>\n"
                       + $"- **Required by core package:** {(contentType.RequiredByCorePackage ? "Yes" : "No")}\n";
     if (contentType.AltNames is { Length: >0 } altNames)
     {

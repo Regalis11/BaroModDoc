@@ -1,6 +1,6 @@
 # BeaconStation
 
-<sub>Relevant files: [Shared:BeaconStationFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/BeaconStationFile.cs)</sub>
+<sup>Relevant files: [Shared:BeaconStationFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/BeaconStationFile.cs)</sup>
 - **Required by core package:** Yes
 
 ## Attributes

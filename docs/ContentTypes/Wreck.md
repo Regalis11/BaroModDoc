@@ -1,6 +1,6 @@
 # Wreck
 
-<sub>Relevant files: [Shared:WreckFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/WreckFile.cs)</sub>
+<sup>Relevant files: [Shared:WreckFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/WreckFile.cs)</sup>
 - **Required by core package:** No
 
 ## Attributes

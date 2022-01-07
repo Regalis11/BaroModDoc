@@ -1,32 +1,32 @@
 # WreckAIConfig
 
-<sub>Relevant files: [Shared:WreckAIConfigFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/WreckAIConfigFile.cs) [Shared:WreckAIConfig.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/Characters/AI/Wreck/WreckAIConfig.cs)</sub>
+<sup>Relevant files: [Shared:WreckAIConfigFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/WreckAIConfigFile.cs) [Shared:WreckAIConfig.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/Characters/AI/Wreck/WreckAIConfig.cs)</sup>
 - **Required by core package:** Yes
 
 ## Attributes
 
-- `BrainRoomBackground` : `string`
-- `AgentSpawnDelayDifficultyMultiplier` : `float`
-- `DeadEntityColorFadeOutTime` : `float`
+- `OffensiveAgent` : `string`
+- `BrainRoomVerticalWall` : `string`
+- `DeadEntityColorMultiplier` : `float`
 - `AgentSpawnCountDifficultyMultiplier` : `float`
-- `MaxAgentCount` : `int`
+- `DefensiveAgent` : `Identifier`
+- `BrainRoomBackground` : `string`
+- `KillAgentsWhenEntityDies` : `bool`
+- `AgentSpawnDelayRandomFactor` : `float`
+- `DeadEntityColorFadeOutTime` : `float`
 - `Spawner` : `string`
 - `MinAgentsPerBrainRoom` : `int`
-- `OffensiveAgent` : `string`
-- `MaxAgentsOutside` : `int`
-- `MaxAgentsInside` : `int`
-- `Brain` : `string`
 - `BrainRoomHorizontalWall` : `string`
-- `MinAgentsOutside` : `int`
-- `MinWaterLevel` : `float`
-- `DefensiveAgent` : `Identifier`
-- `BrainRoomVerticalWall` : `string`
-- `MinAgentsInside` : `int`
-- `AgentSpawnDelay` : `float`
-- `KillAgentsWhenEntityDies` : `bool`
 - `MaxAgentsPerRoom` : `int`
-- `AgentSpawnDelayRandomFactor` : `float`
-- `DeadEntityColorMultiplier` : `float`
+- `AgentSpawnDelayDifficultyMultiplier` : `float`
+- `MinAgentsInside` : `int`
+- `MaxAgentCount` : `int`
+- `AgentSpawnDelay` : `float`
+- `MinAgentsOutside` : `int`
+- `MaxAgentsOutside` : `int`
+- `Brain` : `string`
+- `MaxAgentsInside` : `int`
+- `MinWaterLevel` : `float`
 ## Examples
 
 ### Example 1 - single wreckaiconfig
