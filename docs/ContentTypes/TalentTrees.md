@@ -1,6 +1,10 @@
 # TalentTrees
 
+<sub>Relevant files: [Shared:TalentTree.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource\Characters\Talents\TalentTree.cs) [Shared:TalentTreesFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/TalentTreesFile.cs)</sub>
 - **Required by core package:** Yes
+
+## Attributes
+
 
 ## Examples
 
@@ -8,8 +12,7 @@
 
 ```xml
 <talenttree
-  identifier="mytalenttree"
-  TODO="add remaining attributes" />
+  identifier="mytalenttree" />
 ```
 
 ### Example 2 - multiple talenttrees
@@ -17,11 +20,9 @@
 ```xml
 <talenttrees>
   <talenttree
-    identifier="mytalenttree1"
-    TODO="add remaining attributes" />
+    identifier="mytalenttree1" />
   <talenttree
-    identifier="mytalenttree2"
-    TODO="add remaining attributes" />
+    identifier="mytalenttree2" />
 </talenttrees>
 ```
 
@@ -30,11 +31,9 @@
 ```xml
 <override>
   <talenttree
-    identifier="mytalenttree1"
-    TODO="add remaining attributes" />
+    identifier="mytalenttree1" />
   <talenttree
-    identifier="mytalenttree2"
-    TODO="add remaining attributes" />
+    identifier="mytalenttree2" />
 </override>
 ```
 

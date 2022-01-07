@@ -1,6 +1,10 @@
 # Character
 
+<sub>Relevant files: [Shared:CharacterFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/CharacterFile.cs) [Shared:CharacterPrefab.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource\Characters\CharacterPrefab.cs)</sub>
 - **Required by core package:** Yes
+
+## Attributes
+
 
 **WARNING:** This file likely generated completely incorrectly!
 
@@ -10,8 +14,7 @@
 
 ```xml
 <Character
-  identifier="myCharacter"
-  TODO="add remaining attributes" />
+  identifier="myCharacter" />
 ```
 
 ### Example 2 - multiple Characters
@@ -19,11 +22,9 @@
 ```xml
 <Characters>
   <Character
-    identifier="myCharacter1"
-    TODO="add remaining attributes" />
+    identifier="myCharacter1" />
   <Character
-    identifier="myCharacter2"
-    TODO="add remaining attributes" />
+    identifier="myCharacter2" />
 </Characters>
 ```
 
@@ -32,11 +33,9 @@
 ```xml
 <override>
   <Character
-    identifier="myCharacter1"
-    TODO="add remaining attributes" />
+    identifier="myCharacter1" />
   <Character
-    identifier="myCharacter2"
-    TODO="add remaining attributes" />
+    identifier="myCharacter2" />
 </override>
 ```
 

@@ -1,6 +1,10 @@
 # NPCSets
 
+<sub>Relevant files: [Shared:NPCSet.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource\Map\Outposts\NPCSet.cs) [Shared:NPCSetsFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/NPCSetsFile.cs)</sub>
 - **Required by core package:** Yes
+
+## Attributes
+
 
 ## Examples
 
@@ -8,8 +12,7 @@
 
 ```xml
 <npcset
-  identifier="mynpcset"
-  TODO="add remaining attributes" />
+  identifier="mynpcset" />
 ```
 
 ### Example 2 - multiple npcsets
@@ -17,11 +20,9 @@
 ```xml
 <npcsets>
   <npcset
-    identifier="mynpcset1"
-    TODO="add remaining attributes" />
+    identifier="mynpcset1" />
   <npcset
-    identifier="mynpcset2"
-    TODO="add remaining attributes" />
+    identifier="mynpcset2" />
 </npcsets>
 ```
 
@@ -30,11 +31,9 @@
 ```xml
 <override>
   <npcset
-    identifier="mynpcset1"
-    TODO="add remaining attributes" />
+    identifier="mynpcset1" />
   <npcset
-    identifier="mynpcset2"
-    TODO="add remaining attributes" />
+    identifier="mynpcset2" />
 </override>
 ```
 

@@ -1,6 +1,10 @@
 # Missions
 
+<sub>Relevant files: [Shared:MissionsFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/MissionsFile.cs)</sub>
 - **Required by core package:** Yes
+
+## Attributes
+
 
 ## Examples
 
@@ -8,8 +12,7 @@
 
 ```xml
 <mission
-  identifier="mymission"
-  TODO="add remaining attributes" />
+  identifier="mymission" />
 ```
 
 ### Example 2 - multiple missions
@@ -17,11 +20,9 @@
 ```xml
 <missions>
   <mission
-    identifier="mymission1"
-    TODO="add remaining attributes" />
+    identifier="mymission1" />
   <mission
-    identifier="mymission2"
-    TODO="add remaining attributes" />
+    identifier="mymission2" />
 </missions>
 ```
 
@@ -30,11 +31,9 @@
 ```xml
 <override>
   <mission
-    identifier="mymission1"
-    TODO="add remaining attributes" />
+    identifier="mymission1" />
   <mission
-    identifier="mymission2"
-    TODO="add remaining attributes" />
+    identifier="mymission2" />
 </override>
 ```
 

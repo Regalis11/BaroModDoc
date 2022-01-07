@@ -1,6 +1,10 @@
 # LevelObjectPrefabs
 
+<sub>Relevant files: [Shared:LevelObjectPrefabsFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/LevelObjectPrefabsFile.cs)</sub>
 - **Required by core package:** Yes
+
+## Attributes
+
 
 ## Examples
 
@@ -8,8 +12,7 @@
 
 ```xml
 <levelobject
-  identifier="mylevelobject"
-  TODO="add remaining attributes" />
+  identifier="mylevelobject" />
 ```
 
 ### Example 2 - multiple levelobjects
@@ -17,11 +20,9 @@
 ```xml
 <levelobjects>
   <levelobject
-    identifier="mylevelobject1"
-    TODO="add remaining attributes" />
+    identifier="mylevelobject1" />
   <levelobject
-    identifier="mylevelobject2"
-    TODO="add remaining attributes" />
+    identifier="mylevelobject2" />
 </levelobjects>
 ```
 
@@ -30,11 +31,9 @@
 ```xml
 <override>
   <levelobject
-    identifier="mylevelobject1"
-    TODO="add remaining attributes" />
+    identifier="mylevelobject1" />
   <levelobject
-    identifier="mylevelobject2"
-    TODO="add remaining attributes" />
+    identifier="mylevelobject2" />
 </override>
 ```
 

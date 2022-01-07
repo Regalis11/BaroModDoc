@@ -1,4 +1,5 @@
 ﻿using System.Collections.Immutable;
+using System.Xml.Linq;
 
 namespace BaroAutoDoc;
 
@@ -8,4 +9,14 @@ public record ContentType(
     bool RequiredByCorePackage,
     bool IsSubmarineType,
     string? MatchSingular,
-    string? MatchPlural);
+    string? MatchPlural,
+    ImmutableHashSet<string> ConstructedTypes,
+    ImmutableHashSet<string> RelevantFiles,
+    ImmutableHashSet<ContentType.XmlAttribute> XmlAttributes)
+{
+    public record XmlAttribute(string Type, string Name)
+    {
+        public string ToBulletPoint()
+            => $"- `{Name}` : `{Type}`";
+    }
+}

@@ -1,6 +1,10 @@
 # UIStyle
 
+<sub>Relevant files: [Shared:UIStyleFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/UIStyleFile.cs)</sub>
 - **Required by core package:** No
+
+## Attributes
+
 
 **WARNING:** This file likely generated completely incorrectly!
 
@@ -10,8 +14,7 @@
 
 ```xml
 <UIStyle
-  identifier="myUIStyle"
-  TODO="add remaining attributes" />
+  identifier="myUIStyle" />
 ```
 
 ### Example 2 - multiple UIStyles
@@ -19,11 +22,9 @@
 ```xml
 <UIStyles>
   <UIStyle
-    identifier="myUIStyle1"
-    TODO="add remaining attributes" />
+    identifier="myUIStyle1" />
   <UIStyle
-    identifier="myUIStyle2"
-    TODO="add remaining attributes" />
+    identifier="myUIStyle2" />
 </UIStyles>
 ```
 
@@ -32,11 +33,9 @@
 ```xml
 <override>
   <UIStyle
-    identifier="myUIStyle1"
-    TODO="add remaining attributes" />
+    identifier="myUIStyle1" />
   <UIStyle
-    identifier="myUIStyle2"
-    TODO="add remaining attributes" />
+    identifier="myUIStyle2" />
 </override>
 ```
 

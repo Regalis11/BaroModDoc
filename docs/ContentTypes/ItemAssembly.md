@@ -1,6 +1,10 @@
 # ItemAssembly
 
+<sub>Relevant files: [Shared:ItemAssemblyPrefab.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource\Map\ItemAssemblyPrefab.cs) [Shared:ItemAssemblyFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/ItemAssemblyFile.cs)</sub>
 - **Required by core package:** No
+
+## Attributes
+
 
 ## Examples
 
@@ -8,8 +12,7 @@
 
 ```xml
 <itemassembly
-  identifier="myitemassembly"
-  TODO="add remaining attributes" />
+  identifier="myitemassembly" />
 ```
 
 ### Example 2 - multiple itemassemblies
@@ -17,11 +20,9 @@
 ```xml
 <itemassemblies>
   <itemassembly
-    identifier="myitemassembly1"
-    TODO="add remaining attributes" />
+    identifier="myitemassembly1" />
   <itemassembly
-    identifier="myitemassembly2"
-    TODO="add remaining attributes" />
+    identifier="myitemassembly2" />
 </itemassemblies>
 ```
 
@@ -30,11 +31,9 @@
 ```xml
 <override>
   <itemassembly
-    identifier="myitemassembly1"
-    TODO="add remaining attributes" />
+    identifier="myitemassembly1" />
   <itemassembly
-    identifier="myitemassembly2"
-    TODO="add remaining attributes" />
+    identifier="myitemassembly2" />
 </override>
 ```
 

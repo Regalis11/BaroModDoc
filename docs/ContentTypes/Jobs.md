@@ -1,6 +1,10 @@
 # Jobs
 
+<sub>Relevant files: [Shared:JobPrefab.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource\Characters\Jobs\JobPrefab.cs) [Shared:JobsFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/JobsFile.cs)</sub>
 - **Required by core package:** Yes
+
+## Attributes
+
 
 **WARNING:** This file likely generated completely incorrectly!
 
@@ -10,8 +14,7 @@
 
 ```xml
 <Job
-  identifier="myJob"
-  TODO="add remaining attributes" />
+  identifier="myJob" />
 ```
 
 ### Example 2 - multiple Jobs
@@ -19,11 +22,9 @@
 ```xml
 <Jobs>
   <Job
-    identifier="myJob1"
-    TODO="add remaining attributes" />
+    identifier="myJob1" />
   <Job
-    identifier="myJob2"
-    TODO="add remaining attributes" />
+    identifier="myJob2" />
 </Jobs>
 ```
 
@@ -32,11 +33,9 @@
 ```xml
 <override>
   <Job
-    identifier="myJob1"
-    TODO="add remaining attributes" />
+    identifier="myJob1" />
   <Job
-    identifier="myJob2"
-    TODO="add remaining attributes" />
+    identifier="myJob2" />
 </override>
 ```
 

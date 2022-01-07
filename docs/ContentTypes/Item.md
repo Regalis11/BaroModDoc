@@ -1,6 +1,10 @@
 # Item
 
+<sub>Relevant files: [Shared:ItemFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/ItemFile.cs)</sub>
 - **Required by core package:** Yes
+
+## Attributes
+
 
 ## Examples
 
@@ -8,8 +12,7 @@
 
 ```xml
 <Item
-  identifier="myItem"
-  TODO="add remaining attributes" />
+  identifier="myItem" />
 ```
 
 ### Example 2 - multiple items
@@ -17,11 +20,9 @@
 ```xml
 <items>
   <Item
-    identifier="myItem1"
-    TODO="add remaining attributes" />
+    identifier="myItem1" />
   <Item
-    identifier="myItem2"
-    TODO="add remaining attributes" />
+    identifier="myItem2" />
 </items>
 ```
 
@@ -30,11 +31,9 @@
 ```xml
 <override>
   <Item
-    identifier="myItem1"
-    TODO="add remaining attributes" />
+    identifier="myItem1" />
   <Item
-    identifier="myItem2"
-    TODO="add remaining attributes" />
+    identifier="myItem2" />
 </override>
 ```
 

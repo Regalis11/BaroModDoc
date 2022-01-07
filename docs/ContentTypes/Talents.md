@@ -1,6 +1,10 @@
 # Talents
 
+<sub>Relevant files: [Shared:TalentPrefab.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource\Characters\Talents\TalentPrefab.cs) [Shared:TalentsFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/TalentsFile.cs)</sub>
 - **Required by core package:** Yes
+
+## Attributes
+
 
 ## Examples
 
@@ -8,8 +12,7 @@
 
 ```xml
 <talent
-  identifier="mytalent"
-  TODO="add remaining attributes" />
+  identifier="mytalent" />
 ```
 
 ### Example 2 - multiple talents
@@ -17,11 +20,9 @@
 ```xml
 <talents>
   <talent
-    identifier="mytalent1"
-    TODO="add remaining attributes" />
+    identifier="mytalent1" />
   <talent
-    identifier="mytalent2"
-    TODO="add remaining attributes" />
+    identifier="mytalent2" />
 </talents>
 ```
 
@@ -30,11 +31,9 @@
 ```xml
 <override>
   <talent
-    identifier="mytalent1"
-    TODO="add remaining attributes" />
+    identifier="mytalent1" />
   <talent
-    identifier="mytalent2"
-    TODO="add remaining attributes" />
+    identifier="mytalent2" />
 </override>
 ```
 

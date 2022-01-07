@@ -1,6 +1,10 @@
 # Decals
 
+<sub>Relevant files: [Shared:DecalsFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/DecalsFile.cs)</sub>
 - **Required by core package:** No
+
+## Attributes
+
 
 **WARNING:** This file likely generated completely incorrectly!
 
@@ -10,8 +14,7 @@
 
 ```xml
 <Decal
-  identifier="myDecal"
-  TODO="add remaining attributes" />
+  identifier="myDecal" />
 ```
 
 ### Example 2 - multiple Decals
@@ -19,11 +22,9 @@
 ```xml
 <Decals>
   <Decal
-    identifier="myDecal1"
-    TODO="add remaining attributes" />
+    identifier="myDecal1" />
   <Decal
-    identifier="myDecal2"
-    TODO="add remaining attributes" />
+    identifier="myDecal2" />
 </Decals>
 ```
 
@@ -32,11 +33,9 @@
 ```xml
 <override>
   <Decal
-    identifier="myDecal1"
-    TODO="add remaining attributes" />
+    identifier="myDecal1" />
   <Decal
-    identifier="myDecal2"
-    TODO="add remaining attributes" />
+    identifier="myDecal2" />
 </override>
 ```
 

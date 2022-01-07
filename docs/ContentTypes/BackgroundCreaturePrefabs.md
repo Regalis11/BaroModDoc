@@ -1,6 +1,10 @@
 # BackgroundCreaturePrefabs
 
+<sub>Relevant files: [Shared:BackgroundCreaturePrefabsFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/BackgroundCreaturePrefabsFile.cs)</sub>
 - **Required by core package:** No
+
+## Attributes
+
 
 **WARNING:** This file likely generated completely incorrectly!
 
@@ -10,8 +14,7 @@
 
 ```xml
 <BackgroundCreaturePrefab
-  identifier="myBackgroundCreaturePrefab"
-  TODO="add remaining attributes" />
+  identifier="myBackgroundCreaturePrefab" />
 ```
 
 ### Example 2 - multiple BackgroundCreaturePrefabs
@@ -19,11 +22,9 @@
 ```xml
 <BackgroundCreaturePrefabs>
   <BackgroundCreaturePrefab
-    identifier="myBackgroundCreaturePrefab1"
-    TODO="add remaining attributes" />
+    identifier="myBackgroundCreaturePrefab1" />
   <BackgroundCreaturePrefab
-    identifier="myBackgroundCreaturePrefab2"
-    TODO="add remaining attributes" />
+    identifier="myBackgroundCreaturePrefab2" />
 </BackgroundCreaturePrefabs>
 ```
 
@@ -32,11 +33,9 @@
 ```xml
 <override>
   <BackgroundCreaturePrefab
-    identifier="myBackgroundCreaturePrefab1"
-    TODO="add remaining attributes" />
+    identifier="myBackgroundCreaturePrefab1" />
   <BackgroundCreaturePrefab
-    identifier="myBackgroundCreaturePrefab2"
-    TODO="add remaining attributes" />
+    identifier="myBackgroundCreaturePrefab2" />
 </override>
 ```
 

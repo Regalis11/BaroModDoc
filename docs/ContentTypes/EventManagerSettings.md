@@ -1,6 +1,10 @@
 # EventManagerSettings
 
+<sub>Relevant files: [Shared:EventManagerSettingsFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/EventManagerSettingsFile.cs) [Shared:EventManagerSettings.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource\Events\EventManagerSettings.cs)</sub>
 - **Required by core package:** No
+
+## Attributes
+
 
 ## Examples
 
@@ -8,8 +12,7 @@
 
 ```xml
 <EventManagerSetting
-  identifier="myEventManagerSetting"
-  TODO="add remaining attributes" />
+  identifier="myEventManagerSetting" />
 ```
 
 ### Example 2 - multiple EventManagerSettings
@@ -17,11 +20,9 @@
 ```xml
 <EventManagerSettings>
   <EventManagerSetting
-    identifier="myEventManagerSetting1"
-    TODO="add remaining attributes" />
+    identifier="myEventManagerSetting1" />
   <EventManagerSetting
-    identifier="myEventManagerSetting2"
-    TODO="add remaining attributes" />
+    identifier="myEventManagerSetting2" />
 </EventManagerSettings>
 ```
 
@@ -30,11 +31,9 @@
 ```xml
 <override>
   <EventManagerSetting
-    identifier="myEventManagerSetting1"
-    TODO="add remaining attributes" />
+    identifier="myEventManagerSetting1" />
   <EventManagerSetting
-    identifier="myEventManagerSetting2"
-    TODO="add remaining attributes" />
+    identifier="myEventManagerSetting2" />
 </override>
 ```
 

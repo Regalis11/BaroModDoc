@@ -1,6 +1,10 @@
 # NPCConversations
 
+<sub>Relevant files: [Shared:NPCConversationsFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/NPCConversationsFile.cs) [Shared:NPCConversation.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource\Characters\AI\NPCConversation.cs)</sub>
 - **Required by core package:** No
+
+## Attributes
+
 
 **WARNING:** This file likely generated completely incorrectly!
 
@@ -10,8 +14,7 @@
 
 ```xml
 <NPCConversation
-  identifier="myNPCConversation"
-  TODO="add remaining attributes" />
+  identifier="myNPCConversation" />
 ```
 
 ### Example 2 - multiple NPCConversations
@@ -19,11 +22,9 @@
 ```xml
 <NPCConversations>
   <NPCConversation
-    identifier="myNPCConversation1"
-    TODO="add remaining attributes" />
+    identifier="myNPCConversation1" />
   <NPCConversation
-    identifier="myNPCConversation2"
-    TODO="add remaining attributes" />
+    identifier="myNPCConversation2" />
 </NPCConversations>
 ```
 
@@ -32,11 +33,9 @@
 ```xml
 <override>
   <NPCConversation
-    identifier="myNPCConversation1"
-    TODO="add remaining attributes" />
+    identifier="myNPCConversation1" />
   <NPCConversation
-    identifier="myNPCConversation2"
-    TODO="add remaining attributes" />
+    identifier="myNPCConversation2" />
 </override>
 ```
 

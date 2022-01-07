@@ -1,6 +1,10 @@
 # TraitorMissions
 
+<sub>Relevant files: [Shared:TraitorMissionsFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/TraitorMissionsFile.cs)</sub>
 - **Required by core package:** Yes
+
+## Attributes
+
 
 ## Examples
 
@@ -8,8 +12,7 @@
 
 ```xml
 <TraitorMission
-  identifier="myTraitorMission"
-  TODO="add remaining attributes" />
+  identifier="myTraitorMission" />
 ```
 
 ### Example 2 - multiple TraitorMissions
@@ -17,11 +20,9 @@
 ```xml
 <TraitorMissions>
   <TraitorMission
-    identifier="myTraitorMission1"
-    TODO="add remaining attributes" />
+    identifier="myTraitorMission1" />
   <TraitorMission
-    identifier="myTraitorMission2"
-    TODO="add remaining attributes" />
+    identifier="myTraitorMission2" />
 </TraitorMissions>
 ```
 
@@ -30,11 +31,9 @@
 ```xml
 <override>
   <TraitorMission
-    identifier="myTraitorMission1"
-    TODO="add remaining attributes" />
+    identifier="myTraitorMission1" />
   <TraitorMission
-    identifier="myTraitorMission2"
-    TODO="add remaining attributes" />
+    identifier="myTraitorMission2" />
 </override>
 ```
 

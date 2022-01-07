@@ -1,6 +1,10 @@
 # Sounds
 
+<sub>Relevant files: [Shared:SoundsFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/SoundsFile.cs)</sub>
 - **Required by core package:** Yes
+
+## Attributes
+
 
 **WARNING:** This file likely generated completely incorrectly!
 
@@ -10,8 +14,7 @@
 
 ```xml
 <Sound
-  identifier="mySound"
-  TODO="add remaining attributes" />
+  identifier="mySound" />
 ```
 
 ### Example 2 - multiple Sounds
@@ -19,11 +22,9 @@
 ```xml
 <Sounds>
   <Sound
-    identifier="mySound1"
-    TODO="add remaining attributes" />
+    identifier="mySound1" />
   <Sound
-    identifier="mySound2"
-    TODO="add remaining attributes" />
+    identifier="mySound2" />
 </Sounds>
 ```
 
@@ -32,11 +33,9 @@
 ```xml
 <override>
   <Sound
-    identifier="mySound1"
-    TODO="add remaining attributes" />
+    identifier="mySound1" />
   <Sound
-    identifier="mySound2"
-    TODO="add remaining attributes" />
+    identifier="mySound2" />
 </override>
 ```
 

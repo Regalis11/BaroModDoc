@@ -1,6 +1,10 @@
 # OutpostConfig
 
+<sub>Relevant files: [Shared:OutpostConfigFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/OutpostConfigFile.cs)</sub>
 - **Required by core package:** Yes
+
+## Attributes
+
 
 ## Examples
 
@@ -8,8 +12,7 @@
 
 ```xml
 <OutpostConfig
-  identifier="myOutpostConfig"
-  TODO="add remaining attributes" />
+  identifier="myOutpostConfig" />
 ```
 
 ### Example 2 - multiple OutpostGenerationParameters
@@ -17,11 +20,9 @@
 ```xml
 <OutpostGenerationParameters>
   <OutpostConfig
-    identifier="myOutpostConfig1"
-    TODO="add remaining attributes" />
+    identifier="myOutpostConfig1" />
   <OutpostConfig
-    identifier="myOutpostConfig2"
-    TODO="add remaining attributes" />
+    identifier="myOutpostConfig2" />
 </OutpostGenerationParameters>
 ```
 
@@ -30,11 +31,9 @@
 ```xml
 <override>
   <OutpostConfig
-    identifier="myOutpostConfig1"
-    TODO="add remaining attributes" />
+    identifier="myOutpostConfig1" />
   <OutpostConfig
-    identifier="myOutpostConfig2"
-    TODO="add remaining attributes" />
+    identifier="myOutpostConfig2" />
 </override>
 ```
 

@@ -1,6 +1,10 @@
 # LocationTypes
 
+<sub>Relevant files: [Shared:LocationTypesFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/LocationTypesFile.cs)</sub>
 - **Required by core package:** Yes
+
+## Attributes
+
 
 ## Examples
 
@@ -8,8 +12,7 @@
 
 ```xml
 <locationtype
-  identifier="mylocationtype"
-  TODO="add remaining attributes" />
+  identifier="mylocationtype" />
 ```
 
 ### Example 2 - multiple locationtypes
@@ -17,11 +20,9 @@
 ```xml
 <locationtypes>
   <locationtype
-    identifier="mylocationtype1"
-    TODO="add remaining attributes" />
+    identifier="mylocationtype1" />
   <locationtype
-    identifier="mylocationtype2"
-    TODO="add remaining attributes" />
+    identifier="mylocationtype2" />
 </locationtypes>
 ```
 
@@ -30,11 +31,9 @@
 ```xml
 <override>
   <locationtype
-    identifier="mylocationtype1"
-    TODO="add remaining attributes" />
+    identifier="mylocationtype1" />
   <locationtype
-    identifier="mylocationtype2"
-    TODO="add remaining attributes" />
+    identifier="mylocationtype2" />
 </override>
 ```
 

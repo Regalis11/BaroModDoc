@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Reflection;
+using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 using BaroAutoDoc;
@@ -15,56 +16,63 @@ if (args.Length <= 0)
 }
 repoPath = args[0];
 #endif
-if (!repoPath.EndsWith('/')) { repoPath+="/"; }
 
-string srcPathFmt = $"{repoPath}Barotrauma/Barotrauma{{0}}/{{0}}Source/ContentManagement/ContentFile";
+Directory.SetCurrentDirectory(repoPath);
+
+const string srcPathFmt = "Barotrauma/Barotrauma{0}/{0}Source";
+const string contentFilePathFmt = $"{srcPathFmt}/ContentManagement/ContentFile";
 string[] srcPathParams = {"Shared"};
 
 var contentTypeFinder = new ContentTypeFinder();
 foreach (string p in srcPathParams)
 {
-    string srcPath = string.Format(srcPathFmt, p);
-    if (!Directory.Exists(srcPath)) { continue; }
-    foreach (string f in Directory.GetFiles(srcPath))
+    string contentFilePath = string.Format(contentFilePathFmt, p);
+    if (!Directory.Exists(contentFilePath)) { continue; }
+    foreach (string f in Directory.GetFiles(contentFilePath))
     {
         SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(File.ReadAllText(f));
+        contentTypeFinder.CurrentFile = f.Replace('\\', '/');
         contentTypeFinder.Visit(syntaxTree.GetRoot());
     }
 }
 
+var subElementRipper = new SubElementRipper(contentTypeFinder.ContentTypes);
+
+foreach (string p in srcPathParams)
+{
+    string srcPath = string.Format(srcPathFmt, p);
+    if (!Directory.Exists(srcPath)) { continue; }
+    foreach (string f in Directory.GetFiles(srcPath, "*.cs", SearchOption.AllDirectories))
+    {
+        SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(File.ReadAllText(f));
+        subElementRipper.CurrentFile = f;
+        subElementRipper.Visit(syntaxTree.GetRoot());
+    }
+}
+
+var contentTypes = subElementRipper.ContentTypes;
+
+Directory.SetCurrentDirectory(Path.GetDirectoryName(Assembly.GetCallingAssembly().Location)!);
 Directory.CreateDirectory("markdown/ContentTypes");
 
-foreach (var contentType in contentTypeFinder.ContentTypes)
+foreach (var contentType in contentTypes)
 {
     string? matchSingular = contentType.MatchSingular;
     string? matchPlural = contentType.MatchPlural;
 
     if (contentType.Name.EndsWith("s"))
     {
-        if (string.IsNullOrWhiteSpace(matchPlural))
-        {
-            matchPlural = contentType.Name;
-        }
+        matchPlural ??= contentType.Name;
     }
-    else if (string.IsNullOrWhiteSpace(matchSingular))
+    else
     {
-        matchSingular = contentType.Name;
+        matchSingular ??= contentType.Name;
     }
     
     string transform(string? s, Func<string, string> t)
         => s is null ? "AUTODOC_FAIL" : t(s);
     matchSingular ??= transform(matchPlural, s => s[..^1]);
     matchPlural ??= transform(matchSingular, s => $"{s}s");
-    XElement singularExample(int index=0)
-        => new XElement(matchSingular,
-            new XAttribute("identifier", $"my{matchSingular}{(index > 0 ? index : "")}"),
-            new XAttribute("TODO", "add remaining attributes"));
-    XElement pluralExample = new XElement(matchPlural,
-        singularExample(1),
-        singularExample(2));
-    XElement overrideExample = new XElement("override",
-        singularExample(1),
-        singularExample(2));
 
     var xmlWriterSettings = new XmlWriterSettings
     {
@@ -73,22 +81,28 @@ foreach (var contentType in contentTypeFinder.ContentTypes)
         NewLineOnAttributes = true
     };
 
-    string xmlToMarkdown(XElement element)
-    {
-        var xmlStringBuilder = new StringBuilder();
-        using (var xmlWriter = XmlWriter.Create(xmlStringBuilder, xmlWriterSettings))
-        {
-            element.Save(xmlWriter);
-        }
-        return $"```xml\n{xmlStringBuilder}\n```\n\n";
-    }
+    string[] shorthands = {"Client", "Server", "Shared"};
+
+    string pickShorthand(string file)
+        => shorthands.First(s => file.Contains($"Barotrauma{s}"));
+
+    string fileLink(string file)
+        => $"[{pickShorthand(file)}:{Path.GetFileName(file)}]"
+           + $"(https://github.com/Regalis11/Barotrauma/blob/master/{file})";
 
     string markdown = $"# {contentType.Name}\n\n"
+                      + $"<sub>Relevant files: {string.Join(" ", contentType.RelevantFiles.Select(fileLink))}</sub>\n"
                       + $"- **Required by core package:** {(contentType.RequiredByCorePackage ? "Yes" : "No")}\n";
     if (contentType.AltNames is { Length: >0 } altNames)
     {
         markdown += $"- **Alternate names:** {string.Join(", ", altNames)}\n";
     }
+    markdown += "\n";
+
+    markdown += "## Attributes\n\n";
+
+    markdown += string.Join("\n", contentType.XmlAttributes.Select(a => a.ToBulletPoint()));
+    
     markdown += "\n";
 
     if (contentType.IsSubmarineType)
@@ -97,6 +111,32 @@ foreach (var contentType in contentTypeFinder.ContentTypes)
     }
     else
     {
+        XElement singularExample(int index = 0)
+        {
+            IEnumerable<XAttribute> attributes = new[]
+            {
+                new XAttribute("identifier", $"my{matchSingular}{(index > 0 ? index : "")}")
+            };
+            return new XElement(matchSingular, attributes);
+        }
+        XElement pluralExample = new XElement(matchPlural,
+            singularExample(1),
+            singularExample(2));
+        XElement overrideExample = new XElement("override",
+            singularExample(1),
+            singularExample(2));
+
+        
+        string xmlToMarkdown(XElement element)
+        {
+            var xmlStringBuilder = new StringBuilder();
+            using (var xmlWriter = XmlWriter.Create(xmlStringBuilder, xmlWriterSettings))
+            {
+                element.Save(xmlWriter);
+            }
+            return $"```xml\n{xmlStringBuilder}\n```\n\n";
+        }
+
         if (string.IsNullOrWhiteSpace(contentType.MatchSingular) && string.IsNullOrWhiteSpace(contentType.MatchPlural))
         {
             markdown += "**WARNING:** This file likely generated completely incorrectly!\n\n";

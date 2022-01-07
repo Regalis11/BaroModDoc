@@ -1,6 +1,10 @@
 # RandomEvents
 
+<sub>Relevant files: [Shared:RandomEventsFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/RandomEventsFile.cs) [Shared:EventPrefab.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource\Events\EventPrefab.cs)</sub>
 - **Required by core package:** Yes
+
+## Attributes
+
 
 **WARNING:** This file likely generated completely incorrectly!
 
@@ -10,8 +14,7 @@
 
 ```xml
 <RandomEvent
-  identifier="myRandomEvent"
-  TODO="add remaining attributes" />
+  identifier="myRandomEvent" />
 ```
 
 ### Example 2 - multiple RandomEvents
@@ -19,11 +22,9 @@
 ```xml
 <RandomEvents>
   <RandomEvent
-    identifier="myRandomEvent1"
-    TODO="add remaining attributes" />
+    identifier="myRandomEvent1" />
   <RandomEvent
-    identifier="myRandomEvent2"
-    TODO="add remaining attributes" />
+    identifier="myRandomEvent2" />
 </RandomEvents>
 ```
 
@@ -32,11 +33,9 @@
 ```xml
 <override>
   <RandomEvent
-    identifier="myRandomEvent1"
-    TODO="add remaining attributes" />
+    identifier="myRandomEvent1" />
   <RandomEvent
-    identifier="myRandomEvent2"
-    TODO="add remaining attributes" />
+    identifier="myRandomEvent2" />
 </override>
 ```
 

@@ -2,7 +2,6 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis.Text;
 
 namespace BaroAutoDoc;
 
@@ -10,15 +9,16 @@ public class ContentTypeFinder : CSharpSyntaxWalker
 {
     private readonly List<ContentType> contentTypes = new();
     public IReadOnlyList<ContentType> ContentTypes => contentTypes;
+    
     public override void VisitClassDeclaration(ClassDeclarationSyntax node)
     {
+        bool isAbstract = node.Modifiers.Any(m => m.IsKind(SyntaxKind.AbstractKeyword));
+        if (isAbstract) { return; }
+
         if (node.BaseList is null) { return; }
 
         var baseList = node.BaseList.Types.Select(t => t.ToString()).ToHashSet();
 
-        bool isAbstract = node.Modifiers.Any(m => m.ValueText == "abstract");
-        if (isAbstract) { return; }
-        
         bool derivesFromGenericPrefabFile = baseList.Any(b => b.Contains("GenericPrefabFile"));
         bool derivesFromBaseSubFile = baseList.Contains("BaseSubFile");
         bool derivesFromContentFile =
@@ -30,15 +30,17 @@ public class ContentTypeFinder : CSharpSyntaxWalker
 
         string name = node.Identifier.ValueText[..^4];
 
-        var attributes = node.AttributeLists.SelectMany(l => l.Attributes);
+        var attributes = node.AttributeLists
+            .SelectMany(l => l.Attributes)
+            .ToArray();
 
-        bool attrWithName(AttributeSyntax a, string name)
-            => a.Name is IdentifierNameSyntax {Identifier: {ValueText: var v}} && v == name;
+        bool attrHasName(AttributeSyntax a, string nm)
+            => a.Name is IdentifierNameSyntax {Identifier.ValueText: var v} && v == nm;
         bool requiredByCorePackage = attributes.Any(
-                a => attrWithName(a, "RequiredByCorePackage"));
+                a => attrHasName(a, "RequiredByCorePackage"));
 
         List<string> altNames = new();
-        var altNamesAttr = attributes.FirstOrDefault(a => attrWithName(a, "AlternativeContentTypeNames"));
+        var altNamesAttr = attributes.FirstOrDefault(a => attrHasName(a, "AlternativeContentTypeNames"));
         if (altNamesAttr?.ArgumentList?.Arguments is { } argList)
         {
             altNames.AddRange(
@@ -50,6 +52,8 @@ public class ContentTypeFinder : CSharpSyntaxWalker
         
         string? matchesSingular = null;
         string? matchesPlural = null;
+
+        HashSet<string> constructedTypes = new HashSet<string>();
 
         foreach (var member in node.Members)
         {
@@ -65,6 +69,12 @@ public class ContentTypeFinder : CSharpSyntaxWalker
             }
             extractLiteral("MatchesSingular", ref matchesSingular);
             extractLiteral("MatchesPlural", ref matchesPlural);
+
+            var objectCreationExpressions = method.DescendantNodes().OfType<ObjectCreationExpressionSyntax>();
+            constructedTypes.UnionWith(objectCreationExpressions
+                .Select(e => e.Type)
+                .OfType<IdentifierNameSyntax>()
+                .Select(id => id.Identifier.ValueText));
         }
         
         contentTypes.Add(new ContentType(
@@ -73,8 +83,13 @@ public class ContentTypeFinder : CSharpSyntaxWalker
             requiredByCorePackage,
             derivesFromBaseSubFile,
             matchesSingular,
-            matchesPlural));
+            matchesPlural,
+            constructedTypes.ToImmutableHashSet(),
+            new[] { CurrentFile }.ToImmutableHashSet(),
+            ImmutableHashSet<ContentType.XmlAttribute>.Empty));
         
         base.VisitClassDeclaration(node);
     }
+
+    public string CurrentFile = "";
 }

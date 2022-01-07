@@ -1,6 +1,10 @@
 # Orders
 
+<sub>Relevant files: [Shared:OrdersFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/OrdersFile.cs) [Shared:Order.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource\Characters\AI\Order.cs)</sub>
 - **Required by core package:** Yes
+
+## Attributes
+
 
 **WARNING:** This file likely generated completely incorrectly!
 
@@ -10,8 +14,7 @@
 
 ```xml
 <Order
-  identifier="myOrder"
-  TODO="add remaining attributes" />
+  identifier="myOrder" />
 ```
 
 ### Example 2 - multiple Orders
@@ -19,11 +22,9 @@
 ```xml
 <Orders>
   <Order
-    identifier="myOrder1"
-    TODO="add remaining attributes" />
+    identifier="myOrder1" />
   <Order
-    identifier="myOrder2"
-    TODO="add remaining attributes" />
+    identifier="myOrder2" />
 </Orders>
 ```
 
@@ -32,11 +33,9 @@
 ```xml
 <override>
   <Order
-    identifier="myOrder1"
-    TODO="add remaining attributes" />
+    identifier="myOrder1" />
   <Order
-    identifier="myOrder2"
-    TODO="add remaining attributes" />
+    identifier="myOrder2" />
 </override>
 ```
 

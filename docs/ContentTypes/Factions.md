@@ -1,6 +1,10 @@
 # Factions
 
+<sub>Relevant files: [Shared:FactionsFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/FactionsFile.cs) [Shared:Factions.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource\GameSession\Data\Factions.cs)</sub>
 - **Required by core package:** Yes
+
+## Attributes
+
 
 ## Examples
 
@@ -8,8 +12,7 @@
 
 ```xml
 <faction
-  identifier="myfaction"
-  TODO="add remaining attributes" />
+  identifier="myfaction" />
 ```
 
 ### Example 2 - multiple factions
@@ -17,11 +20,9 @@
 ```xml
 <factions>
   <faction
-    identifier="myfaction1"
-    TODO="add remaining attributes" />
+    identifier="myfaction1" />
   <faction
-    identifier="myfaction2"
-    TODO="add remaining attributes" />
+    identifier="myfaction2" />
 </factions>
 ```
 
@@ -30,11 +31,9 @@
 ```xml
 <override>
   <faction
-    identifier="myfaction1"
-    TODO="add remaining attributes" />
+    identifier="myfaction1" />
   <faction
-    identifier="myfaction2"
-    TODO="add remaining attributes" />
+    identifier="myfaction2" />
 </override>
 ```
 

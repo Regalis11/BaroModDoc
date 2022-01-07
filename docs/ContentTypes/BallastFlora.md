@@ -1,7 +1,11 @@
 # BallastFlora
 
+<sub>Relevant files: [Shared:BallastFloraFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/BallastFloraFile.cs) [Shared:BallastFloraPrefab.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource\Map\Creatures\BallastFloraPrefab.cs)</sub>
 - **Required by core package:** Yes
 - **Alternate names:** MapCreature
+
+## Attributes
+
 
 ## Examples
 
@@ -9,8 +13,7 @@
 
 ```xml
 <ballastflorabehavior
-  identifier="myballastflorabehavior"
-  TODO="add remaining attributes" />
+  identifier="myballastflorabehavior" />
 ```
 
 ### Example 2 - multiple ballastflorabehaviors
@@ -18,11 +21,9 @@
 ```xml
 <ballastflorabehaviors>
   <ballastflorabehavior
-    identifier="myballastflorabehavior1"
-    TODO="add remaining attributes" />
+    identifier="myballastflorabehavior1" />
   <ballastflorabehavior
-    identifier="myballastflorabehavior2"
-    TODO="add remaining attributes" />
+    identifier="myballastflorabehavior2" />
 </ballastflorabehaviors>
 ```
 
@@ -31,11 +32,9 @@
 ```xml
 <override>
   <ballastflorabehavior
-    identifier="myballastflorabehavior1"
-    TODO="add remaining attributes" />
+    identifier="myballastflorabehavior1" />
   <ballastflorabehavior
-    identifier="myballastflorabehavior2"
-    TODO="add remaining attributes" />
+    identifier="myballastflorabehavior2" />
 </override>
 ```
 

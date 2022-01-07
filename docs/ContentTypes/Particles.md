@@ -1,6 +1,10 @@
 # Particles
 
+<sub>Relevant files: [Shared:ParticlesFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/ParticlesFile.cs)</sub>
 - **Required by core package:** Yes
+
+## Attributes
+
 
 **WARNING:** This file likely generated completely incorrectly!
 
@@ -10,8 +14,7 @@
 
 ```xml
 <Particle
-  identifier="myParticle"
-  TODO="add remaining attributes" />
+  identifier="myParticle" />
 ```
 
 ### Example 2 - multiple Particles
@@ -19,11 +22,9 @@
 ```xml
 <Particles>
   <Particle
-    identifier="myParticle1"
-    TODO="add remaining attributes" />
+    identifier="myParticle1" />
   <Particle
-    identifier="myParticle2"
-    TODO="add remaining attributes" />
+    identifier="myParticle2" />
 </Particles>
 ```
 
@@ -32,11 +33,9 @@
 ```xml
 <override>
   <Particle
-    identifier="myParticle1"
-    TODO="add remaining attributes" />
+    identifier="myParticle1" />
   <Particle
-    identifier="myParticle2"
-    TODO="add remaining attributes" />
+    identifier="myParticle2" />
 </override>
 ```
 
