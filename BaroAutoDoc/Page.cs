@@ -4,47 +4,65 @@ namespace BaroAutoDoc;
 
 public class Page
 {
-    public abstract class BodyComponent
+    public abstract record BodyComponent
     {
+        public static readonly BodyComponent Blank = new InlineMarkdown();
+        
         public abstract string ToMarkdown();
     }
     
-    public class InlineMarkdown : BodyComponent
+    public record InlineMarkdown(string Value = "") : BodyComponent
     {
-        public string Value = "";
-        
         public override string ToMarkdown()
             => Value;
     }
 
-    public class RawText : BodyComponent
+    public record RawText(string Value = "") : BodyComponent
     {
         public static readonly ImmutableHashSet<char> CharsToEscape
-            = new[] { '*', '-', '[', ']', '(', ')', '`', '<', '>' }.ToImmutableHashSet();
-        public string Value = "";
-        
+            = new[] { '*', '-', '[', ']', '(', ')', '`', '<', '>', '#' }.ToImmutableHashSet();
+
         public override string ToMarkdown()
             => CharsToEscape.Aggregate(Value.Replace("\\", "\\\\"), (s, c) => s.Replace($"{c}", $"\\{c}"));
     }
-    
-    public class CodeBlock : BodyComponent
+
+    public abstract record ContainerComponent : BodyComponent
     {
-        public string Lang = "";
-        public string Value = "";
+        protected abstract string tag { get; }
+        public readonly List<BodyComponent> Children = new List<BodyComponent>();
+
+        public sealed override string ToMarkdown()
+            => $"<{tag}>{string.Join(" ", Children.Select(c => c.ToMarkdown()))}</{tag}>";
+    }
+    
+    public record Superscript : ContainerComponent
+    {
+        protected override string tag => "sup";
+    }
+    
+    public record Subscript : ContainerComponent
+    {
+        protected override string tag => "sub";
+    }
+
+    public record NewLine : BodyComponent
+    {
+        public override string ToMarkdown() => "\n";
+    }
+    
+    public record CodeBlock(string Lang = "", string Value = "") : BodyComponent
+    {
         public override string ToMarkdown()
             => $"```{Lang}\n{Value}\n```";
     }
 
-    public class Hyperlink : BodyComponent
+    public record Hyperlink(string Url = "", string Text = "") : BodyComponent
     {
-        public string Url = "";
-        public string Text = "";
-
         public override string ToMarkdown()
             => $"[{Text}]({Url})";
     }
     
-    public class BulletList : BodyComponent
+    public record BulletList : BodyComponent
     {
         public readonly List<BodyComponent> Items = new List<BodyComponent>();
 
@@ -63,23 +81,35 @@ public class Page
     {
         public readonly List<BodyComponent> Components = new List<BodyComponent>();
 
+        public void AddNewLine()
+            => Components.Add(new NewLine());
+
         public string ToMarkdown()
             => string.Join("", Components.Select(c => c.ToMarkdown()));
     }
     
-    public readonly Section TopSection = new Section();
+    private readonly Section topSection = new Section();
 
     public string Title
     {
-        get => TopSection.Title;
-        set => TopSection.Title = value;
+        get => topSection.Title;
+        set => topSection.Title = value;
     }
-    public SectionBody Body => TopSection.Body;
+    public SectionBody Body => topSection.Body;
+    public List<Section> Subsections => topSection.Subsections;
+
+    public string ToMarkdown()
+        => topSection.ToMarkdown();
 
     public class Section
     {
         public string Title = "";
         public readonly SectionBody Body = new SectionBody();
         public readonly List<Section> Subsections = new List<Section>();
+
+        public string ToMarkdown()
+            => $"# {Title}\n{Body.ToMarkdown()}\n\n"
+               + string.Join("\n", Subsections.SelectMany(s => s.ToMarkdown().Split("\n"))
+                   .Select(l => l.StartsWith("#") ? $"#{l}" : l));
     }
 }

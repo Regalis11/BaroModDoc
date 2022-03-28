@@ -69,10 +69,10 @@ foreach (var contentType in contentTypes)
         matchSingular ??= contentType.Name;
     }
     
-    string transform(string? s, Func<string, string> t)
+    string transformStringIfNotNull(string? s, Func<string, string> t)
         => s is null ? "AUTODOC_FAIL" : t(s);
-    matchSingular ??= transform(matchPlural, s => s[..^1]);
-    matchPlural ??= transform(matchSingular, s => $"{s}s");
+    matchSingular ??= transformStringIfNotNull(matchPlural, s => s[..^1]);
+    matchPlural ??= transformStringIfNotNull(matchSingular, s => $"{s}s");
 
     var xmlWriterSettings = new XmlWriterSettings
     {
@@ -86,36 +86,49 @@ foreach (var contentType in contentTypes)
     string pickShorthand(string file)
         => shorthands.First(s => file.Contains($"Barotrauma{s}"));
 
-    string fileLink(string file)
-        => $"[{pickShorthand(file)}:{Path.GetFileName(file)}]"
-           + $"(https://github.com/Regalis11/Barotrauma/blob/master/{file})";
+    Page markdown = new Page();
+    markdown.Title = contentType.Name;
+    var relevantFilesSup = new Page.Superscript();
+    relevantFilesSup.Children.Add(new Page.RawText("Relevant files:"));
+    foreach (var file in contentType.RelevantFiles)
+    {
+        relevantFilesSup.Children.Add(new Page.Hyperlink(
+            Url: $"https://github.com/Regalis11/Barotrauma/blob/master/{file}",
+            Text: $"[{pickShorthand(file)}:{Path.GetFileName(file)}]"));
+    }
+    markdown.Body.Components.Add(relevantFilesSup);
+    markdown.Body.AddNewLine();
 
-    string markdown = $"# {contentType.Name}\n\n"
-                      + $"<sup>Relevant files: {string.Join(" ", contentType.RelevantFiles.Select(fileLink))}</sup>\n\n";
-    
     if (string.IsNullOrWhiteSpace(contentType.MatchSingular) && string.IsNullOrWhiteSpace(contentType.MatchPlural))
     {
-        markdown += "**WARNING:** This file likely generated completely incorrectly!\n\n";
+        markdown.Body.Components.Add(new Page.InlineMarkdown("**WARNING:** This file likely generated completely incorrectly!\n\n"));
     }
 
-    markdown += $"- **Required by core package:** {(contentType.RequiredByCorePackage ? "Yes" : "No")}\n";
+    markdown.Body.Components.Add(new Page.InlineMarkdown($"- **Required by core package:** {(contentType.RequiredByCorePackage ? "Yes" : "No")}\n"));
     if (contentType.AltNames is { Length: >0 } altNames)
     {
-        markdown += $"- **Alternate names:** {string.Join(", ", altNames)}\n";
+        markdown.Body.Components.Add(new Page.InlineMarkdown($"- **Alternate names:** {string.Join(", ", altNames)}\n"));
     }
-    markdown += "\n";
+
+    markdown.Body.AddNewLine();
 
     if (contentType.IsSubmarineType)
     {
-        markdown += "This content type is created in the submarine editor.";
+        markdown.Body.Components.Add(new Page.InlineMarkdown("This content type is created in the submarine editor."));
     }
     else
     {
-        markdown += "## Attributes\n\n";
+        var attributesSection = new Page.Section();
+        attributesSection.Title = "Attributes";
+        markdown.Subsections.Add(attributesSection);
 
-        markdown += string.Join("\n", contentType.XmlAttributes.Select(a => a.ToBulletPoint()));
-    
-        markdown += "\n\n";
+        var attrList = new Page.BulletList();
+        attributesSection.Body.Components.Add(attrList);
+        foreach (var attr in contentType.XmlAttributes)
+        {
+            attrList.Items.Add(attr.ToBulletPoint());
+        }
+        attributesSection.Body.AddNewLine();
 
         XElement singularExample(int index = 0)
         {
@@ -133,26 +146,37 @@ foreach (var contentType in contentTypes)
             singularExample(2));
 
         
-        string xmlToMarkdown(XElement element)
+        Page.CodeBlock xmlToMarkdown(XElement element)
         {
             var xmlStringBuilder = new StringBuilder();
             using (var xmlWriter = XmlWriter.Create(xmlStringBuilder, xmlWriterSettings))
             {
                 element.Save(xmlWriter);
             }
-            return $"```xml\n{xmlStringBuilder}\n```\n\n";
+            return new Page.CodeBlock("xml", xmlStringBuilder.ToString());
         }
 
-        markdown += "## Examples\n\n"
-                    + $"### Example 1 - single {matchSingular}\n\n"
-                    + xmlToMarkdown(singularExample())
-                    + $"### Example 2 - multiple {matchPlural}\n\n"
-                    + xmlToMarkdown(pluralExample)
-                    + $"### Example 3 - overriding existing {matchPlural}\n\n"
-                    + xmlToMarkdown(overrideExample);
+        var examplesSection = new Page.Section();
+        examplesSection.Title = "Examples";
+        markdown.Subsections.Add(examplesSection);
+
+        var example1 = new Page.Section();
+        example1.Title = $"Example 1 - single {matchSingular}";
+        examplesSection.Subsections.Add(example1);
+        example1.Body.Components.Add(xmlToMarkdown(singularExample()));
+        
+        var example2 = new Page.Section();
+        example2.Title = $"Example 2 - multiple {matchPlural}";
+        examplesSection.Subsections.Add(example2);
+        example2.Body.Components.Add(xmlToMarkdown(pluralExample));
+        
+        var example3 = new Page.Section();
+        example3.Title = $"Example 3 - overriding existing {matchPlural}";
+        examplesSection.Subsections.Add(example3);
+        example3.Body.Components.Add(xmlToMarkdown(overrideExample));
     }
     
-    File.WriteAllText($"markdown/ContentTypes/{contentType.Name}.md", markdown);
+    File.WriteAllText($"markdown/ContentTypes/{contentType.Name}.md", markdown.ToMarkdown());
 }
 
 File.WriteAllText("markdown/index.md",

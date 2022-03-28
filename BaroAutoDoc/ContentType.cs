@@ -16,7 +16,7 @@ public record ContentType(
 {
     public record XmlAttribute(string Type, string Name)
     {
-        public string ToBulletPoint()
-            => $"- `{Name}` : `{Type}`";
+        public Page.InlineMarkdown ToBulletPoint()
+            => new($"`{Name}` : `{Type}`");
     }
 }
