@@ -13,6 +13,7 @@ repoPath = "C:/Users/juanj/Desktop/Repos/Barotrauma-development";
 if (args.Length <= 0)
 {
     Console.WriteLine($"Usage: BaroAutoDoc [Barotrauma repository directory]");
+    return;
 }
 repoPath = args[0];
 #endif
@@ -99,10 +100,10 @@ foreach (var contentType in contentTypes)
     markdown.Body.Components.Add(relevantFilesSup);
     markdown.Body.AddNewLine();
 
-    if (string.IsNullOrWhiteSpace(contentType.MatchSingular) && string.IsNullOrWhiteSpace(contentType.MatchPlural))
+    /*if (string.IsNullOrWhiteSpace(contentType.MatchSingular) && string.IsNullOrWhiteSpace(contentType.MatchPlural))
     {
         markdown.Body.Components.Add(new Page.InlineMarkdown("**WARNING:** This file likely generated completely incorrectly!\n\n"));
-    }
+    }*/
 
     markdown.Body.Components.Add(new Page.InlineMarkdown($"- **Required by core package:** {(contentType.RequiredByCorePackage ? "Yes" : "No")}\n"));
     if (contentType.AltNames is { Length: >0 } altNames)
@@ -156,6 +157,7 @@ foreach (var contentType in contentTypes)
             return new Page.CodeBlock("xml", xmlStringBuilder.ToString());
         }
 
+        /*
         var examplesSection = new Page.Section();
         examplesSection.Title = "Examples";
         markdown.Subsections.Add(examplesSection);
@@ -174,6 +176,7 @@ foreach (var contentType in contentTypes)
         example3.Title = $"Example 3 - overriding existing {matchPlural}";
         examplesSection.Subsections.Add(example3);
         example3.Body.Components.Add(xmlToMarkdown(overrideExample));
+        */
     }
     
     File.WriteAllText($"markdown/ContentTypes/{contentType.Name}.md", markdown.ToMarkdown());

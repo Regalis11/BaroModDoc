@@ -1,4 +1,8 @@
-# Barotrauma modding guide
+# Hello and welcome to modding Barotrauma!
+
+We want to make Barotrauma as modder-friendly as we can. To that end, the game comes with a couple of editors, and we have separate, more in-depth guides for the Submarine and Character editors.
+
+This guide you're reading now is intended to cover what happens outside the editors. We hope you find it helpful, and we'd be happy to hear what you think should be added to it in the future!
 
 ## Content types
 
@@ -31,6 +35,7 @@
 - [Particles](ContentTypes/Particles.md)
 - [RandomEvents](ContentTypes/RandomEvents.md)
 - [RuinConfig](ContentTypes/RuinConfig.md)
+- [ServerExecutable](ContentTypes/ServerExecutable.md)
 - [SkillSettings](ContentTypes/SkillSettings.md)
 - [Sounds](ContentTypes/Sounds.md)
 - [Structure](ContentTypes/Structure.md)

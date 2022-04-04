@@ -1,9 +1,6 @@
 # BeaconStation
-
-<sup>Relevant files: [Shared:BeaconStationFile.cs](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/BeaconStationFile.cs)</sup>
-
-**WARNING:** This file likely generated completely incorrectly!
-
+<sup>Relevant files: [[Shared:BeaconStationFile.cs]](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/BeaconStationFile.cs)</sup>
 - **Required by core package:** Yes
 
 This content type is created in the submarine editor.
+
