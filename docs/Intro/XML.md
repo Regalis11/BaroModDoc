@@ -16,14 +16,14 @@ As you might imagine, this alone isn't enough to fully define an item.
 Elements can also have attributes, which usually give some additional information about the element. For example:
 
 ```xml
-<Item identifier="alienwrench" variantof="wrench" scale="0.2">
+<Item identifier="alienwrench" name="Alien Wrench" variantof="wrench" scale="0.2">
 </Item>
 ```
 
 Elements can also have child elements. Building upon our last example, we could add a child element called `Sprite` which determines what the item looks like:
 
 ```xml
-<Item identifier="alienwrench" variantof="wrench" scale="0.2">
+<Item identifier="alienwrench" name="Alien Wrench" variantof="wrench" scale="0.2">
   <Sprite texture="%ModDir%/alienwrench.png" sourcerect="0,0,256,112" depth="0.55" origin="0.5,0.1" scale="0.1" />
 </Item>
 ```
@@ -33,6 +33,12 @@ Note that in this example, `Sprite` is a self-closing element. If no child eleme
 An encoding declaration may be optionally added at the top. It typically looks like this:
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
+```
+
+XML also supports adding comments. These are blobs of text that will be ignored by Barotrauma. They can be used to give hints about what the surrounding text is supposed to do.
+```xml
+<!-- This is what a comment looks like -->
+<Item ...>
 ```
 
 In Barotrauma, all XML files have the following constraints:
