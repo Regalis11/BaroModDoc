@@ -1,59 +1,8 @@
 ---
-layout: post
 title: Barotrauma modding documentation
 ---
 Hello and welcome to modding Barotrauma!
 
 This guide is a work in progress. If you have any edits you wish to make, feel free to [fork this repository](https://github.com/Regalis11/BaroModDoc) and [submit a pull request](https://github.com/Regalis11/BaroModDoc/pulls)!
 
-## Topics
 
-- [XML](Intro/XML.md)
-- [Content packages](Intro/ContentPackages.md)
-- [Overrides](Intro/Overrides.md)
-- [Publishing](Intro/Publishing.md)
-
-### Content types
-
-- [Afflictions](ContentTypes/Afflictions.md)
-- [BackgroundCreaturePrefabs](ContentTypes/BackgroundCreaturePrefabs.md)
-- [BallastFlora](ContentTypes/BallastFlora.md)
-- [BeaconStation](ContentTypes/BeaconStation.md)
-- [CaveGenerationParameters](ContentTypes/CaveGenerationParameters.md)
-- [Character](ContentTypes/Character.md)
-- [Corpses](ContentTypes/Corpses.md)
-- [Decals](ContentTypes/Decals.md)
-- [EnemySubmarine](ContentTypes/EnemySubmarine.md)
-- [EventManagerSettings](ContentTypes/EventManagerSettings.md)
-- [Factions](ContentTypes/Factions.md)
-- [ItemAssembly](ContentTypes/ItemAssembly.md)
-- [Item](ContentTypes/Item.md)
-- [Jobs](ContentTypes/Jobs.md)
-- [LevelGenerationParameters](ContentTypes/LevelGenerationParameters.md)
-- [LevelObjectPrefabs](ContentTypes/LevelObjectPrefabs.md)
-- [LocationTypes](ContentTypes/LocationTypes.md)
-- [MapGenerationParameters](ContentTypes/MapGenerationParameters.md)
-- [Missions](ContentTypes/Missions.md)
-- [NPCConversations](ContentTypes/NPCConversations.md)
-- [NPCSets](ContentTypes/NPCSets.md)
-- [Orders](ContentTypes/Orders.md)
-- [Other](ContentTypes/Other.md)
-- [OutpostConfig](ContentTypes/OutpostConfig.md)
-- [Outpost](ContentTypes/Outpost.md)
-- [OutpostModule](ContentTypes/OutpostModule.md)
-- [Particles](ContentTypes/Particles.md)
-- [RandomEvents](ContentTypes/RandomEvents.md)
-- [RuinConfig](ContentTypes/RuinConfig.md)
-- [ServerExecutable](ContentTypes/ServerExecutable.md)
-- [SkillSettings](ContentTypes/SkillSettings.md)
-- [Sounds](ContentTypes/Sounds.md)
-- [Structure](ContentTypes/Structure.md)
-- [Submarine](ContentTypes/Submarine.md)
-- [Talents](ContentTypes/Talents.md)
-- [TalentTrees](ContentTypes/TalentTrees.md)
-- [Text](ContentTypes/Text.md)
-- [TraitorMissions](ContentTypes/TraitorMissions.md)
-- [UIStyle](ContentTypes/UIStyle.md)
-- [UpgradeModules](ContentTypes/UpgradeModules.md)
-- [WreckAIConfig](ContentTypes/WreckAIConfig.md)
-- [Wreck](ContentTypes/Wreck.md)
