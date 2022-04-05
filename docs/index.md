@@ -1,10 +1,15 @@
 # Hello and welcome to modding Barotrauma!
 
-We want to make Barotrauma as modder-friendly as we can. To that end, the game comes with a couple of editors, and we have separate, more in-depth guides for the Submarine and Character editors.
+This guide is a work in progress. If you have any edits you wish to make, feel free to [fork this repository](https://github.com/Regalis11/BaroModDoc) and [submit a pull request](https://github.com/Regalis11/BaroModDoc/pulls)!
 
-This guide you're reading now is intended to cover what happens outside the editors. We hope you find it helpful, and we'd be happy to hear what you think should be added to it in the future!
+## Topics
 
-## Content types
+- [XML](Intro/XML.md)
+- [Content packages](Intro/ContentPackages.md)
+- [Overrides](Intro/Overrides.md)
+- [Publishing](Intro/Publishing.md)
+
+### Content types
 
 - [Afflictions](ContentTypes/Afflictions.md)
 - [BackgroundCreaturePrefabs](ContentTypes/BackgroundCreaturePrefabs.md)
