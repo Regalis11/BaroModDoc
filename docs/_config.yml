@@ -1,4 +1,7 @@
 # Jekyll configuration
 name: Barotrauma modding guide
-theme: architect
+remote_theme: pages-themes/architect@v0.2.0
 site_url: https://juanjp600.github.io/BaroModDoc/
+
+plugins:
+- jekyll-remote-theme

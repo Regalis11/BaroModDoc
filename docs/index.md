@@ -1,4 +1,5 @@
 ---
+layout: post
 title: Barotrauma modding documentation
 ---
 Hello and welcome to modding Barotrauma!
