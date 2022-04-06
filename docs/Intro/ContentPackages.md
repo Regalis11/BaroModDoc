@@ -6,6 +6,9 @@ By default the game uses a single content package called "Vanilla". Any other co
 
 Content packages largely consist of text files in a format called XML, along with any required textures and sounds. If you have no prior experience with the XML format, don’t worry – even though it may look intimidating at first, the format is pretty simple. Please see the [XML](XML.md) page for further details.
 
+Any content package that you are editing should be found in a folder within the `LocalMods` directory, which can be found among the game files. To reach the game files, right click on Barotrauma in your Steam library, and go to `Manage > Browse local files`:
+![](img/BrowseLocalFiles.png)
+
 ## File list
 
 The file list is a vital part of every content package; it allows the game to know which other XML files to load and the purpose each of them serves. For any given mod, its filename will always be `filelist.xml`. The submarine and character editors will generate a basic file list for each of your creations.
@@ -26,10 +29,12 @@ The following example consists of a single file that defines an [Item file](../C
 
 ### Core packages
 
+If you're not an advanced modder, you probably don't need to read this section.
+
 Most mods are usually not core content packages, but instead add things to or modify things in the Vanilla content package (= the default content of the game).
 
 Core packages are packages that contain all the necessary files to make the game run, instead of just adding some extra files on top of another content package. There can only be one core package selected at a time.
 
-This kind of package exists for mods that are extremely thorough and require disabling content from the vanilla game outright. Typically this is not what you want to use, as [overrides](Overrides.md) are usually sufficient.
+This kind of package exists for mods that are extremely thorough and require disabling content from the vanilla game outright. Typically this is not what you want to use, as [overrides](Overrides.md) are usually sufficient and core mods are likely to break as we make updates that add more required files.
 
 [TODO: add list of required content types]

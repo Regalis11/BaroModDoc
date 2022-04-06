@@ -2,10 +2,10 @@
 ---
 ## Topics
 
-- [XML](Intro/XML.md)
+- [XML and how Barotrauma uses it](Intro/XML.md)
 - [Content packages](Intro/ContentPackages.md)
 - [Overrides](Intro/Overrides.md)
-- [Publishing](Intro/Publishing.md)
+- [Publishing to Steam Workshop](Intro/Publishing.md)
 
 ### Content types
 
