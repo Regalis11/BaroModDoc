@@ -1,5 +1,4 @@
-#
-
+# Submarine editor
 
 ## Hello subwrights!
 *Written by TorpedoMike, Chad Husk and Hexcode Guy*

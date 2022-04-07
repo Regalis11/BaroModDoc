@@ -1,5 +1,6 @@
-#
+# Character editor
 
+[TODO: update images]
 
 ## Hello creator!
 ![](https://steamuserimages-a.akamaihd.net/ugc/1483326095193535003/239DEF99E3015D737C85BB2FD4BA264BDAAA90D0/)
