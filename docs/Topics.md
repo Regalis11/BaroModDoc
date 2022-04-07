@@ -7,6 +7,11 @@
 - [Overrides](Intro/Overrides.md)
 - [Publishing to Steam Workshop](Intro/Publishing.md)
 
+### Editors
+
+- [Submarine editor](Editors/SubmarineEditor.md)
+- [Character editor](Editors/CharacterEditor.md)
+
 ### Content types
 
 - [Afflictions](ContentTypes/Afflictions.md)

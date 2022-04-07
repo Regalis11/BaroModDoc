@@ -1,4 +1,8 @@
-﻿namespace BaroAutoDoc;
+﻿using System.Text;
+using System.Xml;
+using System.Xml.Linq;
+
+namespace BaroAutoDoc;
 
 public static class Extensions
 {
@@ -13,5 +17,15 @@ public static class Extensions
         }
 
         return -1;
+    }
+    
+    public static string ElementInnerText(this XElement el)
+    {
+        StringBuilder str = new StringBuilder();
+        foreach (XNode element in el.DescendantNodes().Where(x => x.NodeType == XmlNodeType.Text))
+        {
+            str.Append(element.ToString());
+        }
+        return str.ToString();
     }
 }

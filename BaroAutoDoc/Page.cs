@@ -62,6 +62,12 @@ public class Page
             => $"[{Text}]({Url})";
     }
     
+    public record Image(string Url = "", string Caption = "") : BodyComponent
+    {
+        public override string ToMarkdown()
+            => $"![{Caption}]({Url})";
+    }
+    
     public record BulletList : BodyComponent
     {
         public readonly List<BodyComponent> Items = new List<BodyComponent>();
