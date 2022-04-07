@@ -67,6 +67,7 @@ The first solution makes troubleshooting easier, because problems can usually be
 An engine’s maximum force can be adjusted in the editor. This is useful if the sub’s horizontal movement can’t keep up with its ascent/descent speed or vice versa, which makes steering very difficult \(and can and will result from the engines and ballasts being out of balance\).
 
 ![](img_SubmarineEditor/Maximum_force.png)
+
 Where engines provide horizontal movement, **ballast tanks** are responsible for vertical movement. In their simplest state, they are empty rooms that contain a water pump. The pump is programmed to let water in to make the sub heavier or pump it out to make it lighter. This results in the sub either ascending or descending.
 
 ![](img_SubmarineEditor/Ballast_pump.png)
@@ -75,7 +76,9 @@ Where engines provide horizontal movement, **ballast tanks** are responsible for
 
 **TIP:** A natural place for a ballast tank would be on the bottom. Otherwise you will run into all kinds of issues ranging from leaks to maintenance problems.
 
-![](img_SubmarineEditor/Hull_volume.png) The size of a ballast tank is an important factor in a sub’s handling. If it’s too small, the sub may not be able to descend; too big, and it may sink too easily. Aim for a combined neutral ballast level of .5 for optimal size. The size of a hull is shown in the upper left corner of the viewport when a hull is selected. Selecting multiple hulls will give their combined optimal neutral ballast level. Neutral ballast levels that differ from the standard .5 can be taken into account in the navigation terminal. Look for a ‘Neutral Ballast Level’ field and change it to whatever is suitable.
+![](img_SubmarineEditor/Hull_volume.png)
+
+The size of a ballast tank is an important factor in a sub’s handling. If it’s too small, the sub may not be able to descend; too big, and it may sink too easily. Aim for a combined neutral ballast level of .5 for optimal size. The size of a hull is shown in the upper left corner of the viewport when a hull is selected. Selecting multiple hulls will give their combined optimal neutral ballast level. Neutral ballast levels that differ from the standard .5 can be taken into account in the navigation terminal. Look for a ‘Neutral Ballast Level’ field and change it to whatever is suitable.
 
 Engines and ballast levels are controlled via the navigation terminal. The terminal parses the direction given by the navigator in the sonar display and sends a signal to the engine \(‘velocity_x_out’ to ‘set_force’\) and ballast pumps \(‘velocity_y_out’ to ‘set_targetlevel’\).
 
@@ -161,17 +164,17 @@ If the power goes out, the game crashes, a random chimp event occurs or somethin
 
 
 ## Editor shortcuts
-W, A, S, D – Scroll
-Shift + W, A, S, D – Scroll faster
-Ctrl+1, Control+2 – Switch between edit and wiring mode.
-Q – Toggle entity catalog visibility.
-F – Centers the camera to selection.
-E – Open item interface.
-Ctrl+A – Select or deselect everything.
-Ctrl+S – Show save menu.
-Ctrl+Shift+S – Quick\-save your submarine.
-Ctrl+M, Ctrl+N – Flip item horizontally or vertically.
-Space + Left click – Link item to another \(Useful in linking hulls together or an oxygen generator to vents\).
+- W, A, S, D – Scroll
+- Shift + W, A, S, D – Scroll faster
+- Ctrl+1, Control+2 – Switch between edit and wiring mode.
+- Q – Toggle entity catalog visibility.
+- F – Centers the camera to selection.
+- E – Open item interface.
+- Ctrl+A – Select or deselect everything.
+- Ctrl+S – Show save menu.
+- Ctrl+Shift+S – Quick\-save your submarine.
+- Ctrl+M, Ctrl+N – Flip item horizontally or vertically.
+- Space + Left click – Link item to another \(Useful in linking hulls together or an oxygen generator to vents\).
 
 Holding down shift while dragging or resizing items disables grid snapping.
 

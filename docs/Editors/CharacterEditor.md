@@ -220,6 +220,6 @@ Once everything is ready, simply click 'Publish item'. The mod should now be fou
 
 
 ## Thanks for reading!
-We hope you found this guide helpful. It’s still a work in progress, so all feedback is most welcome! We look forward to seeing your awesome custom characters on Barotrauma's Steam workshop. If you have any questions, please use the \#baro\-modding channel on our [Discord](https://steamcommunity.com/linkfilter/?url=http://discord.gg/undertow)  or the Workshop Discussions subforum here on Steam.
+We hope you found this guide helpful. It’s still a work in progress, so all feedback is most welcome! We look forward to seeing your awesome custom characters on Barotrauma's Steam workshop. If you have any questions, please use the \#baro\-modding channel on our [Discord](http://discord.gg/undertow)  or the Workshop Discussions subforum here on Steam.
 
 
