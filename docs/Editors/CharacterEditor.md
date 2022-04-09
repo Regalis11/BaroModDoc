@@ -1,7 +1,5 @@
 # Character editor
 
-[TODO: update images]
-
 ## Hello creator!
 ![](img_CharacterEditor/Intro.png)
 *Written for v0.9.5.0 by itchyOwl*
