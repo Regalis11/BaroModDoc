@@ -205,7 +205,13 @@ There are some limitations to keep in mind when using the character editor. We w
 
 The current limitations in the character editor are the following:
 
-
+- Unlike the animation parameters, many of the ragdoll parameters are not updated at runtime. Click 'Recreate Ragdoll' or press F5 to see the changes applied.
+- Not all aspects of humanoids are exposed in the editor.
+- Some AI behavior, like latching or swarming cannot be edited in the editor.
+- There is no support for status effects in the character editor.
+- Conditional sprites or damage overlays are not visible or editable in the editor.
+- Sprite deformations are partially editable, but you cannot add or remove them in the editor.
+- Decorative sprites are not editable in the editor.
 
 ## Publishing your character
 ![](https://steamuserimages-a.akamaihd.net/ugc/1483326095193535190/3F5FFC22D663E7094B5E0702B5D2AE3B242B3787/)
