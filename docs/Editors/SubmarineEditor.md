@@ -183,6 +183,6 @@ Holding down shift while dragging or resizing items disables grid snapping.
 
 
 ## Thanks for reading!
-We hope you found this guide helpful – feedback is always welcome, so let us know how we did. Be sure to post your subs on Barotrauma’s Steam workshop and on our [Discord server](https://steamcommunity.com/linkfilter/?url=http://discord.gg/undertow)  , where we have a channel dedicated to custom subs!
+We hope you found this guide helpful – feedback is always welcome, so let us know how we did. Be sure to post your subs on Barotrauma’s Steam workshop and on our [Discord server](http://discord.gg/undertow), where we have a channel dedicated to custom subs!
 
 
