@@ -6,11 +6,11 @@
 ![](https://steamuserimages-a.akamaihd.net/ugc/1483326095193535003/239DEF99E3015D737C85BB2FD4BA264BDAAA90D0/)
 *Written for v0.9.5.0 by itchyOwl*
 
-In Barotrauma, all characters have a **character config file** . A character config file defines visual things like sounds and particle effects as well as functional things, like how the character acts, how much health it has, and whether or not it can walk. A character config file also contains references to the ragdoll and animation files.
+In Barotrauma, all characters have a **character config file**. A character config file defines visual things like sounds and particle effects as well as functional things, like how the character acts, how much health it has, and whether or not it can walk. A character config file also contains references to the ragdoll and animation files.
 
 A **ragdoll file** defines the physical dimensions of the character: How many limbs and joints does it have? At what coordinates are they found on the texture? How much does the character weigh? What are the relations of the limbs to each other and how they constitute the skeleton or the physical 'ragdoll' of the character. A ragdoll file also contains things like damage modifiers \(armor or weak spots\), lights, and attacks.
 
-The movement of the character is defined in the **animation files** . The animation files contain things like forces, multipliers and other variables that define the forces applied on the ragdoll when it moves. Each animation type is defined in a separate file. For a character that can move, that would mean four different files: Walk, Run, SwimSlow, and SwimFast.
+The movement of the character is defined in the **animation files**. The animation files contain things like forces, multipliers and other variables that define the forces applied on the ragdoll when it moves. Each animation type is defined in a separate file. For a character that can move, that would mean four different files: Walk, Run, SwimSlow, and SwimFast.
 
 In the character editor, you can edit all the character files without having to worry about .xml editing. In the following, you can find more detailed instructions for editing each of these files or aspects of the character.
 
@@ -76,14 +76,14 @@ The editing mode should now automatically change to 'Joints'. In this mode, we c
 
 **TIP** : You can edit and create limbs and joints also over the character in the game view, but it's usually easier to do it on the sprite sheet.
 
-Try dragging the circular widget. This is the **anchor point of the joint** . It defines the point where the limb is attached to the other limb. The longer the distance between the two ends, the longer the joint. And the longer the joint, the farther the limbs are from each other.
+Try dragging the circular widget. This is the **anchor point of the joint**. It defines the point where the limb is attached to the other limb. The longer the distance between the two ends, the longer the joint. And the longer the joint, the farther the limbs are from each other.
 
 **TIP** : If the limbs seem to be on top of each other and the joint ends look correct on the sprite sheet but wrong in the game view, try flipping the joint ends \(i. e. just drag them so that they swap places\).
 
 
 ![](https://steamuserimages-a.akamaihd.net/ugc/1483326095193535072/50839544334D8B7B8AC05ADB0B1F5E2E9B16AB1C/)
 
-When you get both joint ends in place, select one of the rectangular widgets. These are the joint angle controls. They define **the limits of joint rotation** . There's an upper limit and a lower limit. By default both are set to 0. When the joint limits are at the same value, the joint is not allowed to bend at all. The upper limit should always be higher \(or the same\) than the lower limit. Both limits go clockwise from \-180 degrees to 180 degrees.
+When you get both joint ends in place, select one of the rectangular widgets. These are the joint angle controls. They define **the limits of joint rotation**. There's an upper limit and a lower limit. By default both are set to 0. When the joint limits are at the same value, the joint is not allowed to bend at all. The upper limit should always be higher \(or the same\) than the lower limit. Both limits go clockwise from \-180 degrees to 180 degrees.
 
 **IMPORTANT** : By default, the rotations start from the bottom \(\-180\) and also end at the bottom \(180\) meaning that 0 degrees is at the middle point, i.e. pointing up. 'Spritesheet Orientation' is the setting that adds an offset to this. Enable 'Spritesheet' on the 'Show' panel to see the orientation controls.
 
@@ -139,7 +139,7 @@ Enable 'Character' on the 'Edit' panel to see the character config parameters.
 
 ![](https://steamuserimages-a.akamaihd.net/ugc/1483326095193535130/AE6533AB9F1E4526BE8C8CE7B94168CD596BABEC/)
 
-The AI section is an important one and might require a bit of explaining. Note that these settings *only apply to non-humans* . The human AI is a separate beast altogether.
+The AI section is an important one and might require a bit of explaining. Note that these settings *only apply to non-humans*. The human AI is a separate beast altogether.
 
 In the AI section, you can add targets with priorities and states. These are used by the AI to make decisions about which things the character should target, which state it should use while targeting, and what \(base\) priority should be given to this target. The actual priority is determined by dynamic factors like distance from the target.
 
