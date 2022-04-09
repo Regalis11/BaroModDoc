@@ -2,9 +2,9 @@
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace BaroAutoDoc;
+namespace BaroAutoDoc.SyntaxWalkers;
 
-public class SubElementRipper : CSharpSyntaxWalker
+public class SubElementRipper : FolderSyntaxWalker
 {
     private readonly ImmutableHashSet<string> typesToLookFor;
     private readonly ContentType[] contentTypes;
@@ -47,6 +47,4 @@ public class SubElementRipper : CSharpSyntaxWalker
         
         base.VisitClassDeclaration(node);
     }
-
-    public string CurrentFile = "";
 }

@@ -3,9 +3,9 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace BaroAutoDoc;
+namespace BaroAutoDoc.SyntaxWalkers;
 
-public class ContentTypeFinder : CSharpSyntaxWalker
+public class ContentTypeFinder : FolderSyntaxWalker
 {
     private readonly List<ContentType> contentTypes = new();
     public IReadOnlyList<ContentType> ContentTypes => contentTypes;
@@ -90,6 +90,4 @@ public class ContentTypeFinder : CSharpSyntaxWalker
         
         base.VisitClassDeclaration(node);
     }
-
-    public string CurrentFile = "";
 }
