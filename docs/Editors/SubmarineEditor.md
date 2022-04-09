@@ -54,6 +54,9 @@ The **nuclear reactor** is the source of almost all the power on board the subma
 Power is distributed through the sub via **junction boxes** , as devices cannot draw power straight from the reactor. Power wires need to be connected to junction boxes to calculate the grid’s power load correctly.
 
 There are two major ways to wire power in a sub.
+- Place junction boxes in each room, close to devices they're providing power to, or
+- Group all junction boxes in a separate electrical room, where they can all be easily accessed.
+
 The first solution makes troubleshooting easier, because problems can usually be traced to the closest junction box. On the other hand, grouping all junction boxes together makes them easier to maintain.
 
 **TIP:** In most cases, it’s smart to keep everything in the same grid because the reactor always outputs the same amount of power to each grid. If there are two power grids with different loads, the one with the lower load will be overloaded and its junction boxes damaged. If you want to use multiple power grids, make sure their power requirements are balanced.
