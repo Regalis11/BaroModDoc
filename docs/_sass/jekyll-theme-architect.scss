@@ -76,7 +76,8 @@ aside#sidebar {
   float: left;
   width: 200px;
   min-height: 504px;
-  margin-right: 20px;
+  margin-right: 6px;
+  padding-right: 14px;
   font-size: 12px;
   line-height: 1.3;
   background: #1e1e1e;
@@ -199,8 +200,8 @@ form {
 }
 
 #main-content h1:before {
-  padding-right: 0.3em;
-  margin-left: -0.9em;
+  padding-right: 0.15em;
+  margin-left: -0.75em;
   color: #9ddcff;
   content: "/";
 }
@@ -214,8 +215,8 @@ form {
   text-indent: 4px;
 }
 #main-content h2:before {
-  padding-right: 0.3em;
-  margin-left: -1.5em;
+  padding-right: 0.15em;
+  margin-left: -1.35em;
   content: "//";
   color: #9ddcff;
 }
@@ -231,8 +232,8 @@ form {
 }
 
 #main-content h3:before {
-  padding-right: 0.3em;
-  margin-left: -2em;
+  padding-right: 0.15em;
+  margin-left: -1.85em;
   content: "///";
   color: #9ddcff;
 }
@@ -247,8 +248,8 @@ form {
 }
 
 h4:before {
-  padding-right: 0.3em;
-  margin-left: -2.8em;
+  padding-right: 0.15em;
+  margin-left: -2.65em;
   content: "////";
   color: #9ddcff;
 }
@@ -261,8 +262,8 @@ h4:before {
   text-indent: 3px;
 }
 h5:before {
-  padding-right: 0.3em;
-  margin-left: -3.2em;
+  padding-right: 0.15em;
+  margin-left: -3.05em;
   content: "/////";
   color: #9ddcff;
 }
@@ -275,8 +276,8 @@ h5:before {
   text-indent: 3px;
 }
 h6:before {
-  padding-right: 0.3em;
-  margin-left: -3.7em;
+  padding-right: 0.15em;
+  margin-left: -3.55em;
   content: "//////";
   color: #9ddcff;
 }
