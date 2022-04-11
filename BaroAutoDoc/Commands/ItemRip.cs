@@ -74,7 +74,7 @@ public class ItemRip : Command
 
         //Find references from one class to another
         var referenceFinder
-            = new Regex("item.GetComponent[s]?<(.+?)>", RegexOptions.CultureInvariant | RegexOptions.Compiled);
+            = new Regex(@"item\.GetComponent[s]?<(.+?)>", RegexOptions.CultureInvariant | RegexOptions.Compiled);
         foreach (var node in nodes.Values)
         {
             var code = node.Class.ToString();
