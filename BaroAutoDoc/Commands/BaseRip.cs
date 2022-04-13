@@ -58,13 +58,6 @@ public class BaseRip : Command
             matchSingular ??= transformStringIfNotNull(matchPlural, s => s[..^1]);
             matchPlural ??= transformStringIfNotNull(matchSingular, s => $"{s}s");
 
-            var xmlWriterSettings = new XmlWriterSettings
-            {
-                Indent = true,
-                OmitXmlDeclaration = true,
-                NewLineOnAttributes = true
-            };
-
             string[] shorthands = {"Client", "Server", "Shared"};
 
             string pickShorthand(string file)
@@ -128,17 +121,6 @@ public class BaseRip : Command
                 XElement overrideExample = new XElement("override",
                     singularExample(1),
                     singularExample(2));
-
-                
-                Page.CodeBlock xmlToMarkdown(XElement element)
-                {
-                    var xmlStringBuilder = new StringBuilder();
-                    using (var xmlWriter = XmlWriter.Create(xmlStringBuilder, xmlWriterSettings))
-                    {
-                        element.Save(xmlWriter);
-                    }
-                    return new Page.CodeBlock("xml", xmlStringBuilder.ToString());
-                }
 
                 /*
                 var examplesSection = new Page.Section();

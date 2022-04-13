@@ -1,4 +1,6 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Reflection;
+using System.Text.RegularExpressions;
+using System.Xml.Linq;
 using BaroAutoDoc.SyntaxWalkers;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
@@ -57,9 +59,8 @@ public class ItemRip : Command
             }
             nodes.Add(newNode.Name, newNode);
         }
-        
-        
-        var treeTop = nodes["ItemComponent"];
+
+        /*var treeTop = nodes["ItemComponent"];
         void print(TreeNode node, int indent)
         {
             Console.WriteLine("{0}\\_{1}",
@@ -70,7 +71,7 @@ public class ItemRip : Command
                 print(child, indent+1);
             }
         }
-        print(treeTop, 0);
+        print(treeTop, 0);*/
 
         //Find references from one class to another
         var referenceFinder
@@ -81,11 +82,99 @@ public class ItemRip : Command
             var matches = referenceFinder.Matches(code);
             foreach (Match match in matches)
             {
-                Console.WriteLine($"{node.Name} -> {match.Groups[0].Value}");
+                //Console.WriteLine($"{node.Name} -> {match.Groups[0].Value}");
                 node.InteractsWith.Add(nodes[match.Groups[1].Value]);
             }
         }
+
+        IEnumerable<TreeNode> allInteractsWith(TreeNode n)
+            => new[] { nodes["ConnectionPanel"] }.Union(n.InteractsWith.Union(n.Parent != null ? allInteractsWith(n.Parent) : Enumerable.Empty<TreeNode>()));
+        IEnumerable<TreeNode> allInteractsWithAndSelf(TreeNode n)
+            => new[] { n }.Union(allInteractsWith(n));
+
+        //Get all of the item XML definitions
+        const string gameRoot = "Barotrauma/BarotraumaShared";
+        const string contentPackagePath = $"{gameRoot}/Content/ContentPackages/Vanilla.xml";
+        XDocument contentPackageFileList = XDocument.Load(contentPackagePath);
+        var itemFiles = contentPackageFileList.Root!.Elements("Item").ToArray();
+        List<XElement> itemElements = new();
+        foreach (var itemFileElem in itemFiles)
+        {
+            XDocument itemFile = XDocument.Load(Path.Combine(gameRoot, itemFileElem.Attribute("file")!.Value));
+            itemElements.AddRange(itemFile.Root!.Elements()
+                .Where(e => !string.Equals(
+                    e.Attributes().FirstOrDefault(a => a.Name.LocalName.Equals("category"))?.Value,
+                    "legacy", StringComparison.OrdinalIgnoreCase) /* skip legacy items */));
+        }
+
+        //Rip out some example of each of the item components, preferring
+        //to include as many of the referenced itemcomponents as possible
+        Dictionary<TreeNode, XElement> examples = new();
+        HashSet<XElement> usedExamples = new();
+        foreach (var node in nodes.Values)
+        {
+            XElement[] potentialExamples = itemElements
+                .Where(e => e.Elements().Any(ic => string.Equals(ic.Name.LocalName, node.Name, StringComparison.OrdinalIgnoreCase)))
+                .ToArray();
+
+            int countMatching(XElement example)
+                => example.Elements().Count(ic => allInteractsWithAndSelf(node).Any(iw
+                    => string.Equals(ic.Name.LocalName, iw.Name, StringComparison.OrdinalIgnoreCase)));
+
+            potentialExamples = potentialExamples
+                .OrderBy(usedExamples.Contains)
+                .ThenByDescending(countMatching)
+                .ThenBy(e => e.ToString().Length)
+                .ToArray();
+
+            XElement? result = potentialExamples.FirstOrDefault();
+            if (result != null)
+            {
+                usedExamples.Add(result);
+                //Console.WriteLine($"{node.Name} -> {result.Attribute("identifier")!.Value}");
+                examples.Add(node, result);
+            }
+        }
         
-        //TODO: rip and trim examples
+        //Trim the extracted examples by removing any elements that do not illustrate the components
+        Dictionary<TreeNode, XElement> trimmedExamples = new();
+        foreach (var (node, example) in examples)
+        {
+            XElement trimmed = new XElement(example.Name);
+            trimmed.Add(example.Attributes().Select(a => (object)a).ToArray());
+            bool markOmission = false;
+            foreach (var ic in example.Elements()
+                         .OrderByDescending(e => e.Name.LocalName == node.Name))
+            {
+                if (allInteractsWithAndSelf(node).Any(n => string.Equals(n.Name, ic.Name.LocalName, StringComparison.OrdinalIgnoreCase)))
+                {
+                    trimmed.Add(new XElement(ic));
+                }
+                else
+                {
+                    markOmission = true;
+                }
+            }
+            if (markOmission) { trimmed.Add(new XElement("__OMISSION__")); }
+            trimmedExamples.Add(node, trimmed);
+        }
+        
+        //Convert the trimmed examples to Markdown and write
+        Directory.SetCurrentDirectory(Path.GetDirectoryName(Assembly.GetCallingAssembly().Location)!);
+        Directory.CreateDirectory("ItemComponents");
+        foreach (var (node, example) in trimmedExamples)
+        {
+            Page page = new();
+            page.Title = node.Name;
+
+            Page.Section exampleSection = new(); page.Subsections.Add(exampleSection);
+            exampleSection.Title = "Example";
+            
+            exampleSection.Body.Components.Add(Page.CodeBlock.FromXElement(example)
+                .PostProcess(s => s.Replace("<__OMISSION__ />", "[...]")));
+            File.WriteAllText(Path.Combine("ItemComponents", $"{node.Name}.md"), page.ToMarkdown());
+        }
+        
+        int b = 0;
     }
 }

@@ -1,4 +1,7 @@
 ﻿using System.Collections.Immutable;
+using System.Text;
+using System.Xml;
+using System.Xml.Linq;
 
 namespace BaroAutoDoc;
 
@@ -9,6 +12,9 @@ public class Page
         public static readonly BodyComponent Blank = new InlineMarkdown();
         
         public abstract string ToMarkdown();
+
+        public InlineMarkdown PostProcess(Func<string, string> postProcFunc)
+            => new InlineMarkdown(postProcFunc(ToMarkdown()));
     }
     
     public record InlineMarkdown(string Value = "") : BodyComponent
@@ -54,6 +60,23 @@ public class Page
     {
         public override string ToMarkdown()
             => $"```{Lang}\n{Value}\n```";
+
+        public static CodeBlock FromXElement(XElement element)
+        {
+            var xmlWriterSettings = new XmlWriterSettings
+            {
+                Indent = true,
+                OmitXmlDeclaration = true,
+                //NewLineOnAttributes = true
+            };
+
+            var xmlStringBuilder = new StringBuilder();
+            using (var xmlWriter = XmlWriter.Create(xmlStringBuilder, xmlWriterSettings))
+            {
+                element.Save(xmlWriter);
+            }
+            return new CodeBlock("xml", xmlStringBuilder.ToString());
+        }
     }
 
     public record Hyperlink(string Url = "", string Text = "") : BodyComponent
