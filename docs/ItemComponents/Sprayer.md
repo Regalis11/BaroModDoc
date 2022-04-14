@@ -8,6 +8,7 @@
 | Range|float|0.0|The distance at which the item can spray walls. |
 | SprayStrength|float|1.0|How fast the item changes the color of the walls. |
 
+This component also supports the attributes defined in: [RangedWeapon](RangedWeapon.md), [ItemComponent](ItemComponent.md)
 
 
 ## Example

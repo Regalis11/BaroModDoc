@@ -25,6 +25,7 @@
 | GrowthWeights|Vector4|"1,1,1,1"|Probability for the plant to grow in a direction. |
 | FireVulnerability|float|0.0|How much damage is taken from fires. |
 
+This component also supports the attributes defined in: [ItemComponent](ItemComponent.md)
 
 
 ## Example

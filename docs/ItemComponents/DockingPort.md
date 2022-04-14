@@ -13,6 +13,7 @@
 | ForceDockingDirection|DirectionType|DirectionType.None|Which direction the port is allowed to dock in. For example, "Top" would mean the port can dock to another port above it.
 Normally there's no need to touch this setting, but if you notice the docking position is incorrect (for example due to some unusual docking port configuration without hulls or doors), you can use this to enforce the direction. |
 
+This component also supports the attributes defined in: [ItemComponent](ItemComponent.md)
 
 
 ## Example

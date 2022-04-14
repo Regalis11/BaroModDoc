@@ -16,6 +16,7 @@
 | DeteriorateAlways|bool|false|If set to true, the deterioration timer will always run regardless if the item is being used or not. |
 | SkillRequirementMultiplier|float|1.0| |
 
+This component also supports the attributes defined in: [ItemComponent](ItemComponent.md)
 
 
 ## Example

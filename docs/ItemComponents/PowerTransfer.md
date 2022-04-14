@@ -10,6 +10,7 @@
 | FireProbability|float|0.15|The probability for a fire to start when the item breaks. |
 | Overload|bool|false|Is the item currently overloaded. Intended to be used by StatusEffect conditionals (setting the value from XML is not recommended). |
 
+This component also supports the attributes defined in: [Powered](Powered.md), [ItemComponent](ItemComponent.md)
 
 
 ## Example

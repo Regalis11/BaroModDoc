@@ -7,6 +7,7 @@
 | ---|---|---|--- |
 | Exponent|float|1.0|The exponent of the operation. |
 
+This component also supports the attributes defined in: [ItemComponent](ItemComponent.md)
 
 
 ## Example

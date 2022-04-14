@@ -25,6 +25,7 @@
 | TargetForce|float|0.0|Force applied to the entity the ray hits. |
 | BarrelRotation|float|0.0|Rotation of the barrel in degrees. |
 
+This component also supports the attributes defined in: [ItemComponent](ItemComponent.md)
 
 
 ## Example

@@ -16,6 +16,7 @@
 | UseBetweenOutpostModules|bool|true| |
 | BotsShouldKeepOpen|bool|false|If true, bots won't try to close this door behind them. |
 
+This component also supports the attributes defined in: [Pickable](Pickable.md), [ItemComponent](ItemComponent.md)
 
 
 ## Example

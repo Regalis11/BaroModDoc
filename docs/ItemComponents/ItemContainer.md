@@ -27,6 +27,7 @@
 | AutoInjectThreshold|float|0.5|The health threshold that the user must reach in order to activate the autoinjection. |
 | RemoveContainedItemsOnDeconstruct|bool|false| |
 
+This component also supports the attributes defined in: [ItemComponent](ItemComponent.md)
 
 
 ## Example

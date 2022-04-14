@@ -9,6 +9,7 @@
 | OnlyInOwnSub|bool|false| |
 | Range|float|10000.0| |
 
+This component also supports the attributes defined in: [ItemComponent](ItemComponent.md)
 
 
 ## Example

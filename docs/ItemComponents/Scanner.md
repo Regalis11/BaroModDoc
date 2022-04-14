@@ -10,6 +10,7 @@
 | ScanRadius|float|1.0|How far the scanner can be from the target for the scan to be successful. |
 | AlwaysDisplayProgressBar|bool|true|Should the progress bar always be displayed when the item has been attached. |
 
+This component also supports the attributes defined in: [ItemComponent](ItemComponent.md)
 
 
 ## Example

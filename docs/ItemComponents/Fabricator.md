@@ -8,6 +8,7 @@
 | FabricationSpeed|float|1.0| |
 | SkillRequirementMultiplier|float|1.0| |
 
+This component also supports the attributes defined in: [Powered](Powered.md), [ItemComponent](ItemComponent.md)
 
 
 ## Example

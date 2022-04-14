@@ -12,6 +12,7 @@
 | ContinuousOutput|bool|true|Should the component keep sending the output even after it stops receiving a signal, or only send an output when it receives a signal. |
 | Expression|string|""|The regular expression used to check the incoming signals. |
 
+This component also supports the attributes defined in: [ItemComponent](ItemComponent.md)
 
 
 ## Example

@@ -18,6 +18,7 @@
 | MinimumVelocity|float|0.01|How fast the objects within the detector's range have to be moving (in m/s). |
 | DetectOwnMotion|bool|true|Should the sensor trigger when the item itself moves. |
 
+This component also supports the attributes defined in: [ItemComponent](ItemComponent.md)
 
 
 ## Example

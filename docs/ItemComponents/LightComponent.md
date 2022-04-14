@@ -17,6 +17,7 @@
 | LightColor|Color|"255,255,255,255"|The color of the emitted light (R,G,B,A). |
 | IgnoreContinuousToggle|bool|false|If enabled, the component will ignore continuous signals received in the toggle input (i.e. a continuous signal will only toggle it once). |
 
+This component also supports the attributes defined in: [Powered](Powered.md), [ItemComponent](ItemComponent.md)
 
 
 ## Example

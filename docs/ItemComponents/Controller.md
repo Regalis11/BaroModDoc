@@ -11,6 +11,7 @@
 | UsableIn|UseEnvironment|UseEnvironment.Both|Can the item be selected in air, underwater or both. |
 | DrawUserBehind|bool|false|Should the character using the item be drawn behind the item. |
 
+This component also supports the attributes defined in: [ItemComponent](ItemComponent.md)
 
 
 ## Example

@@ -20,6 +20,7 @@
 | OwnerSkinColor|Color|"#ffffff"| |
 | OwnerSheetIndex|Vector2|"0,0"| |
 
+This component also supports the attributes defined in: [Pickable](Pickable.md), [ItemComponent](ItemComponent.md)
 
 
 ## Example

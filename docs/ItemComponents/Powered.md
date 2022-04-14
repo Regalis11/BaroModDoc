@@ -12,6 +12,7 @@
 | Voltage|float|0.0|The current voltage of the item (calculated as power consumption / available power). Intended to be used by StatusEffect conditionals (setting the value from XML is not recommended). |
 | VulnerableToEMP|bool|true|Can the item be damaged by electomagnetic pulses. |
 
+This component also supports the attributes defined in: [ItemComponent](ItemComponent.md)
 
 
 ## Example

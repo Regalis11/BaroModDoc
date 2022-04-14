@@ -23,6 +23,7 @@
 | CorrectTurbineOutput|float|0.0| |
 | ExplosionDamagesOtherSubs|bool|true| |
 
+This component also supports the attributes defined in: [Powered](Powered.md), [ItemComponent](ItemComponent.md)
 
 
 ## Example

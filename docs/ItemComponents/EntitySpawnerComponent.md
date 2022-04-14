@@ -23,6 +23,7 @@
 | MaximumAmountRangePadding|float|500|Inflate the circle of rectangle by this value to extend the area that counts towards the maximum amount of items or enemies to be spawned |
 | CanSpawn|bool|true| |
 
+This component also supports the attributes defined in: [ItemComponent](ItemComponent.md)
 
 
 ## Example

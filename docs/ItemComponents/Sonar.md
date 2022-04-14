@@ -11,6 +11,7 @@
 | CenterOnTransducers|bool|false|Should the sonar view be centered on the transducers or the submarine's center of mass. Only has an effect if UseTransducers is enabled. |
 | HasMineralScanner|bool|false|Does the sonar have mineral scanning mode. Only available in-game when the Item has no Steering component. |
 
+This component also supports the attributes defined in: [Powered](Powered.md), [ItemComponent](ItemComponent.md)
 
 
 ## Example

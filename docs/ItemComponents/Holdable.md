@@ -24,6 +24,7 @@
 | SwingWhenUsing|bool|false|Should the item swing around when it's being used (for example, when firing a weapon or a welding tool). |
 | SpriteDepthWhenDropped|float|0.55|Sprite depth that's used when the item is NOT attached to a wall. |
 
+This component also supports the attributes defined in: [Pickable](Pickable.md), [ItemComponent](ItemComponent.md)
 
 
 ## Example

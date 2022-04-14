@@ -12,6 +12,7 @@
 | ConditionIncreaseOnCombineMin|float|3.0| |
 | ConditionIncreaseOnCombineMax|float|8.0| |
 
+This component also supports the attributes defined in: [ItemComponent](ItemComponent.md)
 
 
 ## Example

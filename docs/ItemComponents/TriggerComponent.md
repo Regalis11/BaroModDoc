@@ -7,6 +7,7 @@
 | ---|---|---|--- |
 | Force|float|0.0|The maximum amount of force applied to the triggering entitites. |
 
+This component also supports the attributes defined in: [ItemComponent](ItemComponent.md)
 
 
 ## Example

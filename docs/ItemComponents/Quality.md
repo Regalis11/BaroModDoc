@@ -7,6 +7,7 @@
 | ---|---|---|--- |
 | QualityLevel|int|0| |
 
+This component also supports the attributes defined in: [ItemComponent](ItemComponent.md)
 
 
 ## Example

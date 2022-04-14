@@ -6,6 +6,7 @@
 | Attribute|Type|Default value|Description |
 | ---|---|---|--- |
 
+This component also supports the attributes defined in: [ItemComponent](ItemComponent.md)
 
 
 ## Example

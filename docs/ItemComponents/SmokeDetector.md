@@ -9,6 +9,7 @@
 | Output|string|"1"|The signal the item outputs when it has detected a fire. |
 | FalseOutput|string|"0"|The signal the item outputs when it has not detected a fire. |
 
+This component also supports the attributes defined in: [ItemComponent](ItemComponent.md)
 
 
 ## Example

@@ -7,6 +7,7 @@
 | ---|---|---|--- |
 | GeneratedAmount|float|400.0|How much oxygen the machine generates when operating at full power. |
 
+This component also supports the attributes defined in: [Powered](Powered.md), [ItemComponent](ItemComponent.md)
 
 
 ## Example

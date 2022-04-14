@@ -17,6 +17,7 @@
 | RechargeAdjustSpeed|float|0.5| |
 | Efficiency|float|0.95|The amount of power you can get out of a item relative to the amount of power that's put into it. |
 
+This component also supports the attributes defined in: [Powered](Powered.md), [ItemComponent](ItemComponent.md)
 
 
 ## Example

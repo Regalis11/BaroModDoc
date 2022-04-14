@@ -8,6 +8,7 @@
 | Labels|string|""|The texts displayed on the buttons/tickboxes, separated by commas. |
 | Signals|string|""|The signals sent when the buttons are pressed or the tickboxes checked, separated by commas. |
 
+This component also supports the attributes defined in: [ItemComponent](ItemComponent.md)
 
 
 ## Example

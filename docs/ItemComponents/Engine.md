@@ -9,6 +9,7 @@
 | PropellerPos|Vector2|"0.0,0.0"|The position of the propeller as an offset from the item's center (in pixels). Determines where the particles spawn and the position that causes characters to take damage from the engine if the PropellerDamage is defined. |
 | DisablePropellerDamage|bool|false| |
 
+This component also supports the attributes defined in: [Powered](Powered.md), [ItemComponent](ItemComponent.md)
 
 
 ## Example

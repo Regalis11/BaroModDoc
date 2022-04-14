@@ -26,6 +26,7 @@
 | MaxJointTranslation|float|-1| |
 | Prismatic|bool|true| |
 
+This component also supports the attributes defined in: [ItemComponent](ItemComponent.md)
 
 
 ## Example

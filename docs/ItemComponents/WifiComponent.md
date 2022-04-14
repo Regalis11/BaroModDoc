@@ -13,6 +13,7 @@
 | MinChatMessageInterval|float|1.0|How many seconds have to pass between signals for a message to be displayed in the chatbox. Setting this to a very low value is not recommended, because it may cause an excessive amount of chat messages to be created if there are chat-linked wifi components that transmit a continuous signal. |
 | DiscardDuplicateChatMessages|bool|false|If set to true, the component will only create chat messages when the received signal changes. |
 
+This component also supports the attributes defined in: [ItemComponent](ItemComponent.md)
 
 
 ## Example

@@ -9,6 +9,7 @@
 | ResetWhenSignalReceived|bool|false|Should the component discard previously received signals when a new one is received. |
 | ResetWhenDifferentSignalReceived|bool|false|Should the component discard previously received signals when the incoming signal changes. |
 
+This component also supports the attributes defined in: [ItemComponent](ItemComponent.md)
 
 
 ## Example

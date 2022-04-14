@@ -7,6 +7,7 @@
 | ---|---|---|--- |
 | ThrowForce|float|1.0|The impulse applied to the physics body of the item when thrown. Higher values make the item be thrown faster. |
 
+This component also supports the attributes defined in: [Holdable](Holdable.md), [Pickable](Pickable.md), [ItemComponent](ItemComponent.md)
 
 
 ## Example

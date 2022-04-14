@@ -7,6 +7,7 @@
 | ---|---|---|--- |
 | WrittenName|string|""|Name written on the tag. |
 
+This component also supports the attributes defined in: [ItemComponent](ItemComponent.md)
 
 
 ## Example

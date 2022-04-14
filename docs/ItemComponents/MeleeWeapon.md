@@ -12,6 +12,7 @@
 | SwingPos|Vector2|"2.0, 0.0"| |
 | SwingForce|Vector2|"3.0, -1.0"| |
 
+This component also supports the attributes defined in: [Holdable](Holdable.md), [Pickable](Pickable.md), [ItemComponent](ItemComponent.md)
 
 
 ## Example

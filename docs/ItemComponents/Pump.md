@@ -9,6 +9,7 @@
 | MaxFlow|float|80.0|How fast the item pumps water in/out when operating at 100%. |
 | IsOn|bool|true| |
 
+This component also supports the attributes defined in: [Powered](Powered.md), [ItemComponent](ItemComponent.md)
 
 
 ## Example

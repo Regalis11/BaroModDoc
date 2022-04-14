@@ -7,6 +7,7 @@
 | ---|---|---|--- |
 | Modulus|float|1.0|The modulus of the operation. Must be non-zero. |
 
+This component also supports the attributes defined in: [ItemComponent](ItemComponent.md)
 
 
 ## Example

@@ -12,6 +12,7 @@
 | EnableElectricalView|bool|true|Enable electrical view mode. |
 | EnableItemFinder|bool|true|Enable item finder mode. |
 
+This component also supports the attributes defined in: [Powered](Powered.md), [ItemComponent](ItemComponent.md)
 
 
 ## Example

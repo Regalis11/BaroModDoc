@@ -29,6 +29,7 @@
 | MaxActiveProjectiles|int|-1|The turret won't fire additional projectiles if the number of previously fired, still active projectiles reaches this limit. If set to -1, there is no limit to the number of projectiles. |
 | MaxChargeTime|float|0|The time required for a charge-type turret to charge up before able to fire. |
 
+This component also supports the attributes defined in: [Powered](Powered.md), [ItemComponent](ItemComponent.md)
 
 
 ## Example

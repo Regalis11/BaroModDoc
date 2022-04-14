@@ -7,6 +7,7 @@
 | ---|---|---|--- |
 | Locked|bool|false|Locked connection panels cannot be rewired in-game. |
 
+This component also supports the attributes defined in: [ItemComponent](ItemComponent.md)
 
 
 ## Example

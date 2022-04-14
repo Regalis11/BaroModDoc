@@ -9,6 +9,7 @@
 | Output|string|"1"|The signal the item sends out when it's underwater. |
 | FalseOutput|string|"0"|The signal the item sends out when it's not underwater. |
 
+This component also supports the attributes defined in: [ItemComponent](ItemComponent.md)
 
 
 ## Example

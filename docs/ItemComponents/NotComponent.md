@@ -7,6 +7,7 @@
 | ---|---|---|--- |
 | ContinuousOutput|bool|false|When enabled, the component continuously outputs "1" when it's not receiving a signal. |
 
+This component also supports the attributes defined in: [ItemComponent](ItemComponent.md)
 
 
 ## Example

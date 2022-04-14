@@ -9,6 +9,7 @@
 | UseMonospaceFont|bool|false|The terminal will use a monospace font if this box is ticked. |
 | TextColor|Color|"50,205,50,255"|Color of the terminal text. |
 
+This component also supports the attributes defined in: [ItemComponent](ItemComponent.md)
 
 
 ## Example

@@ -7,6 +7,7 @@
 | ---|---|---|--- |
 | Function|FunctionType|FunctionType.Round|Which kind of function to run the input through. |
 
+This component also supports the attributes defined in: [ItemComponent](ItemComponent.md)
 
 
 ## Example

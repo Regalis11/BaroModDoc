@@ -10,6 +10,7 @@
 | Output|string|"1"|The signal sent when the condition is met. |
 | FalseOutput|string|""|The signal sent when the condition is met (if empty, no signal is sent). |
 
+This component also supports the attributes defined in: [ItemComponent](ItemComponent.md)
 
 
 ## Example

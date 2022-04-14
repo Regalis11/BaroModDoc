@@ -8,6 +8,7 @@
 | Signals|string[]|new string[0]|Signals sent when the corresponding buttons are pressed. |
 | ActivatingItems|string|""|Identifiers or tags of items that, when contained, allow the terminal buttons to be used. Multiple ones should be separated by commas. |
 
+This component also supports the attributes defined in: [ItemComponent](ItemComponent.md)
 
 
 ## Example

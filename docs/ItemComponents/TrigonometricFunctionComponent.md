@@ -8,6 +8,7 @@
 | Function|FunctionType|FunctionType.Sin|Which kind of function to run the input through. |
 | UseRadians|bool|false|If set to true, the trigonometric function uses radians instead of degrees. |
 
+This component also supports the attributes defined in: [ItemComponent](ItemComponent.md)
 
 
 ## Example

@@ -16,6 +16,7 @@
 | TargetMinMass|float|30.0|How much mass is required for the target to pull the source towards it. Static and kinematic targets are always treated heavy enough. |
 | LerpForces|bool|false| |
 
+This component also supports the attributes defined in: [ItemComponent](ItemComponent.md)
 
 
 ## Example

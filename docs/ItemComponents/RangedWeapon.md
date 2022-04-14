@@ -13,6 +13,7 @@
 | UnskilledSpread|float|0.0|Random spread applied to the firing angle of the projectiles when used by a character with insufficient skills to use the weapon (in degrees). |
 | MaxChargeTime|float|0|The time required for a charge-type turret to charge up before able to fire. |
 
+This component also supports the attributes defined in: [ItemComponent](ItemComponent.md)
 
 
 ## Example

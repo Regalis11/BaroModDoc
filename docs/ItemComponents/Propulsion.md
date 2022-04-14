@@ -8,6 +8,7 @@
 | UsableIn|UseEnvironment|UseEnvironment.Both|Can the item be used in air, underwater or both. |
 | Force|float|0.0|The force to apply to the user's body. |
 
+This component also supports the attributes defined in: [ItemComponent](ItemComponent.md)
 
 
 ## Example

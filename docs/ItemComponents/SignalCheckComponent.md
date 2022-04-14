@@ -10,6 +10,7 @@
 | FalseOutput|string|"0"|The signal this item outputs when the received signal does not match the target signal. |
 | TargetSignal|string|""|The value to compare the received signals against. |
 
+This component also supports the attributes defined in: [ItemComponent](ItemComponent.md)
 
 
 ## Example

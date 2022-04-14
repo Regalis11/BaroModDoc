@@ -10,6 +10,7 @@
 | Duration|float|0.25|The duration of an individual discharge (in seconds). |
 | OutdoorsOnly|bool|false|If set to true, the discharge cannot travel inside the submarine nor shock anyone inside. |
 
+This component also supports the attributes defined in: [Powered](Powered.md), [ItemComponent](ItemComponent.md)
 
 
 ## Example

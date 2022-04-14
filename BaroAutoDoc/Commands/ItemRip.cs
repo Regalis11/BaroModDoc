@@ -258,11 +258,31 @@ public class ItemRip : Command
             {
                 HeadRow = new Page.Table.Row("Attribute", "Type", "Default value", "Description")
             };
-            foreach (var attr in node.Attributes)
+
+            IEnumerable<TreeNode.Attribute> getAttributes(TreeNode n)
+                => n.Attributes.Concat(n.Parent is { IsAbstract: true }
+                    ? getAttributes(n.Parent)
+                    : Enumerable.Empty<TreeNode.Attribute>());
+            
+            foreach (var attr in getAttributes(node))
             {
                 attributesTable.BodyRows.Add(new Page.Table.Row(attr.Name, attr.Type, attr.DefaultValue, attr.Description));
             }
             attributesSection.Body.Components.Add(attributesTable);
+
+            attributesSection.Body.Components.Add(new Page.NewLine());
+            if (node.Parent != null)
+            {
+                attributesSection.Body.Components.Add(new Page.RawText("This component also supports the attributes defined in: "));
+                var p = node.Parent;
+                while (true)
+                {
+                    if (!p.IsAbstract) { attributesSection.Body.Components.Add(new Page.Hyperlink($"{p.Name}.md", p.Name)); }
+                    p = p.Parent;
+                    if (p is null) { break; }
+                    if (!p.IsAbstract) { attributesSection.Body.Components.Add(new Page.RawText(", ")); }
+                }
+            }
 
             if (trimmedExamples.TryGetValue(node, out var example))
             {
