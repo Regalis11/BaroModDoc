@@ -3,7 +3,7 @@
 
 ## Example
 ```xml
-<Item name="" identifier="dockingport" tags="dock" linkable="true" indestructible="true" scale="0.5" requirecursorinsidetrigger="true" requirebodyinsidetrigger="false">
+<Item identifier="dockingport" tags="dock" linkable="true" indestructible="true" scale="0.5" requirecursorinsidetrigger="true" requirebodyinsidetrigger="false">
   <DockingPort IsHorizontal="true" DistanceTolerance="200,64" DockedDistance="172">
     <StatusEffect type="OnSecondaryUse" target="This">
       <sound file="Content/Items/Door/DockingPort2.ogg" type="OnSecondaryUse" range="15000.0" />

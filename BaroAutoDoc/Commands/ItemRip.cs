@@ -96,7 +96,9 @@ public class ItemRip : Command
         }
 
         IEnumerable<TreeNode> allInteractsWith(TreeNode n)
-            => new[] { nodes["ConnectionPanel"] }.Union(n.InteractsWith.Union(n.Parent != null ? allInteractsWith(n.Parent) : Enumerable.Empty<TreeNode>()));
+            => new[] { nodes["ConnectionPanel"] }
+                .Union(n.InteractsWith)
+                .Union(n.Parent != null ? allInteractsWith(n.Parent) : Enumerable.Empty<TreeNode>());
         IEnumerable<TreeNode> allInteractsWithAndSelf(TreeNode n)
             => new[] { n }.Union(allInteractsWith(n));
 
@@ -111,20 +113,21 @@ public class ItemRip : Command
             XDocument itemFile = XDocument.Load(Path.Combine(gameRoot, itemFileElem.Attribute("file")!.Value));
             itemElements.AddRange(itemFile.Root!.Elements()
                 .Where(e => e.GetAttributeValue("category") is not { } category
-                            || (!category.EqCaseInsensitive("legacy") /* skip legacy items */
-                                && !category.EqCaseInsensitive("hidden") /* skip hidden items */))
+                            || (!category.ContainsCaseInsensitive("legacy") /* skip legacy items */
+                                && !category.ContainsCaseInsensitive("hidden") /* skip hidden items */))
                 .Where(e => !bool.TryParse(e.GetAttributeValue("HideInMenus"), out bool hiddenInMenus) || !hiddenInMenus));
         }
 
         itemElements = itemElements
-            .OrderBy(e => e.GetAttributeValue("identifier")?.Length ?? 10000)
+            .OrderBy(e => e.ToString().Length)
+            .ThenBy(e => e.GetAttributeValue("identifier")?.Length ?? 10000)
             .ThenBy(e => e.GetAttributeValue("identifier") ?? "")
             .ToList();
 
         //Rip out some example of each of the item components, preferring
         //to include as many of the referenced itemcomponents as possible
         Dictionary<TreeNode, XElement> examples = new();
-        HashSet<XElement> usedExamples = new();
+        //HashSet<XElement> usedExamples = new();
         foreach (var node in nodes.Values)
         {
             XElement[] potentialExamples = itemElements
@@ -136,15 +139,22 @@ public class ItemRip : Command
                     => string.Equals(ic.Name.LocalName, iw.Name, StringComparison.OrdinalIgnoreCase)));
 
             potentialExamples = potentialExamples
-                .OrderBy(usedExamples.Contains)
+                //prefer examples where the identifier contains the class name
+                .OrderByDescending(e => e.GetAttributeValue("identifier").ContainsCaseInsensitive(node.Name))
+                //prefer non-wrecked examples
+                .ThenBy(e => e.GetAttributeValue("identifier").ContainsCaseInsensitive("wreck"))
+                //prefer non-thalamus examples
+                .ThenBy(e => e.GetAttributeValue("identifier").ContainsCaseInsensitive("thalamus"))
+                //prefer non-alien examples
+                .ThenBy(e => e.GetAttributeValue("category").ContainsCaseInsensitive("alien"))
+                //prefer examples with the most referenced itemcomponents
                 .ThenByDescending(countMatching)
-                .ThenBy(e => e.ToString().Length)
                 .ToArray();
 
             XElement? result = potentialExamples.FirstOrDefault();
             if (result != null)
             {
-                usedExamples.Add(result);
+                //usedExamples.Add(result);
                 //Console.WriteLine($"{node.Name} -> {result.Attribute("identifier")!.Value}");
                 examples.Add(node, result);
             }
@@ -155,7 +165,9 @@ public class ItemRip : Command
         foreach (var (node, example) in examples)
         {
             XElement trimmed = new XElement(example.Name);
-            trimmed.Add(example.Attributes().Select(a => (object)a).ToArray());
+            trimmed.Add(example.Attributes()
+                .Where(a => a.Name != "name" && a.Name != "description")
+                .Select(a => (object)a).ToArray());
             bool markOmission = false;
             foreach (var ic in example.Elements()
                          .OrderByDescending(e => e.Name.LocalName == node.Name))

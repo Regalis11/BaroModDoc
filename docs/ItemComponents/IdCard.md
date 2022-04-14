@@ -3,7 +3,7 @@
 
 ## Example
 ```xml
-<Item name="" identifier="idcardwreck" category="Equipment" Tags="smallitem,wreck_id,identitycard" cargocontaineridentifier="metalcrate">
+<Item identifier="idcard" category="Equipment" Tags="smallitem,identitycard" cargocontaineridentifier="metalcrate">
   <IdCard slots="Card,Any" msg="ItemMsgPickUpSelect" />
   [...]
 </Item>

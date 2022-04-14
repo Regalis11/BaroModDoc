@@ -3,7 +3,7 @@
 
 ## Example
 ```xml
-<Item name="" identifier="relaycomponent" category="Electrical" Tags="smallitem,signal,logic" maxstacksize="8" cargocontaineridentifier="metalcrate" description="" scale="0.5" impactsoundtag="impact_metal_light" isshootable="true">
+<Item identifier="relaycomponent" category="Electrical" Tags="smallitem,signal,logic" maxstacksize="8" cargocontaineridentifier="metalcrate" scale="0.5" impactsoundtag="impact_metal_light" isshootable="true">
   <RelayComponent canbeselected="true" vulnerabletoemp="false" canbeoverloaded="false">
     <GuiFrame relativesize="0.2,0.14" minsize="450,160" anchor="Center" style="ItemUI" />
   </RelayComponent>

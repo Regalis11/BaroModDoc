@@ -3,7 +3,7 @@
 
 ## Example
 ```xml
-<Item name="" nameidentifier="oxygenerator" identifier="outpostoxygenerator" tags="oxygengenerator" category="Machine" linkable="true" allowedlinks="vent" damagedbyexplosions="true" scale="0.5" explosiondamagemultiplier="0.2">
+<Item nameidentifier="oxygenerator" identifier="outpostoxygenerator" tags="oxygengenerator" category="Machine" linkable="true" allowedlinks="vent" damagedbyexplosions="true" scale="0.5" explosiondamagemultiplier="0.2">
   <OxygenGenerator powerconsumption="1000.0" minvoltage="0.5" generatedamount="5000" canbeselected="true" msg="ItemMsgInteractSelect">
     <poweronsound file="Content/Items/PowerOnLight2.ogg" range="1500" loop="false" />
     <sound file="Content/Items/OxygenGenerator/OxygenGenerator.ogg" type="OnActive" range="1000.0" volumeproperty="CurrFlow" volume="0.001" loop="true" />

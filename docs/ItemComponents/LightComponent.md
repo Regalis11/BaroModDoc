@@ -3,16 +3,18 @@
 
 ## Example
 ```xml
-<Item name="" nameidentifier="RuinDecal1" identifier="ruindecalpulse1" width="64" height="80" texturescale="0.5,0.5" scale="0.5" noninteractable="true" category="Alien">
-  <LightComponent range="0.0" lightcolor="111,111,255,33" IsOn="true" castshadows="false" allowingameediting="false" pulseamount="0.5" pulsefrequency="0.25">
-    <sprite texture="Content/Map/AlienRuins_LevelAssets1.png" sourcerect="433,0,404,402" depth="0.1" origin="0.5,0.5" alpha="1.0" />
+<Item identifier="lightcomponent" category="Electrical" Tags="smallitem,lightcomponent" maxstacksize="8" cargocontaineridentifier="metalcrate" scale="0.5" impactsoundtag="impact_metal_light" isshootable="true">
+  <LightComponent canbeselected="true" color="1.0,0.0,0.0,0.5" castshadows="false">
+    <LightTexture texture="Content/Lights/pointlight_bounce.png" origin="0.5,0.5" />
+    <sprite texture="Content/Items/Electricity/signalcomp.png" sourcerect="228,3,23,24" origin="0.5,0.5" />
   </LightComponent>
-  <LightComponent range="0.0" lightcolor="111,111,255,11" IsOn="true" castshadows="false" allowingameediting="false" pulseamount="0.9" pulsefrequency="0.5">
-    <sprite texture="Content/Map/AlienRuins_LevelAssets1.png" sourcerect="917,1,406,405" depth="0.1" origin="0.5,0.5" alpha="1.0" />
-  </LightComponent>
-  <LightComponent range="0.0" lightcolor="111,111,255,11" IsOn="true" castshadows="false" allowingameediting="false" pulseamount="0.9" pulsefrequency="0.6">
-    <sprite texture="Content/Map/AlienRuins_LevelAssets1.png" sourcerect="1392,1,406,402" depth="0.1" origin="0.5,0.5" alpha="1.0" />
-  </LightComponent>
+  <ConnectionPanel selectkey="Action" canbeselected="true" msg="ItemMsgRewireScrewdriver" hudpriority="10">
+    <GuiFrame relativesize="0.2,0.32" minsize="400,350" maxsize="480,420" anchor="Center" style="ConnectionPanel" />
+    <RequiredItem items="screwdriver" type="Equipped" />
+    <input name="toggle" displayname="connection.togglestate" />
+    <input name="set_state" displayname="connection.setstate" />
+    <input name="set_color" displayname="connection.setcolor" />
+  </ConnectionPanel>
   [...]
 </Item>
 ```

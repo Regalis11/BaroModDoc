@@ -3,7 +3,7 @@
 
 ## Example
 ```xml
-<Item name="" identifier="sprayer" category="Equipment" Tags="smallitem,tool" cargocontaineridentifier="metalcrate" description="" Scale="0.5" impactsoundtag="impact_metal_light">
+<Item identifier="sprayer" category="Equipment" Tags="smallitem,tool" cargocontaineridentifier="metalcrate" Scale="0.5" impactsoundtag="impact_metal_light">
   <Sprayer barrelpos="34,8" spread="0" unskilledspread="0" drawhudwhenequipped="true" crosshairscale="0.1" spraystrength="6.0" range="300">
     <Crosshair texture="Content/Items/Weapons/Crosshairs.png" sourcerect="0,256,256,256" />
     <CrosshairPointer texture="Content/Items/Weapons/Crosshairs.png" sourcerect="256,256,256,256" />

@@ -3,7 +3,7 @@
 
 ## Example
 ```xml
-<Item name="" identifier="memorycomponent" category="Electrical" Tags="smallitem,logic" maxstacksize="8" linkable="true" cargocontaineridentifier="metalcrate" scale="0.5" impactsoundtag="impact_metal_light" isshootable="true">
+<Item identifier="memorycomponent" category="Electrical" Tags="smallitem,logic" maxstacksize="8" linkable="true" cargocontaineridentifier="metalcrate" scale="0.5" impactsoundtag="impact_metal_light" isshootable="true">
   <MemoryComponent canbeselected="true" />
   <ConnectionPanel selectkey="Action" canbeselected="true" msg="ItemMsgRewireScrewdriver" hudpriority="10">
     <GuiFrame relativesize="0.2,0.32" minsize="400,350" maxsize="480,420" anchor="Center" style="ConnectionPanel" />

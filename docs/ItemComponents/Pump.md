@@ -3,7 +3,7 @@
 
 ## Example
 ```xml
-<Item name="" identifier="smallpump" tags="pump" linkable="true" category="Machine" scale="0.5" damagedbyexplosions="true" explosiondamagemultiplier="0.2" allowrotatingineditor="true">
+<Item identifier="smallpump" tags="pump" linkable="true" category="Machine" scale="0.5" damagedbyexplosions="true" explosiondamagemultiplier="0.2" allowrotatingineditor="true">
   <Pump canbeselected="true" maxflow="100" PowerConsumption="60.0" MinVoltage="0.3" IsOn="true" msg="ItemMsgInteractSelect">
     <!-- TODO: define max size-->
     <GuiFrame relativesize="0.25,0.2" minsize="420,220" anchor="Center" style="ItemUI" />

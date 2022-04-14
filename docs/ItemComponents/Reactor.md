@@ -3,7 +3,7 @@
 
 ## Example
 ```xml
-<Item name="" nameidentifier="reactor1" identifier="outpostreactor" tags="reactor" type="Reactor" linkable="true" category="Machine" damagedbyexplosions="true" scale="0.5" explosiondamagemultiplier="0.2">
+<Item nameidentifier="reactor1" identifier="outpostreactor" tags="reactor" type="Reactor" linkable="true" category="Machine" damagedbyexplosions="true" scale="0.5" explosiondamagemultiplier="0.2">
   <Reactor canbeselected="true" firedelay="20" meltdowndelay="120" maxpoweroutput="20000" fuelconsumptionrate="0.2" vulnerabletoemp="false" msg="ItemMsgInteractSelect">
     <StatusEffect type="InWater" target="This" condition="-0.5">
       <Conditional condition="gt 10" />

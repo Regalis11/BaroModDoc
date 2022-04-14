@@ -35,4 +35,7 @@ public static class Extensions
 
     public static bool EqCaseInsensitive(this string? str, string? other)
         => string.Equals(str, other, StringComparison.OrdinalIgnoreCase);
+    
+    public static bool ContainsCaseInsensitive(this string? str, string? other)
+        => other is not null && (str?.Contains(other, StringComparison.OrdinalIgnoreCase) ?? false);
 }

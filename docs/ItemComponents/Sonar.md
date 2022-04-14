@@ -3,7 +3,7 @@
 
 ## Example
 ```xml
-<Item name="" identifier="sonarmonitor" tags="command,sonarmonitor" linkable="true" allowedlinks="statusmonitor" scale="0.5" category="Machine" damagedbyexplosions="true" explosiondamagemultiplier="0.2">
+<Item identifier="sonarmonitor" tags="command,sonarmonitor" linkable="true" allowedlinks="statusmonitor" scale="0.5" category="Machine" damagedbyexplosions="true" explosiondamagemultiplier="0.2">
   <Sonar canbeselected="true" powerconsumption="100" displaybordersize="-0.1" allowuioverlap="true" hudlayer="-1" rightlayout="true">
     <GuiFrame relativesize="0.55,0.59" anchor="Center" style="OuterGlow" color="0,0,0,0.8" relativeoffset="0.1,-0.05" />
     <sound file="Content/Items/Command/SonarPing.ogg" type="OnUse" range="1000.0" />

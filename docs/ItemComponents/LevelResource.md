@@ -3,7 +3,7 @@
 
 ## Example
 ```xml
-<Item name="" identifier="paralyxis" category="Material" maxstacksize="8" Tags="smallitem" scale="0.5" cargocontaineridentifier="metalcrate" canbepicked="true">
+<Item identifier="paralyxis" category="Material" maxstacksize="8" Tags="smallitem" scale="0.5" cargocontaineridentifier="metalcrate" canbepicked="true">
   <LevelResource deattachduration="4" randomoffsetfromwall="20">
     <Commonness commonness="0.02" />
     <RequiredItem items="cuttingequipment" type="Equipped" />

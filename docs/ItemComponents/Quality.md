@@ -3,7 +3,7 @@
 
 ## Example
 ```xml
-<Item name="" identifier="crowbar" category="Equipment" Tags="smallitem,tool,simpletool,dooropeningtool,crowbaritem" cargocontaineridentifier="metalcrate" Scale="0.5" impactsoundtag="impact_metal_light" RequireAimToUse="True">
+<Item identifier="crowbar" category="Equipment" Tags="smallitem,tool,simpletool,dooropeningtool,crowbaritem" cargocontaineridentifier="metalcrate" Scale="0.5" impactsoundtag="impact_metal_light" RequireAimToUse="True">
   <Quality>
     <QualityStat stattype="StrikingPowerMultiplier" value="0.1" />
   </Quality>

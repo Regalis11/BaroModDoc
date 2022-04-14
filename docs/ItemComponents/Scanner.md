@@ -3,7 +3,7 @@
 
 ## Example
 ```xml
-<Item name="" identifier="ruinscanner" description="" category="Equipment" Tags="smallitem,scanner" Scale="0.5" cargocontaineridentifier="metalcrate" impactsoundtag="impact_metal_light" isshootable="true">
+<Item identifier="ruinscanner" category="Equipment" Tags="smallitem,scanner" Scale="0.5" cargocontaineridentifier="metalcrate" impactsoundtag="impact_metal_light" isshootable="true">
   <Scanner scanduration="30" scanradius="1000" alwaysdisplayprogressbar="false">
     <StatusEffect type="OnActive" targettype="This">
       <Conditional scantimer="gt 0" />

@@ -3,7 +3,7 @@
 
 ## Example
 ```xml
-<Item name="" identifier="gravitysphere" category="Alien" linkable="true" scale="0.5">
+<Item identifier="gravitysphere" category="Alien" linkable="true" scale="0.5">
   <TriggerComponent triggeredby="Human, Item" force="75" radius="1000" distancebasedforce="true">
     <StatusEffect type="OnActive" target="This">
       <ParticleEmitter particle="gravityspherefx" particleamount="1" emitinterval="1.25" />

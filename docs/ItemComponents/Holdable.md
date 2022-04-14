@@ -3,15 +3,17 @@
 
 ## Example
 ```xml
-<Item name="" identifier="button" category="Electrical" tags="smallitem,button" cargocontaineridentifier="metalcrate" scale="0.5" impactsoundtag="impact_metal_light" isshootable="true" maxstacksize="8">
-  <Holdable selectkey="Select" pickkey="Use" slots="Any,RightHand,LeftHand" msg="ItemMsgDetachWrench" PickingTime="10.0" aimpos="35,-10" handle1="0,0" attachable="true" attachedbydefault="true" aimable="true">
-    <requireditem identifier="wrench" type="Equipped" />
+<Item identifier="paralyxis" category="Material" maxstacksize="8" Tags="smallitem" scale="0.5" cargocontaineridentifier="metalcrate" canbepicked="true">
+  <Holdable canBeCombined="true" removeOnCombined="true" slots="Any,RightHand,LeftHand" handle1="0,0" msg="ItemMsgPickUpSelect" attachable="true" reattachable="false">
+    <!-- Remove the item when fully used -->
+    <StatusEffect type="OnBroken" target="This">
+      <Remove />
+    </StatusEffect>
   </Holdable>
-  <ConnectionPanel selectkey="Action" canbeselected="true" msg="ItemMsgRewireScrewdriver" hudpriority="10">
-    <GuiFrame relativesize="0.2,0.32" minsize="400,350" maxsize="480,420" anchor="Center" style="ConnectionPanel" />
-    <RequiredItem identifier="screwdriver" type="Equipped" />
-    <output name="signal_out" displayname="connection.signalout" />
-  </ConnectionPanel>
+  <LevelResource deattachduration="4" randomoffsetfromwall="20">
+    <Commonness commonness="0.02" />
+    <RequiredItem items="cuttingequipment" type="Equipped" />
+  </LevelResource>
   [...]
 </Item>
 ```

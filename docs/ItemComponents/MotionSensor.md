@@ -3,7 +3,7 @@
 
 ## Example
 ```xml
-<Item name="" identifier="alienmotionsensor" category="Alien" Tags="alien,alienmotionsensor" scale="0.5">
+<Item identifier="alienmotionsensor" category="Alien" Tags="alien,alienmotionsensor" scale="0.5">
   <MotionSensor range="75" output="0" onlyhumans="true" ignoredead="true" />
   <ConnectionPanel canbeselected="true" msg="ItemMsgRewireScrewdriver" hudpriority="10">
     <RequiredItem items="screwdriver" type="Equipped" />

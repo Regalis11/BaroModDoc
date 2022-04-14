@@ -3,7 +3,7 @@
 
 ## Example
 ```xml
-<Item name="" identifier="textdisplay" scale="0.5" impactsoundtag="impact_metal_light" isshootable="true">
+<Item identifier="textdisplay" scale="0.5" impactsoundtag="impact_metal_light" isshootable="true">
   <ItemLabel scrollable="true" padding="10,5,10,12" textcolor="1,1,1,1">
     <Upgrade gameversion="0.12.0.0" padding="10,5,10,12" />
     <LightComponent range="10.0" lightcolor="1.0,1.0,1.0,0.1" IsOn="true" castshadows="false">

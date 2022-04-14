@@ -3,7 +3,7 @@
 
 ## Example
 ```xml
-<Item name="" identifier="shuttlebattery" tags="battery,batterycellrecharger" category="Electrical,Machine" Scale="0.5" description="" damagedbyexplosions="false">
+<Item identifier="shuttlebattery" tags="battery,batterycellrecharger" category="Electrical,Machine" Scale="0.5" damagedbyexplosions="false">
   <PowerContainer capacity="2000.0" maxrechargespeed="500.0" maxoutput="1000.0" canbeselected="true" indicatorposition="21,12" indicatorsize="54,35" ishorizontal="true" msg="ItemMsgInteractSelect">
     <GuiFrame relativesize="0.25,0.23" minsize="350,200" anchor="Center" style="ItemUI" />
     <!--minsize="350,250" maxsize="420,300"-->

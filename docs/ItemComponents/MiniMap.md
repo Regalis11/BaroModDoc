@@ -3,7 +3,7 @@
 
 ## Example
 ```xml
-<Item name="" identifier="statusmonitor" tags="command,statusmonitor" aliases="MiniMap" category="Machine" linkable="true" scale="0.5" allowedlinks="navterminal" damagedbyexplosions="true" explosiondamagemultiplier="0.2">
+<Item identifier="statusmonitor" tags="command,statusmonitor" aliases="MiniMap" category="Machine" linkable="true" scale="0.5" allowedlinks="navterminal" damagedbyexplosions="true" explosiondamagemultiplier="0.2">
   <MiniMap MinVoltage="0.5" PowerConsumption="100" canbeselected="true" msg="ItemMsgInteractSelect" allowuioverlap="true">
     <GuiFrame relativesize="0.5,0.5" anchor="Center" style="ItemUI" />
     <AlternativeLayout relativesize="0.2725,0.3" anchor="CenterLeft" pivot="BottomLeft" relativeoffset="0.05,-0.001" />

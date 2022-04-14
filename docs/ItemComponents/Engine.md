@@ -3,7 +3,7 @@
 
 ## Example
 ```xml
-<Item name="" identifier="shuttleengine" tags="engine" category="Machine" Scale="0.5" damagedbyexplosions="true" explosiondamagemultiplier="0.2">
+<Item identifier="shuttleengine" tags="engine" category="Machine" Scale="0.5" damagedbyexplosions="true" explosiondamagemultiplier="0.2">
   <Engine minvoltage="0.5" powerconsumption="500.0" maxforce="300" canbeselected="true" propellerpos="-200,0" msg="ItemMsgInteractSelect">
     <Upgrade gameversion="0.11.0.9" propellerpos="-200,0" />
     <GuiFrame relativesize="0.2,0.18" minsize="450,200" anchor="Center" style="ItemUI" />

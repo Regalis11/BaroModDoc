@@ -3,7 +3,7 @@
 
 ## Example
 ```xml
-<Item name="" identifier="deconstructor" tags="deconstructor,donttakeitems" category="Machine" linkable="true" allowedlinks="fabricator,medicalfabricator,locker" description="" scale="0.5" damagedbyexplosions="true" explosiondamagemultiplier="0.2">
+<Item identifier="deconstructor" tags="deconstructor,donttakeitems" category="Machine" linkable="true" allowedlinks="fabricator,medicalfabricator,locker" scale="0.5" damagedbyexplosions="true" explosiondamagemultiplier="0.2">
   <Deconstructor canbeselected="true" powerconsumption="500.0" msg="ItemMsgInteractSelect">
     <GuiFrame relativesize="0.25,0.27" style="ItemUI" anchor="Center" />
     <sound file="Content/Items/Fabricators/Deconstructor.ogg" type="OnActive" range="1000.0" loop="true" />

@@ -3,7 +3,7 @@
 
 ## Example
 ```xml
-<Item name="" identifier="shuttlenavterminal" tags="command,navterminal,secondarynavterminal" linkable="true" allowedlinks="statusmonitor" category="Machine" scale="0.5" damagedbyexplosions="true" explosiondamagemultiplier="0.2">
+<Item identifier="shuttlenavterminal" tags="command,navterminal,secondarynavterminal" linkable="true" allowedlinks="statusmonitor" category="Machine" scale="0.5" damagedbyexplosions="true" explosiondamagemultiplier="0.2">
   <CustomInterface canbeselected="true" allowuioverlap="true">
     <GuiFrame relativesize="0.15,0.1" anchor="CenterLeft" pivot="TopLeft" relativeoffset="0.1125,0.001" style="ItemUI" />
     <Button text="Signal out #1" connection="signal_out1" />

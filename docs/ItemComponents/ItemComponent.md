@@ -3,7 +3,7 @@
 
 ## Example
 ```xml
-<Item name="" identifier="incendiumgrenade" category="Weapon" maxstacksize="8" cargocontaineridentifier="explosivecrate" tags="smallitem,weapon,explosive,demolitionsexpert" Scale="0.5" impactsoundtag="impact_metal_heavy">
+<Item identifier="incendiumgrenade" category="Weapon" maxstacksize="8" cargocontaineridentifier="explosivecrate" tags="smallitem,weapon,explosive,demolitionsexpert" Scale="0.5" impactsoundtag="impact_metal_heavy">
   <ItemComponent characterusable="false">
     <!-- statuseffect that explodes the grenade when used by something else than a character (e.g. a detonator) -->
     <StatusEffect type="OnUse" target="This" Condition="-100.0" disabledeltatime="true" />

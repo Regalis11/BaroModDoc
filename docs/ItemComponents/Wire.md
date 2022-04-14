@@ -3,17 +3,8 @@
 
 ## Example
 ```xml
-<Item name="" identifier="dockinghatch" tags="dock" linkable="true" scale="0.5" indestructible="true" requirecursorinsidetrigger="true" requirebodyinsidetrigger="false">
+<Item identifier="wire" category="Electrical" Tags="smallitem,wire" maxstacksize="8" spritecolor="210,215,218,255" InventoryIconColor="210,215,218,255" canbepicked="true" cargocontaineridentifier="metalcrate" scale="0.5" impactsoundtag="impact_metal_light">
   <Wire />
-  <ConnectionPanel selectkey="Action" canbeselected="true" msg="ItemMsgRewireScrewdriver" hudpriority="10">
-    <GuiFrame relativesize="0.2,0.32" minsize="400,350" maxsize="480,420" anchor="Center" style="ConnectionPanel" />
-    <RequiredItem items="screwdriver" type="Equipped" />
-    <input name="toggle" displayname="connection.togglestate" />
-    <input name="set_state" displayname="connection.setstate" />
-    <output name="power" displayname="connection.power" maxwires="6" maxplayerconnectablewires="5" />
-    <output name="state_out" displayname="connection.stateout" fallbackdisplayname="connection.signalout" />
-    <output name="proximity_sensor" displayname="connection.dockingproximitysensor" fallbackdisplayname="label.readytodock" />
-  </ConnectionPanel>
   [...]
 </Item>
 ```

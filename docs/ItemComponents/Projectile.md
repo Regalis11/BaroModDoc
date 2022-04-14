@@ -3,12 +3,12 @@
 
 ## Example
 ```xml
-<Item name="" identifier="alienspear" category="Weapon,Alien" maxstacksize="6" interactthroughwalls="true" cargocontaineridentifier="metalcrate" tags="mediumitem,harpoonammo" Scale="0.5" impactsoundtag="impact_metal_light">
+<Item identifier="spear" category="Weapon" maxstacksize="6" interactthroughwalls="true" cargocontaineridentifier="metalcrate" tags="mediumitem,harpoonammo" Scale="0.5" impactsoundtag="impact_metal_light">
   <Projectile characterusable="false" launchimpulse="20.0" sticktocharacters="true" sticktoitems="false" sticktostructures="false">
-    <Attack structuredamage="30" itemdamage="60" targetforce="10" severlimbsprobability="0.2">
-      <Affliction identifier="bleeding" strength="35" />
-      <Affliction identifier="lacerations" strength="57.5" />
-      <Affliction identifier="stun" strength="1" />
+    <Attack structuredamage="20" itemdamage="40" targetforce="5" severlimbsprobability="0.1">
+      <Affliction identifier="bleeding" strength="30" />
+      <Affliction identifier="lacerations" strength="30" />
+      <Affliction identifier="stun" strength="0.3" />
     </Attack>
     <StatusEffect type="OnActive" target="UseTarget,This" checkconditionalalways="true" comparison="And">
       <Conditional Snapped="false" />

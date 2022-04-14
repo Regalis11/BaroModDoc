@@ -3,7 +3,7 @@
 
 ## Example
 ```xml
-<Item name="" identifier="dischargecoil" tags="dischargecoil" category="Machine,Weapon" Scale="0.5">
+<Item identifier="dischargecoil" tags="dischargecoil" category="Machine,Weapon" Scale="0.5">
   <ElectricalDischarger duration="0.25" outdoorsonly="true" powerconsumption="10000">
     <Attack targetimpulse="50">
       <Affliction identifier="stun" strength="8" />

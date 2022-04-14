@@ -3,7 +3,7 @@
 
 ## Example
 ```xml
-<Item name="" identifier="alienterminal" category="Alien" Tags="smallitem,logic" cargocontaineridentifier="metalcrate" scale="0.5" impactsoundtag="impact_metal_light" isshootable="true">
+<Item identifier="alienterminal" category="Alien" Tags="smallitem,logic" cargocontaineridentifier="metalcrate" scale="0.5" impactsoundtag="impact_metal_light" isshootable="true">
   <ButtonTerminal activatingitems="smallalienartifact" canbeselected="true" msg="ItemMsgInteractSelect">
     <GuiFrame relativesize="0.25,0.2" style="ItemUI" anchor="Center" />
     <TerminalButton style="alienbuttongreen" />
