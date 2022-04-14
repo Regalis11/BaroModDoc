@@ -1,6 +1,13 @@
 # XorComponent
 
 
+## Attributes
+
+| Attribute|Type|Default value|Description |
+| ---|---|---|--- |
+
+
+
 ## Example
 ```xml
 <Item identifier="xorcomponent" category="Electrical" Tags="smallitem,logic" maxstacksize="8" linkable="true" cargocontaineridentifier="metalcrate" scale="0.5" impactsoundtag="impact_metal_light" isshootable="true">

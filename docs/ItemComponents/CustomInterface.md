@@ -1,6 +1,15 @@
 # CustomInterface
 
 
+## Attributes
+
+| Attribute|Type|Default value|Description |
+| ---|---|---|--- |
+| Labels|string|""|The texts displayed on the buttons/tickboxes, separated by commas. |
+| Signals|string|""|The signals sent when the buttons are pressed or the tickboxes checked, separated by commas. |
+
+
+
 ## Example
 ```xml
 <Item identifier="shuttlenavterminal" tags="command,navterminal,secondarynavterminal" linkable="true" allowedlinks="statusmonitor" category="Machine" scale="0.5" damagedbyexplosions="true" explosiondamagemultiplier="0.2">

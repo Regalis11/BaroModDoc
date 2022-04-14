@@ -1,6 +1,14 @@
 # Quality
 
 
+## Attributes
+
+| Attribute|Type|Default value|Description |
+| ---|---|---|--- |
+| QualityLevel|int|0| |
+
+
+
 ## Example
 ```xml
 <Item identifier="crowbar" category="Equipment" Tags="smallitem,tool,simpletool,dooropeningtool,crowbaritem" cargocontaineridentifier="metalcrate" Scale="0.5" impactsoundtag="impact_metal_light" RequireAimToUse="True">

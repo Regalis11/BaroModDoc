@@ -1,6 +1,15 @@
 # Steering
 
 
+## Attributes
+
+| Attribute|Type|Default value|Description |
+| ---|---|---|--- |
+| NeutralBallastLevel|float|0.5|How full the ballast tanks should be when the submarine is not being steered upwards/downwards. Can be used to compensate if the ballast tanks are too large/small relative to the size of the submarine. |
+| DockingAssistThreshold|float|1000.0|How close the docking port has to be to another docking port for the docking mode to become active. |
+
+
+
 ## Example
 ```xml
 <Item identifier="shuttlenavterminal" tags="command,navterminal,secondarynavterminal" linkable="true" allowedlinks="statusmonitor" category="Machine" scale="0.5" damagedbyexplosions="true" explosiondamagemultiplier="0.2">

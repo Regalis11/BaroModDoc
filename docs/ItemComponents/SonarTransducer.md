@@ -1,6 +1,13 @@
 # SonarTransducer
 
 
+## Attributes
+
+| Attribute|Type|Default value|Description |
+| ---|---|---|--- |
+
+
+
 ## Example
 ```xml
 <Item identifier="sonartransducer" tags="command,sonartransducer" category="Machine" spritecolor="255,255,255,255" Scale="0.5">

@@ -1,6 +1,17 @@
 # Scanner
 
 
+## Attributes
+
+| Attribute|Type|Default value|Description |
+| ---|---|---|--- |
+| ScanDuration|float|1.0|How long it takes for the scan to be completed. |
+| ScanTimer|float|0.0|How far along the scan is. When the timer goes above ScanDuration, the scan is completed. |
+| ScanRadius|float|1.0|How far the scanner can be from the target for the scan to be successful. |
+| AlwaysDisplayProgressBar|bool|true|Should the progress bar always be displayed when the item has been attached. |
+
+
+
 ## Example
 ```xml
 <Item identifier="ruinscanner" category="Equipment" Tags="smallitem,scanner" Scale="0.5" cargocontaineridentifier="metalcrate" impactsoundtag="impact_metal_light" isshootable="true">

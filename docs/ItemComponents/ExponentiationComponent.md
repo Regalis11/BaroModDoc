@@ -1,6 +1,14 @@
 # ExponentiationComponent
 
 
+## Attributes
+
+| Attribute|Type|Default value|Description |
+| ---|---|---|--- |
+| Exponent|float|1.0|The exponent of the operation. |
+
+
+
 ## Example
 ```xml
 <Item identifier="powcomponent" category="Electrical" Tags="smallitem,logic" maxstacksize="8" linkable="false" cargocontaineridentifier="metalcrate" scale="0.5" impactsoundtag="impact_metal_light" isshootable="true">

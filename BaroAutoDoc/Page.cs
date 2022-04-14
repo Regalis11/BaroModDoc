@@ -51,6 +51,36 @@ public class Page
         protected override string tag => "sub";
     }
 
+
+    public record Table : BodyComponent
+    {
+        public record Row(params string[] Values)
+        {
+            public string ToMarkdown()
+                => $"| {string.Join("|", Values)} |";
+        }
+
+        public Row? HeadRow;
+        public readonly List<Row> BodyRows = new();
+
+        public override string ToMarkdown()
+        {
+            List<string> lines = new List<string>();
+            if (HeadRow != null)
+            {
+                lines.Add(HeadRow.ToMarkdown());
+                lines.Add($"| {string.Join("|", HeadRow.Values.Select(_ => "---"))} |");
+            }
+
+            foreach (var row in BodyRows)
+            {
+                lines.Add(row.ToMarkdown());
+            }
+
+            return $"\n{string.Join("\n", lines)}\n";
+        }
+    }
+    
     public record NewLine : BodyComponent
     {
         public override string ToMarkdown() => "\n";

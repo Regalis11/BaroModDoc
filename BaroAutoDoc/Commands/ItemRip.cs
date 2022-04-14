@@ -1,20 +1,76 @@
 ﻿using System.Reflection;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using BaroAutoDoc.SyntaxWalkers;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace BaroAutoDoc.Commands;
 
 public class ItemRip : Command
 {
-    private record TreeNode(
-        ClassDeclarationSyntax Class)
+    private record TreeNode(ClassDeclarationSyntax Class)
     {
+        public record Attribute(string Name, string Type, string DefaultValue, string Description);
+        
         public readonly List<TreeNode> Children = new();
         public readonly HashSet<TreeNode> InteractsWith = new();
         public string Name => Class.Identifier.Text;
         public string ParentName => Class.BaseList!.Types.First().ToString();
+
+        public IEnumerable<Attribute> Attributes
+        {
+            get
+            {
+                foreach (var member in Class.Members)
+                {
+                    if (member is not PropertyDeclarationSyntax property) { continue; }
+                    var serializeAttr = property.AttributeLists
+                        .SelectMany(l => l.Attributes)
+                        .FirstOrDefault(a => a.Name.ToString() == "Serialize");
+                    if (serializeAttr is null) { continue; }
+
+                    string cleanupDefaultValue(string v)
+                        => v.EndsWith("f") ? v[..^1] : v;
+                    
+                    string cleanupDescription(string desc)
+                        => CSharpScript.EvaluateAsync<string>(desc).Result;
+
+                    string getArgument(string argName)
+                    {
+                        var arg = serializeAttr.ArgumentList!.Arguments.FirstOrDefault(arg
+                            => arg.NameColon?.Name.Identifier.Text == argName);
+                        if (arg is null)
+                        {
+                            switch (argName)
+                            {
+                                case "defaultValue":
+                                    arg = serializeAttr.ArgumentList!.Arguments[0];
+                                    break;
+                                case "description":
+                                    arg = serializeAttr.ArgumentList!.Arguments.Count >= 3 ? serializeAttr.ArgumentList.Arguments[2] : null;
+                                    break;
+                            }
+                        }
+
+                        return arg?.NameColon is not { Name.Identifier.Text: { } name } || name == argName
+                            ? arg?.Expression.ToString() ?? ""
+                            : "";
+                    }
+                    
+                    yield return new Attribute(
+                        Name: property.Identifier.Text,
+                        Type: property.Type.ToString(),
+                        DefaultValue: cleanupDefaultValue(getArgument("defaultValue")),
+                        Description: cleanupDescription(getArgument("description")));
+                }
+            }
+        }
+        
+        public bool IsAbstract => Class.Modifiers.Any(m => m.IsKind(SyntaxKind.AbstractKeyword));
         
         public TreeNode? Parent = null;
     }
@@ -188,17 +244,34 @@ public class ItemRip : Command
         //Convert the trimmed examples to Markdown and write
         Directory.SetCurrentDirectory(Path.GetDirectoryName(Assembly.GetCallingAssembly().Location)!);
         Directory.CreateDirectory("ItemComponents");
-        foreach (var (node, example) in trimmedExamples)
+        foreach (var node in nodes.Values)
         {
+            if (node.IsAbstract) { continue; }
+            
             Page page = new();
             page.Title = node.Name;
 
-            Page.Section exampleSection = new(); page.Subsections.Add(exampleSection);
-            exampleSection.Title = "Example";
-            
-            exampleSection.Body.Components.Add(Page.CodeBlock.FromXElement(example)
-                .PostProcess(s => s.Replace("<__OMISSION__ />", "[...]")));
-            File.WriteAllText(Path.Combine("ItemComponents", $"{node.Name}.md"), page.ToMarkdown());
+            Page.Section attributesSection = new(); page.Subsections.Add(attributesSection);
+            attributesSection.Title = "Attributes";
+
+            Page.Table attributesTable = new()
+            {
+                HeadRow = new Page.Table.Row("Attribute", "Type", "Default value", "Description")
+            };
+            foreach (var attr in node.Attributes)
+            {
+                attributesTable.BodyRows.Add(new Page.Table.Row(attr.Name, attr.Type, attr.DefaultValue, attr.Description));
+            }
+            attributesSection.Body.Components.Add(attributesTable);
+
+            if (trimmedExamples.TryGetValue(node, out var example))
+            {
+                Page.Section exampleSection = new(); page.Subsections.Add(exampleSection);
+                exampleSection.Title = "Example";
+                exampleSection.Body.Components.Add(Page.CodeBlock.FromXElement(example)
+                    .PostProcess(s => s.Replace("<__OMISSION__ />", "[...]")));
+                File.WriteAllText(Path.Combine("ItemComponents", $"{node.Name}.md"), page.ToMarkdown());
+            }
         }
     }
 }

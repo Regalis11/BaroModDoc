@@ -1,6 +1,13 @@
 # OxygenDetector
 
 
+## Attributes
+
+| Attribute|Type|Default value|Description |
+| ---|---|---|--- |
+
+
+
 ## Example
 ```xml
 <Item identifier="oxygendetector" category="Electrical" Tags="smallitem,sensor" maxstacksize="8" cargocontaineridentifier="metalcrate" scale="0.5" impactsoundtag="impact_metal_light" isshootable="true">

@@ -1,6 +1,14 @@
 # NotComponent
 
 
+## Attributes
+
+| Attribute|Type|Default value|Description |
+| ---|---|---|--- |
+| ContinuousOutput|bool|false|When enabled, the component continuously outputs "1" when it's not receiving a signal. |
+
+
+
 ## Example
 ```xml
 <Item identifier="notcomponent" category="Electrical" Tags="smallitem,logic" maxstacksize="8" cargocontaineridentifier="metalcrate" scale="0.5" impactsoundtag="impact_metal_light" isshootable="true">

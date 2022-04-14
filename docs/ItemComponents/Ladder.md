@@ -1,6 +1,13 @@
 # Ladder
 
 
+## Attributes
+
+| Attribute|Type|Default value|Description |
+| ---|---|---|--- |
+
+
+
 ## Example
 ```xml
 <Item identifier="ladderwrecked" nameidentifier="ladder" category="Wrecked" tags="ladder" resizevertical="true">

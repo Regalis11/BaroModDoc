@@ -1,6 +1,17 @@
 # ElectricalDischarger
 
 
+## Attributes
+
+| Attribute|Type|Default value|Description |
+| ---|---|---|--- |
+| Range|float|500.0|How far the discharge can travel from the item. |
+| RangeMultiplierInWalls|float|25.0|How much further can the discharge be carried when moving across walls. |
+| Duration|float|0.25|The duration of an individual discharge (in seconds). |
+| OutdoorsOnly|bool|false|If set to true, the discharge cannot travel inside the submarine nor shock anyone inside. |
+
+
+
 ## Example
 ```xml
 <Item identifier="dischargecoil" tags="dischargecoil" category="Machine,Weapon" Scale="0.5">

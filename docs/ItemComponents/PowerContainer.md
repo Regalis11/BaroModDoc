@@ -1,6 +1,24 @@
 # PowerContainer
 
 
+## Attributes
+
+| Attribute|Type|Default value|Description |
+| ---|---|---|--- |
+| IndicatorPosition|Vector2|"0,0"|The position of the progress bar indicating the charge of the item. In pixels as an offset from the upper left corner of the sprite. |
+| IndicatorSize|Vector2|"0,0"|The size of the progress bar indicating the charge of the item (in pixels). |
+| IsHorizontal|bool|false|Should the progress bar indicating the charge of the item fill up horizontally or vertically. |
+| MaxOutPut|float|10.0|Maximum output of the device when fully charged (kW). |
+| Capacity|float|10.0|The maximum capacity of the device (kW * min). For example, a value of 1000 means the device can output 100 kilowatts of power for 10 minutes, or 1000 kilowatts for 1 minute. |
+| Charge|float|0.0|The current charge of the device. |
+| MaxRechargeSpeed|float|10.0|How fast the device can be recharged. For example, a recharge speed of 100 kW and a capacity of 1000 kW*min would mean it takes 10 minutes to fully charge the device. |
+| RechargeSpeed|float|10.0|The current recharge speed of the device. |
+| ExponentialRechargeSpeed|bool|false|If true, the recharge speed (and power consumption) of the device goes up exponentially as the recharge rate is increased. |
+| RechargeAdjustSpeed|float|0.5| |
+| Efficiency|float|0.95|The amount of power you can get out of a item relative to the amount of power that's put into it. |
+
+
+
 ## Example
 ```xml
 <Item identifier="shuttlebattery" tags="battery,batterycellrecharger" category="Electrical,Machine" Scale="0.5" damagedbyexplosions="false">

@@ -1,6 +1,16 @@
 # SmokeDetector
 
 
+## Attributes
+
+| Attribute|Type|Default value|Description |
+| ---|---|---|--- |
+| MaxOutputLength|int|200|The maximum length of the output strings. Warning: Large values can lead to large memory usage or networking issues. |
+| Output|string|"1"|The signal the item outputs when it has detected a fire. |
+| FalseOutput|string|"0"|The signal the item outputs when it has not detected a fire. |
+
+
+
 ## Example
 ```xml
 <Item identifier="smokedetector" category="Electrical" Tags="smallitem,sensor" maxstacksize="8" cargocontaineridentifier="metalcrate" scale="0.5" impactsoundtag="impact_metal_light" isshootable="true">

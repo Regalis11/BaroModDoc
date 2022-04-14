@@ -1,6 +1,30 @@
 # Reactor
 
 
+## Attributes
+
+| Attribute|Type|Default value|Description |
+| ---|---|---|--- |
+| PowerOn|bool|false| |
+| LastUserWasPlayer|bool|false| |
+| MaxPowerOutput|float|10000.0|How much power (kW) the reactor generates when operating at full capacity. |
+| MeltdownDelay|float|120.0|How long the temperature has to stay critical until a meltdown occurs. |
+| FireDelay|float|30.0|How long the temperature has to stay critical until the reactor catches fire. |
+| Temperature|float|0.0|Current temperature of the reactor (0% - 100%). Indended to be used by StatusEffect conditionals. |
+| FissionRate|float|0.0|Current fission rate of the reactor (0% - 100%). Intended to be used by StatusEffect conditionals (setting the value from XML is not recommended). |
+| TurbineOutput|float|0.0|Current turbine output of the reactor (0% - 100%). Intended to be used by StatusEffect conditionals (setting the value from XML is not recommended). |
+| FuelConsumptionRate|float|0.2|How fast the condition of the contained fuel rods deteriorates per second. |
+| TemperatureCritical|bool|false|Is the temperature currently critical. Intended to be used by StatusEffect conditionals (setting the value from XML has no effect). |
+| AutoTemp|bool|false|Is the automatic temperature control currently on. Indended to be used by StatusEffect conditionals (setting the value from XML is not recommended). |
+| AvailableFuel|float|0.0| |
+| Load|float|0.0| |
+| TargetFissionRate|float|0.0| |
+| TargetTurbineOutput|float|0.0| |
+| CorrectTurbineOutput|float|0.0| |
+| ExplosionDamagesOtherSubs|bool|true| |
+
+
+
 ## Example
 ```xml
 <Item nameidentifier="reactor1" identifier="outpostreactor" tags="reactor" type="Reactor" linkable="true" category="Machine" damagedbyexplosions="true" scale="0.5" explosiondamagemultiplier="0.2">

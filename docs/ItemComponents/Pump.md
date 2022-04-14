@@ -1,6 +1,16 @@
 # Pump
 
 
+## Attributes
+
+| Attribute|Type|Default value|Description |
+| ---|---|---|--- |
+| FlowPercentage|float|0.0|How fast the item is currently pumping water (-100 = full speed out, 100 = full speed in). Intended to be used by StatusEffect conditionals (setting this value in XML has no effect). |
+| MaxFlow|float|80.0|How fast the item pumps water in/out when operating at 100%. |
+| IsOn|bool|true| |
+
+
+
 ## Example
 ```xml
 <Item identifier="smallpump" tags="pump" linkable="true" category="Machine" scale="0.5" damagedbyexplosions="true" explosiondamagemultiplier="0.2" allowrotatingineditor="true">

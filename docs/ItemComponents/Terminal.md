@@ -1,6 +1,16 @@
 # Terminal
 
 
+## Attributes
+
+| Attribute|Type|Default value|Description |
+| ---|---|---|--- |
+| WelcomeMessage|string|""|Message to be displayed on the terminal display when it is first opened. |
+| UseMonospaceFont|bool|false|The terminal will use a monospace font if this box is ticked. |
+| TextColor|Color|"50,205,50,255"|Color of the terminal text. |
+
+
+
 ## Example
 ```xml
 <Item identifier="terminal" category="Electrical" Tags="smallitem,logic" cargocontaineridentifier="metalcrate" scale="0.5" impactsoundtag="impact_metal_light" isshootable="true">

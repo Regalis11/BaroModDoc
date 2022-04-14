@@ -1,6 +1,13 @@
 # StatusHUD
 
 
+## Attributes
+
+| Attribute|Type|Default value|Description |
+| ---|---|---|--- |
+
+
+
 ## Example
 ```xml
 <Item identifier="thermalgoggles" scale="0.5" category="Equipment" tags="smallitem,clothing" cargocontaineridentifier="metalcrate" impactsoundtag="impact_metal_light">

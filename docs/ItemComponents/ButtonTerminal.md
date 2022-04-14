@@ -1,6 +1,15 @@
 # ButtonTerminal
 
 
+## Attributes
+
+| Attribute|Type|Default value|Description |
+| ---|---|---|--- |
+| Signals|string[]|new string[0]|Signals sent when the corresponding buttons are pressed. |
+| ActivatingItems|string|""|Identifiers or tags of items that, when contained, allow the terminal buttons to be used. Multiple ones should be separated by commas. |
+
+
+
 ## Example
 ```xml
 <Item identifier="alienterminal" category="Alien" Tags="smallitem,logic" cargocontaineridentifier="metalcrate" scale="0.5" impactsoundtag="impact_metal_light" isshootable="true">

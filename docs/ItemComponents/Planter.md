@@ -1,6 +1,15 @@
 # Planter
 
 
+## Attributes
+
+| Attribute|Type|Default value|Description |
+| ---|---|---|--- |
+| Fertilizer|float|0|How much fertilizer the planter has. |
+| FertilizerCapacity|float|100|How much fertilizer can the planter hold. |
+
+
+
 ## Example
 ```xml
 <Item identifier="smallplanter" category="Misc" Tags="planter,mediumitem" scale="0.5" isshootable="true">

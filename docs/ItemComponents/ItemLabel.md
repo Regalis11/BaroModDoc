@@ -1,6 +1,13 @@
 # ItemLabel
 
 
+## Attributes
+
+| Attribute|Type|Default value|Description |
+| ---|---|---|--- |
+
+
+
 ## Example
 ```xml
 <Item identifier="textdisplay" scale="0.5" impactsoundtag="impact_metal_light" isshootable="true">

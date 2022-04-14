@@ -1,6 +1,15 @@
 # RelayComponent
 
 
+## Attributes
+
+| Attribute|Type|Default value|Description |
+| ---|---|---|--- |
+| MaxPower|float|1000.0|The maximum amount of power that can pass through the item. |
+| IsOn|bool|true|Can the relay currently pass power and signals through it. |
+
+
+
 ## Example
 ```xml
 <Item identifier="relaycomponent" category="Electrical" Tags="smallitem,signal,logic" maxstacksize="8" cargocontaineridentifier="metalcrate" scale="0.5" impactsoundtag="impact_metal_light" isshootable="true">

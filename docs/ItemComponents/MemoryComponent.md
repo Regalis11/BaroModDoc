@@ -1,6 +1,16 @@
 # MemoryComponent
 
 
+## Attributes
+
+| Attribute|Type|Default value|Description |
+| ---|---|---|--- |
+| MaxValueLength|int|200|The maximum length of the stored value. Warning: Large values can lead to large memory usage or networking issues. |
+| Value|string|""|The currently stored signal the item outputs. |
+| Writeable|bool|true|Can the value stored in the memory component be changed via signals. |
+
+
+
 ## Example
 ```xml
 <Item identifier="memorycomponent" category="Electrical" Tags="smallitem,logic" maxstacksize="8" linkable="true" cargocontaineridentifier="metalcrate" scale="0.5" impactsoundtag="impact_metal_light" isshootable="true">

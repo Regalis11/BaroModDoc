@@ -1,6 +1,15 @@
 # Deconstructor
 
 
+## Attributes
+
+| Attribute|Type|Default value|Description |
+| ---|---|---|--- |
+| DeconstructItemsSimultaneously|bool|false| |
+| DeconstructionSpeed|float|1.0| |
+
+
+
 ## Example
 ```xml
 <Item identifier="deconstructor" tags="deconstructor,donttakeitems" category="Machine" linkable="true" allowedlinks="fabricator,medicalfabricator,locker" scale="0.5" damagedbyexplosions="true" explosiondamagemultiplier="0.2">

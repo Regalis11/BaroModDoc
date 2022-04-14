@@ -1,6 +1,16 @@
 # Engine
 
 
+## Attributes
+
+| Attribute|Type|Default value|Description |
+| ---|---|---|--- |
+| MaxForce|float|500.0|The amount of force exerted on the submarine when the engine is operating at full power. |
+| PropellerPos|Vector2|"0.0,0.0"|The position of the propeller as an offset from the item's center (in pixels). Determines where the particles spawn and the position that causes characters to take damage from the engine if the PropellerDamage is defined. |
+| DisablePropellerDamage|bool|false| |
+
+
+
 ## Example
 ```xml
 <Item identifier="shuttleengine" tags="engine" category="Machine" Scale="0.5" damagedbyexplosions="true" explosiondamagemultiplier="0.2">

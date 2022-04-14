@@ -1,6 +1,14 @@
 # OxygenGenerator
 
 
+## Attributes
+
+| Attribute|Type|Default value|Description |
+| ---|---|---|--- |
+| GeneratedAmount|float|400.0|How much oxygen the machine generates when operating at full power. |
+
+
+
 ## Example
 ```xml
 <Item nameidentifier="oxygenerator" identifier="outpostoxygenerator" tags="oxygengenerator" category="Machine" linkable="true" allowedlinks="vent" damagedbyexplosions="true" scale="0.5" explosiondamagemultiplier="0.2">

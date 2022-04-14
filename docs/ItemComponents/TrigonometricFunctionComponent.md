@@ -1,6 +1,15 @@
 # TrigonometricFunctionComponent
 
 
+## Attributes
+
+| Attribute|Type|Default value|Description |
+| ---|---|---|--- |
+| Function|FunctionType|FunctionType.Sin|Which kind of function to run the input through. |
+| UseRadians|bool|false|If set to true, the trigonometric function uses radians instead of degrees. |
+
+
+
 ## Example
 ```xml
 <Item identifier="coscomponent" category="Electrical" Tags="smallitem,logic" maxstacksize="8" cargocontaineridentifier="metalcrate" scale="0.5" impactsoundtag="impact_metal_light" isshootable="true">

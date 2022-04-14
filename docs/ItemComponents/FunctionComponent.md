@@ -1,6 +1,14 @@
 # FunctionComponent
 
 
+## Attributes
+
+| Attribute|Type|Default value|Description |
+| ---|---|---|--- |
+| Function|FunctionType|FunctionType.Round|Which kind of function to run the input through. |
+
+
+
 ## Example
 ```xml
 <Item identifier="ceilcomponent" category="Electrical" Tags="smallitem,logic" maxstacksize="8" cargocontaineridentifier="metalcrate" scale="0.5" impactsoundtag="impact_metal_light" isshootable="true">

@@ -1,6 +1,14 @@
 # TriggerComponent
 
 
+## Attributes
+
+| Attribute|Type|Default value|Description |
+| ---|---|---|--- |
+| Force|float|0.0|The maximum amount of force applied to the triggering entitites. |
+
+
+
 ## Example
 ```xml
 <Item identifier="gravitysphere" category="Alien" linkable="true" scale="0.5">

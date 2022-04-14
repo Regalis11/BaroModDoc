@@ -1,6 +1,27 @@
 # IdCard
 
 
+## Attributes
+
+| Attribute|Type|Default value|Description |
+| ---|---|---|--- |
+| TeamID|CharacterTeamType|CharacterTeamType.None| |
+| SubmarineSpecificID|int|0| |
+| OwnerTags|string|""| |
+| Description|string|""| |
+| OwnerName|string|""| |
+| OwnerJobId|Identifier|""| |
+| OwnerHairIndex|int|-1| |
+| OwnerBeardIndex|int|-1| |
+| OwnerMoustacheIndex|int|-1| |
+| OwnerFaceAttachmentIndex|int|-1| |
+| OwnerHairColor|Color|"#ffffff"| |
+| OwnerFacialHairColor|Color|"#ffffff"| |
+| OwnerSkinColor|Color|"#ffffff"| |
+| OwnerSheetIndex|Vector2|"0,0"| |
+
+
+
 ## Example
 ```xml
 <Item identifier="idcard" category="Equipment" Tags="smallitem,identitycard" cargocontaineridentifier="metalcrate">

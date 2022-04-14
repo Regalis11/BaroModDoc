@@ -1,6 +1,23 @@
 # Repairable
 
 
+## Attributes
+
+| Attribute|Type|Default value|Description |
+| ---|---|---|--- |
+| DeteriorationSpeed|float|0.0|How fast the condition of the item deteriorates per second. |
+| MinDeteriorationDelay|float|0.0|Minimum initial delay before the item starts to deteriorate. |
+| MaxDeteriorationDelay|float|0.0|Maximum initial delay before the item starts to deteriorate. |
+| MinDeteriorationCondition|float|50.0|The item won't deteriorate spontaneously if the condition is below this value. For example, if set to 10, the condition will spontaneously drop to 10 and then stop dropping (unless the item is damaged further by external factors). Percentages of max condition. |
+| MinSabotageCondition|float|0|How low a traitor must get the item's condition for it to start breaking down. |
+| RepairThreshold|float|80.0|The condition of the item has to be below this for it to become repairable. Percentages of max condition. |
+| FixDurationLowSkill|float|100.0|The amount of time it takes to fix the item with insufficient skill levels. |
+| FixDurationHighSkill|float|10.0|The amount of time it takes to fix the item with sufficient skill levels. |
+| DeteriorateAlways|bool|false|If set to true, the deterioration timer will always run regardless if the item is being used or not. |
+| SkillRequirementMultiplier|float|1.0| |
+
+
+
 ## Example
 ```xml
 <Item identifier="op_researchterminal" tags="geneticresearchstation" width="494" height="297" texturescale="1.0,1.0" scale="0.5" category="Machine" subcategory="Outpost">

@@ -1,6 +1,18 @@
 # Sonar
 
 
+## Attributes
+
+| Attribute|Type|Default value|Description |
+| ---|---|---|--- |
+| Range|float|DefaultSonarRange|The maximum range of the sonar. |
+| DetectSubmarineWalls|bool|false|Should the sonar display the walls of the submarine it is inside. |
+| UseTransducers|bool|false|Does the sonar have to be connected to external transducers to work. |
+| CenterOnTransducers|bool|false|Should the sonar view be centered on the transducers or the submarine's center of mass. Only has an effect if UseTransducers is enabled. |
+| HasMineralScanner|bool|false|Does the sonar have mineral scanning mode. Only available in-game when the Item has no Steering component. |
+
+
+
 ## Example
 ```xml
 <Item identifier="sonarmonitor" tags="command,sonarmonitor" linkable="true" allowedlinks="statusmonitor" scale="0.5" category="Machine" damagedbyexplosions="true" explosiondamagemultiplier="0.2">

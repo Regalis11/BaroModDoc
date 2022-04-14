@@ -1,6 +1,15 @@
 # Fabricator
 
 
+## Attributes
+
+| Attribute|Type|Default value|Description |
+| ---|---|---|--- |
+| FabricationSpeed|float|1.0| |
+| SkillRequirementMultiplier|float|1.0| |
+
+
+
 ## Example
 ```xml
 <Item identifier="medicalfabricator" tags="medicalfabricator,donttakeitems" category="Machine" linkable="true" allowedlinks="deconstructor,medcabinet,locker,toxcontainer" scale="0.5" damagedbyexplosions="true" explosiondamagemultiplier="0.2">

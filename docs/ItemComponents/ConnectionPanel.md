@@ -1,6 +1,14 @@
 # ConnectionPanel
 
 
+## Attributes
+
+| Attribute|Type|Default value|Description |
+| ---|---|---|--- |
+| Locked|bool|false|Locked connection panels cannot be rewired in-game. |
+
+
+
 ## Example
 ```xml
 <Item identifier="button" category="Electrical" tags="smallitem,button" cargocontaineridentifier="metalcrate" scale="0.5" impactsoundtag="impact_metal_light" isshootable="true" maxstacksize="8">

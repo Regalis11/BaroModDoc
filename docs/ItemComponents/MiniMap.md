@@ -1,6 +1,19 @@
 # MiniMap
 
 
+## Attributes
+
+| Attribute|Type|Default value|Description |
+| ---|---|---|--- |
+| RequireWaterDetectors|bool|false|Does the machine require inputs from water detectors in order to show the water levels inside rooms. |
+| RequireOxygenDetectors|bool|true|Does the machine require inputs from oxygen detectors in order to show the oxygen levels inside rooms. |
+| ShowHullIntegrity|bool|true|Should damaged walls be displayed by the machine. |
+| EnableHullStatus|bool|true|Enable hull status mode. |
+| EnableElectricalView|bool|true|Enable electrical view mode. |
+| EnableItemFinder|bool|true|Enable item finder mode. |
+
+
+
 ## Example
 ```xml
 <Item identifier="statusmonitor" tags="command,statusmonitor" aliases="MiniMap" category="Machine" linkable="true" scale="0.5" allowedlinks="navterminal" damagedbyexplosions="true" explosiondamagemultiplier="0.2">

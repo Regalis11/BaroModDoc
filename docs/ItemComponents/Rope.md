@@ -1,6 +1,23 @@
 # Rope
 
 
+## Attributes
+
+| Attribute|Type|Default value|Description |
+| ---|---|---|--- |
+| SnapAnimDuration|float|1.0| |
+| ProjectilePullForce|float|0.0|How much force is applied to pull the projectile the rope is attached to. |
+| TargetPullForce|float|0.0|How much force is applied to pull the target the rope is attached to. |
+| SourcePullForce|float|0.0|How much force is applied to pull the source the rope is attached to. |
+| MaxLength|float|1000.0|How far the source item can be from the projectile until the rope breaks. |
+| MaxAngle|float|360.0|The maximum angle from the source to the target until the rope breaks. |
+| SnapOnCollision|bool|true|Should the rope snap when it collides with a structure/submarine (if not, it will just go through it). |
+| SnapWhenNotAimed|bool|true|Should the rope snap when the character drops the aim? |
+| TargetMinMass|float|30.0|How much mass is required for the target to pull the source towards it. Static and kinematic targets are always treated heavy enough. |
+| LerpForces|bool|false| |
+
+
+
 ## Example
 ```xml
 <Item identifier="spear" category="Weapon" maxstacksize="6" interactthroughwalls="true" cargocontaineridentifier="metalcrate" tags="mediumitem,harpoonammo" Scale="0.5" impactsoundtag="impact_metal_light">

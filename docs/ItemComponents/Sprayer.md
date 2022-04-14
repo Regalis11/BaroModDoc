@@ -1,6 +1,15 @@
 # Sprayer
 
 
+## Attributes
+
+| Attribute|Type|Default value|Description |
+| ---|---|---|--- |
+| Range|float|0.0|The distance at which the item can spray walls. |
+| SprayStrength|float|1.0|How fast the item changes the color of the walls. |
+
+
+
 ## Example
 ```xml
 <Item identifier="sprayer" category="Equipment" Tags="smallitem,tool" cargocontaineridentifier="metalcrate" Scale="0.5" impactsoundtag="impact_metal_light">

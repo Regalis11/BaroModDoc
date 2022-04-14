@@ -1,6 +1,13 @@
 # Vent
 
 
+## Attributes
+
+| Attribute|Type|Default value|Description |
+| ---|---|---|--- |
+
+
+
 ## Example
 ```xml
 <Item identifier="vent" tags="vent" category="Machine" interactdistance="0" linkable="true" allowedlinks="oxygenerator" scale="0.5">

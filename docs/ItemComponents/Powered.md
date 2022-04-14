@@ -1,6 +1,19 @@
 # Powered
 
 
+## Attributes
+
+| Attribute|Type|Default value|Description |
+| ---|---|---|--- |
+| MinVoltage|float|0.5|The minimum voltage required for the device to function. The voltage is calculated as power / powerconsumption, meaning that a device with a power consumption of 1000 kW would need at least 500 kW of power to work if the minimum voltage is set to 0.5. |
+| PowerConsumption|float|0.0|How much power the device draws (or attempts to draw) from the electrical grid when active. |
+| IsActive|bool|false|Is the device currently active. Inactive devices don't consume power. |
+| CurrPowerConsumption|float|0.0|The current power consumption of the device. Intended to be used by StatusEffect conditionals (setting the value from XML is not recommended). |
+| Voltage|float|0.0|The current voltage of the item (calculated as power consumption / available power). Intended to be used by StatusEffect conditionals (setting the value from XML is not recommended). |
+| VulnerableToEMP|bool|true|Can the item be damaged by electomagnetic pulses. |
+
+
+
 ## Example
 ```xml
 <Item identifier="divingsuitlocker" category="Diving" tags="container,divingsuitcontainer,divingsuitcontainerwindow" pickdistance="50" scale="0.5">

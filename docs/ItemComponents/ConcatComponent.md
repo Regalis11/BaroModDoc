@@ -1,6 +1,15 @@
 # ConcatComponent
 
 
+## Attributes
+
+| Attribute|Type|Default value|Description |
+| ---|---|---|--- |
+| MaxOutputLength|int|256|The maximum length of the output string. Warning: Large values can lead to large memory usage or networking load. |
+| Separator|string|""| |
+
+
+
 ## Example
 ```xml
 <Item identifier="concatcomponent" category="Electrical" Tags="smallitem,logic" maxstacksize="8" cargocontaineridentifier="metalcrate" scale="0.5" impactsoundtag="impact_metal_light" isshootable="true">
