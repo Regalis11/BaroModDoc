@@ -76,6 +76,8 @@ public class ItemRip : Command
         //Find references from one class to another
         var referenceFinder
             = new Regex(@"item\.GetComponent[s]?<(.+?)>", RegexOptions.CultureInvariant | RegexOptions.Compiled);
+        var qualityRefFinder
+            = new Regex(@"item\.GetQualityModifier\((.+?)\)", RegexOptions.CultureInvariant | RegexOptions.Compiled);
         foreach (var node in nodes.Values)
         {
             var code = node.Class.ToString();
@@ -84,6 +86,12 @@ public class ItemRip : Command
             {
                 //Console.WriteLine($"{node.Name} -> {match.Groups[0].Value}");
                 node.InteractsWith.Add(nodes[match.Groups[1].Value]);
+            }
+
+            var qualityMatches = qualityRefFinder.Matches(code);
+            if (qualityMatches.Any())
+            {
+                nodes["Quality"].InteractsWith.Add(node);
             }
         }
 
