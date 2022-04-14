@@ -110,10 +110,16 @@ public class ItemRip : Command
         {
             XDocument itemFile = XDocument.Load(Path.Combine(gameRoot, itemFileElem.Attribute("file")!.Value));
             itemElements.AddRange(itemFile.Root!.Elements()
-                .Where(e => !string.Equals(
-                    e.Attributes().FirstOrDefault(a => a.Name.LocalName.Equals("category"))?.Value,
-                    "legacy", StringComparison.OrdinalIgnoreCase) /* skip legacy items */));
+                .Where(e => e.GetAttributeValue("category") is not { } category
+                            || (!category.EqCaseInsensitive("legacy") /* skip legacy items */
+                                && !category.EqCaseInsensitive("hidden") /* skip hidden items */))
+                .Where(e => !bool.TryParse(e.GetAttributeValue("HideInMenus"), out bool hiddenInMenus) || !hiddenInMenus));
         }
+
+        itemElements = itemElements
+            .OrderBy(e => e.GetAttributeValue("identifier")?.Length ?? 10000)
+            .ThenBy(e => e.GetAttributeValue("identifier") ?? "")
+            .ToList();
 
         //Rip out some example of each of the item components, preferring
         //to include as many of the referenced itemcomponents as possible
@@ -182,7 +188,5 @@ public class ItemRip : Command
                 .PostProcess(s => s.Replace("<__OMISSION__ />", "[...]")));
             File.WriteAllText(Path.Combine("ItemComponents", $"{node.Name}.md"), page.ToMarkdown());
         }
-        
-        int b = 0;
     }
 }

@@ -28,4 +28,11 @@ public static class Extensions
         }
         return str.ToString();
     }
+
+    public static string? GetAttributeValue(this XElement elem, string attrName)
+        => elem.Attributes().FirstOrDefault(a => a.Name.LocalName.Equals(attrName, StringComparison.OrdinalIgnoreCase))
+            ?.Value;
+
+    public static bool EqCaseInsensitive(this string? str, string? other)
+        => string.Equals(str, other, StringComparison.OrdinalIgnoreCase);
 }

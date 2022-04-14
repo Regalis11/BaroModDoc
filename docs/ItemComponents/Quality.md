@@ -3,24 +3,15 @@
 
 ## Example
 ```xml
-<Item name="" identifier="divingknifeunique" category="Weapon" Tags="smallitem,weapon" cargocontaineridentifier="metalcrate" scale="0.5" impactsoundtag="impact_metal_light" hideinmenus="true" allowasextracargo="true" RequireAimToUse="True">
+<Item name="" identifier="crowbar" category="Equipment" Tags="smallitem,tool,simpletool,dooropeningtool,crowbaritem" cargocontaineridentifier="metalcrate" Scale="0.5" impactsoundtag="impact_metal_light" RequireAimToUse="True">
   <Quality>
     <QualityStat stattype="StrikingPowerMultiplier" value="0.1" />
   </Quality>
-  <MeleeWeapon slots="Any,RightHand,LeftHand" aimpos="50,0" handle1="-10,0" holdangle="30" reload="0.75" range="50" combatPriority="25" msg="ItemMsgPickUpSelect">
-    <Attack targetimpulse="2" severlimbsprobability="0.1" itemdamage="10">
-      <Affliction identifier="lacerations" strength="10" />
-      <Affliction identifier="bleeding" strength="10" />
-      <Affliction identifier="stun" strength="0.2" />
-      <Affliction identifier="morbusinepoisoning" strength="1" />
-      <StatusEffect type="OnUse" target="Character">
-        <Sound file="Content/Sounds/Damage/LimbSlash1.ogg" selectionmode="random" range="500" />
-        <Sound file="Content/Sounds/Damage/LimbSlash2.ogg" range="500" />
-        <Sound file="Content/Sounds/Damage/LimbSlash3.ogg" range="500" />
-        <Sound file="Content/Sounds/Damage/LimbSlash4.ogg" range="500" />
-        <Sound file="Content/Sounds/Damage/LimbSlash5.ogg" range="500" />
-        <Sound file="Content/Sounds/Damage/LimbSlash6.ogg" range="500" />
-      </StatusEffect>
+  <MeleeWeapon slots="RightHand+LeftHand,Any" controlpose="true" aimpos="45,10" handle1="-10,0" handle2="0,5" holdangle="60" reload="1" range="100" combatpriority="20" msg="ItemMsgPickUpSelect">
+    <Attack structuredamage="10" itemdamage="5" targetimpulse="10">
+      <Affliction identifier="blunttrauma" strength="10" />
+      <Affliction identifier="stun" strength="0.5" />
+      <Sound file="Content/Items/Weapons/Smack2.ogg" range="800" />
     </Attack>
   </MeleeWeapon>
   [...]

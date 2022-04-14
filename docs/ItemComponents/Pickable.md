@@ -3,8 +3,8 @@
 
 ## Example
 ```xml
-<Item name="" identifier="geneticmaterialcrawler_unresearched" nameidentifier="unidentifiedgeneticmaterial" category="Material" maxstacksize="1" tags="smallitem,unidentifiedgeneticmaterial" cargocontaineridentifier="mediccrate" description="" scale="0.5" impactsoundtag="impact_soft" hideinmenus="true">
-  <Pickable slots="Any" />
+<Item name="" identifier="stungundartfulgurium" category="Weapon" maxstacksize="8" interactthroughwalls="true" cargocontaineridentifier="metalcrate" tags="smallitem,stungunammo" Scale="0.5" impactsoundtag="impact_metal_light">
+  <Pickable slots="Any" msg="ItemMsgPickUpSelect" />
   [...]
 </Item>
 ```

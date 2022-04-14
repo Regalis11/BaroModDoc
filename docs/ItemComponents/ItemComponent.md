@@ -3,17 +3,19 @@
 
 ## Example
 ```xml
-<Item name="ballastfloratoxins" identifier="ballastfloratoxins" Scale="1" tags="" sonarsize="0" hideinmenus="true" health="10" depth="0.1" isdangerous="true">
-  <ItemComponent>
-    <StatusEffect type="Always" target="This" condition="-1">
-      <ParticleEmitter particle="toxins" particlespersecond="1" scalemin="0.2" scalemax="0.3" anglemin="0" anglemax="360" />
-      <sound file="Content/Items/Alien/AlienPump.ogg" range="500.0" loop="true" />
-    </StatusEffect>
-    <StatusEffect type="Always" target="NearbyCharacters" range="200" disabledeltatime="false">
-      <Affliction identifier="burn" strength="0.15" />
-    </StatusEffect>
+<Item name="" identifier="incendiumgrenade" category="Weapon" maxstacksize="8" cargocontaineridentifier="explosivecrate" tags="smallitem,weapon,explosive,demolitionsexpert" Scale="0.5" impactsoundtag="impact_metal_heavy">
+  <ItemComponent characterusable="false">
+    <!-- statuseffect that explodes the grenade when used by something else than a character (e.g. a detonator) -->
+    <StatusEffect type="OnUse" target="This" Condition="-100.0" disabledeltatime="true" />
     <StatusEffect type="OnBroken" target="This">
+      <sound file="Content/Items/Weapons/IncendiumGrenade.ogg" />
+      <Explosion range="500" ballastfloradamage="50" itemdamage="200" force="0.1" smoke="false">
+        <Affliction identifier="explosiondamage" strength="5" />
+        <Affliction identifier="burn" strength="100" />
+        <Affliction identifier="stun" strength="8" />
+      </Explosion>
       <Remove />
+      <Fire size="300.0" />
     </StatusEffect>
   </ItemComponent>
   [...]

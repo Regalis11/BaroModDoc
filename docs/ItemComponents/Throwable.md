@@ -3,8 +3,9 @@
 
 ## Example
 ```xml
-<Item name="" identifier="food" nameidentifier="food" Tags="smallitem,petfood1,petfood2,petfood3" maxstacksize="8" hideinmenus="true" health="50" damagedbyexplosions="true" category="Misc" scale="0.5" impactsoundtag="impact_metal_light" cargocontaineridentifier="metalcrate">
-  <Throwable characterusable="true" slots="Any,RightHand,LeftHand" throwforce="4.0" aimpos="35,-10" msg="ItemMsgPickUpSelect">
+<Item name="" identifier="chlorine" category="Material" maxstacksize="8" cargocontaineridentifier="chemicalcrate" Tags="smallitem,chem,medical" description="" useinhealthinterface="true" scale="0.5" impactsoundtag="impact_metal_light">
+  <Throwable characterusable="true" canBeCombined="true" removeOnCombined="true" slots="Any,RightHand,LeftHand" throwforce="4.0" aimpos="35,-10">
+    <!-- Remove the item when fully used -->
     <StatusEffect type="OnBroken" target="This">
       <Remove />
     </StatusEffect>
