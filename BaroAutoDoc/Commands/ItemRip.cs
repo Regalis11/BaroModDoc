@@ -241,7 +241,7 @@ public class ItemRip : Command
             trimmedExamples.Add(node, trimmed);
         }
         
-        //Convert the trimmed examples to Markdown and write
+        //Convert the trimmed examples to Markdown and write the pages
         Directory.SetCurrentDirectory(Path.GetDirectoryName(Assembly.GetCallingAssembly().Location)!);
         Directory.CreateDirectory("ItemComponents");
         foreach (var node in nodes.Values)
@@ -293,5 +293,21 @@ public class ItemRip : Command
                 File.WriteAllText(Path.Combine("ItemComponents", $"{node.Name}.md"), page.ToMarkdown());
             }
         }
+        
+        //Write a list of non-abstract components first in inheritance order, then alphabetical
+        Page listPage = new();
+        Page.BulletList list = new(); listPage.Body.Components.Add(list);
+
+        void addToList(TreeNode node)
+        {
+            if (node.IsAbstract) { return; }
+            list.Items.Add(new Page.Hyperlink($"ItemComponents/{node.Name}.md", node.Name));
+            foreach (var child in node.Children.OrderBy(c => c.Name))
+            {
+                addToList(child);
+            }
+        }
+        addToList(nodes["ItemComponent"]);
+        File.WriteAllText("itemComponentList.md", listPage.ToMarkdown());
     }
 }
