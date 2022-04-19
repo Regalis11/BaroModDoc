@@ -298,16 +298,19 @@ public class ItemRip : Command
         Page listPage = new();
         Page.BulletList list = new(); listPage.Body.Components.Add(list);
 
-        void addToList(TreeNode node)
+        static void addToList(Page.BulletList list, TreeNode node)
         {
-            if (node.IsAbstract) { return; }
-            list.Items.Add(new Page.Hyperlink($"ItemComponents/{node.Name}.md", node.Name));
+            if (!node.IsAbstract)
+            {
+                list.Items.Add(new Page.Hyperlink($"ItemComponents/{node.Name}.md", node.Name));
+            }
+
             foreach (var child in node.Children.OrderBy(c => c.Name))
             {
-                addToList(child);
+                addToList(list, child);
             }
         }
-        addToList(nodes["ItemComponent"]);
+        addToList(list, nodes["ItemComponent"]);
         File.WriteAllText("itemComponentList.md", listPage.ToMarkdown());
     }
 }
