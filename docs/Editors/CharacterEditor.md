@@ -1,4 +1,5 @@
 # Character editor
+{toc}
 
 ## Hello creator!
 ![](img_CharacterEditor/Intro.png)

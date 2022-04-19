@@ -29,7 +29,11 @@
     <div id="content-wrapper">
       <div class="inner clearfix">
         <section id="main-content">
-          {{ content }}
+          {%- capture toc_html -%}
+          {% include toc.html html=content class="toc" %}
+          {%- endcapture -%}
+          {%- capture toc_find -%}{toc}{%- endcapture -%}
+          {{ content | replace: toc_find, toc_html }}
         </section>
 
         <aside id="sidebar">
