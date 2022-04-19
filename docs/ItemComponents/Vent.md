@@ -3,10 +3,7 @@
 
 ## Attributes
 
-| Attribute|Type|Default value|Description |
-| ---|---|---|--- |
-
-This component also supports the attributes defined in: [ItemComponent](ItemComponent.md)
+This component supports the attributes defined in: [ItemComponent](ItemComponent.md)
 
 
 ## Example

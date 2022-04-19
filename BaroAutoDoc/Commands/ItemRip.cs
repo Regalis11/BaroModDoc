@@ -268,12 +268,20 @@ public class ItemRip : Command
             {
                 attributesTable.BodyRows.Add(new Page.Table.Row(attr.Name, attr.Type, attr.DefaultValue, attr.Description));
             }
-            attributesSection.Body.Components.Add(attributesTable);
+
+            if (attributesTable.BodyRows.Any())
+            {
+                attributesSection.Body.Components.Add(attributesTable);
+            }
+            else
+            {
+                Console.WriteLine($"{node.Name} has no attributes table");
+            }
 
             attributesSection.Body.Components.Add(new Page.NewLine());
             if (node.Parent != null)
             {
-                attributesSection.Body.Components.Add(new Page.RawText("This component also supports the attributes defined in: "));
+                attributesSection.Body.Components.Add(new Page.RawText($"This component {(attributesTable.BodyRows.Any() ? "also " : "")}supports the attributes defined in: "));
                 var p = node.Parent;
                 while (true)
                 {

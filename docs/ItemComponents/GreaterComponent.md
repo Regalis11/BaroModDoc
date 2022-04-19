@@ -3,10 +3,7 @@
 
 ## Attributes
 
-| Attribute|Type|Default value|Description |
-| ---|---|---|--- |
-
-This component also supports the attributes defined in: [EqualsComponent](EqualsComponent.md), [ItemComponent](ItemComponent.md)
+This component supports the attributes defined in: [EqualsComponent](EqualsComponent.md), [ItemComponent](ItemComponent.md)
 
 
 ## Example
