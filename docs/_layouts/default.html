@@ -17,6 +17,11 @@
   </head>
 
   <body>
+    {%- capture toc_html -%}
+    {% include toc.html html=content class="toc" %}
+    {%- endcapture -%}
+    {%- capture toc_find -%}{toc}{%- endcapture -%}
+
     <header>
       <div class="inner">
         <a href="{{ '/' | absolute_url }}">
@@ -29,16 +34,16 @@
     <div id="content-wrapper">
       <div class="inner clearfix">
         <section id="main-content">
-          {%- capture toc_html -%}
-          {% include toc.html html=content class="toc" %}
-          {%- endcapture -%}
-          {%- capture toc_find -%}{toc}{%- endcapture -%}
           {{ content | replace: toc_find, toc_html }}
         </section>
 
         <aside id="sidebar">
           {%- assign page_paths = site.pages | map: "path" -%}
           <p>
+          {%- if page.has_toc -%}
+            <h2>Table of contents</h2>
+            {{ toc_html }}
+          {%- endif -%}
           {%- for path in page_paths -%}
             {%- assign my_page = site.pages | where: "path", path | first -%}
             {%- assign my_url = my_page.url | relative_url -%}

@@ -1,5 +1,7 @@
+---
+has_toc: true
+---
 # Character editor
-{toc}
 
 ## Hello creator!
 ![](img_CharacterEditor/Intro.png)

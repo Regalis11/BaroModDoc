@@ -1,5 +1,7 @@
+---
+has_toc: true
+---
 # Submarine editor
-{toc}
 
 ## Hello subwrights!
 *Written by TorpedoMike, Chad Husk and Hexcode Guy*
