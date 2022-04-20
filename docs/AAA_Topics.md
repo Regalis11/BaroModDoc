@@ -8,5 +8,5 @@
 - [Publishing to Steam Workshop](Intro/Publishing.md)
 
 - Editors
- - [Submarine editor](Editors/SubmarineEditor.md)
- - [Character editor](Editors/CharacterEditor.md)
+  - [Submarine editor](Editors/SubmarineEditor.md)
+  - [Character editor](Editors/CharacterEditor.md)
