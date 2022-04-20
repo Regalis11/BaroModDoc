@@ -286,9 +286,9 @@ public class ItemRip : Command
                 while (true)
                 {
                     if (!p.IsAbstract) { attributesSection.Body.Components.Add(new Page.Hyperlink($"{p.Name}.md", p.Name)); }
-                    p = p.Parent;
-                    if (p is null) { break; }
+                    if (p.Parent is null) { break; }
                     if (!p.IsAbstract) { attributesSection.Body.Components.Add(new Page.RawText(", ")); }
+                    p = p.Parent;
                 }
             }
 

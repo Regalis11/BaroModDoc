@@ -9,7 +9,7 @@
 | Separator|string|""| |
 | TimeFrame|float|0.0|The item must have received signals to both inputs within this timeframe to output the result. If set to 0, the inputs must be received at the same time. |
 
-This component also supports the attributes defined in: , [ItemComponent](ItemComponent.md)
+This component also supports the attributes defined in: [ItemComponent](ItemComponent.md)
 
 
 ## Example
