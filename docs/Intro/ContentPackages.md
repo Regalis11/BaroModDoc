@@ -1,6 +1,6 @@
 # Content packages
 
-Content packages are collections of files that define many of the properties of the things that exist in Barotrauma. This includes [items](../ContentTypes/Item.md), [structures](../ContentTypes/Structure.md), [monsters](../ContentTypes/Character.md), [random events](../ContentTypes/RandomEvents.md), [level generation parameters](../ContentTypes/LevelGenerationParameters.md), [jobs](../ContentTypes/Jobs.md) and so on. You can see a full list of what content packages define under the [Content Types](../index.md#content-types) section of the index page.
+Content packages are collections of files that define many of the properties of the things that exist in Barotrauma. This includes [items](../ContentTypes/Item.md), [structures](../ContentTypes/Structure.md), [monsters](../ContentTypes/Character.md), [random events](../ContentTypes/RandomEvents.md), [level generation parameters](../ContentTypes/LevelGenerationParameters.md), [jobs](../ContentTypes/Jobs.md) and so on. You can see a full list of what content packages define in the [Content Types](ContentTypes.md) page.
 
 By default the game uses a single content package called "Vanilla". Any other content package can be considered a modification of the game content, that is, a "mod".
 
@@ -11,13 +11,15 @@ Any content package that you are editing should be found in a folder within the 
 
 ## File list
 
-The file list is a vital part of every content package; it allows the game to know which other XML files to load and the purpose each of them serves. For any given mod, its filename will always be `filelist.xml`. The submarine and character editors will generate a basic file list for each of your creations.
+The file list is a vital part of every content package; it allows the game to know which other XML files to load and the purpose each of them serves. For any given mod, its filename will always be `filelist.xml`. The [submarine](../Editors/SubmarineEditor.md) and [character](../Editors/CharacterEditor.md) editors will generate a basic file list for each of your creations.
 
 The root element of the content package has the following attributes:
 - `name`: The name for this content package that is seen by players in-game.
 - `modversion`: The version number of the mod. Typically, this will increment as new versions of the mod are published to the Workshop. Currently, this is simply a hint for modders to be able to check which version of a mod is being used.
 - `gameversion`: The version number that this mod was last updated for. This may be used by the game to detect mods that need to be modified for backwards compatibility.
 - `corepackage`: Whether or not the content package is a "core" package, [described in a separate section](#core-packages).
+
+This root element then has a child element for each content XML file that needs to be loaded. The name of each of these child elements must be one of the content types listed in the [Content Types](ContentTypes.md) page.
 
 The following example consists of a single file that defines an [Item file](../ContentTypes/Item.md).
 
