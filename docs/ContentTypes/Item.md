@@ -4,7 +4,7 @@
 
 This content type is used to define various interactables, namely machinery and items that can be picked up.
 
-Items consist of one or more “item components” that determine the functionality of the item. For example, an item could have a “Holdable” component that makes it possible to pick it up and hold it in your hands and an “ItemContainer” component that lets you contain other items inside it.
+Items consist of one or more “item components” that determine the functionality of the item. For example, an item could have a “Holdable” component that makes it possible to hold it in your hands and an “ItemContainer” component that lets you contain other items inside it.
 
 If you are familiar with Unity, you can think of items as Unity's GameObjects, and item components as the Components attached to the GameObjects.
 
