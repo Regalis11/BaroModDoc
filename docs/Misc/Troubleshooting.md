@@ -16,6 +16,7 @@ To edit a mod you've published in a previous version of the game, follow these s
 - If needed, create a local copy of your existing mod by going into the Publish tab and selecting your mod
 - Edit the copy of your mod in the `LocalMods` folder, which can be accessed by clicking on the pencil icon next to your local copy in the `Installed Mods` list.
 - Once you're done making changes to that copy of the mod, go back into the Publish tab and submit it.
+
 This is, admittedly, fairly unintuitive. This is subject to change in future updates.
 
 ## A mod I used to be able to play with now refuses to be enabled!
