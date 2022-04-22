@@ -12,4 +12,4 @@
   - [Overrides](Intro/Overrides.md)
 
 - [Publishing to Steam Workshop](Intro/Publishing.md)
-
+- [Troubleshooting](Misc/Troubleshooting.md)
