@@ -74,14 +74,17 @@ The following attributes can also be defined:
 Each XML element that defines an item can have the following child elements:
 - `sprite`: The section of a texture to use to render this item in the level, along with scaling and offset properties.
   - Example:
+
 ```xml
 <Item identifier="alienwrench" name="Alien Wrench" variantof="wrench" scale="0.2">
   <Sprite texture="%ModDir%/alienwrench.png" sourcerect="0,0,256,112" depth="0.55" origin="0.5,0.1" scale="0.1" />
   <!-- ... -->
 ```
+
 - `price`: Pricing information for this item in the campaign stores.
 - `preferredcontainer`: Tag or identifier of a container item that should be chosen when randomly generating this item.
   - Example:
+
 ```xml
 <Item identifier="fiberplant" category="Material" Tags="smallitem,plant" maxstacksize="8" canbepicked="true" cargocontaineridentifier="metalcrate" scale="0.5" impactsoundtag="impact_soft">
   <PreferredContainer primary="medfabcab" minamount="0" maxamount="4" spawnprobability="1"/>
@@ -95,9 +98,11 @@ Each XML element that defines an item can have the following child elements:
   </Price>
   <!-- ... -->
 ```
+
 - `fabricate`: A fabrication recipe for this item, along with a list of identifiers or tags of suitable fabricators.
 - `deconstruct`: The result of deconstructing this item.
   - Example:
+
 ```xml
 <Item identifier="toolbelt" category="Equipment" tags="smallitem,mobilecontainer,tool" cargocontaineridentifier="metalcrate" showcontentsintooltip="true" Scale="0.5" fireproof="true" description="" impactsoundtag="impact_soft">
   <Deconstruct time="10">
@@ -108,8 +113,10 @@ Each XML element that defines an item can have the following child elements:
   </Fabricate>
   <!-- ... -->
 ```
+
 - `swappableitem`: A list of items that this item can be swapped to when upgrading the submarine in a campaign.
   - Example:
+
 ```xml
 <Item identifier="coilgun" Tags="turret" category="Machine,Weapon" interactthroughwalls="true" Scale="0.5" interactdistance="10" spritecolor="1.0,1.0,1.0,1.0" focusonselected="true" offsetonselected="750" linkable="true" allowedlinks="coilgunequipment">
   <SwappableItem price="5000" replacementonuninstall="turrethardpoint" origin="128,215" swapidentifier="basicturret">
@@ -119,8 +126,10 @@ Each XML element that defines an item can have the following child elements:
   </SwappableItem>
   <!-- ... -->
 ```
+
 - `trigger`: This determines a rectangular area where a character must be within to be able to interact with the item.
   - Example:
+
 ```xml
 <Item identifier="ladder" tags="ladder" resizevertical="true" scale="0.5" allowrotatingineditor="false">
   <Ladder canbeselected="true" msg="ItemMsgClimbSelect">
@@ -129,8 +138,10 @@ Each XML element that defines an item can have the following child elements:
   <trigger x="-40" y="20" width="90"/>
   <!-- ... -->
 ```
+
 - `levelresource`: This tells the map generator the rules to follow when placing this item as an automatically generated resource.
   - Example:
+
 ```xml
 <Item identifier="bornite" category="Material" Tags="smallitem,ore" maxstacksize="8" canbepicked="true" description="" cargocontaineridentifier="metalcrate" scale="0.5" impactsoundtag="impact_metal_light">
     <LevelResource deattachduration="4" randomoffsetfromwall="80">
@@ -143,8 +154,10 @@ Each XML element that defines an item can have the following child elements:
     </LevelResource>
     <!-- ... -->
 ```
+
 - `suitabletreatment`: This tells the game which [afflictions](Afflictions.md) this item is a suitable treatment for.
   - Example:
+
 ```xml
 <Item identifier="tonicliquid" category="Medical" maxstacksize="8" cargocontaineridentifier="chemicalcrate" Tags="smallitem,chem,medical" description="" useinhealthinterface="true" scale="0.5" impactsoundtag="impact_metal_light" RequireAimToUse="True">
   <SuitableTreatment type="damage" suitability="1" />
