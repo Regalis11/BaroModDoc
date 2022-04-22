@@ -6,5 +6,7 @@
 
 ## Attributes
 - `SpawnPosition` : `Level.PositionType`
+- `MinMoney` : `int`
+- `MaxMoney` : `int`
 
 

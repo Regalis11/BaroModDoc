@@ -2,7 +2,7 @@
 
 Usually you are not creating a total conversion mod, but you might still want to replace parts of the original content. This can be done by using `override` elements in the XML configuration files.
 
-Overriding is based on identifiers, meaning that the identifier of the new item must match the identifier of the old item.
+For items, overriding is based on identifiers, meaning that the identifier of the new item must match the identifier of the old item. This is also true of most other [content types](ContentTypes.md).
 
 The following example replaces the vanilla harpoon gun with a potato gun, and the corresponding ammo with a potato:
 ```xml
@@ -18,7 +18,7 @@ The following example replaces the vanilla harpoon gun with a potato gun, and th
 </Override>
 ```
 
-In order to get the new item to function like the vanilla counterpart, make sure to include all the tags of the original item.
+In order to get the new item to function like the vanilla counterpart, make sure to include all the tags and child elements of the original item.
 
 It's also possible to override items created in another mod. For example, we can override the example presented in [this page](ContentPackages.md):
 ```xml

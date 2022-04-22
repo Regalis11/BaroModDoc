@@ -1,10 +1,162 @@
 # Item
-<sup>Relevant files: [[Shared:ItemFile.cs]](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/ItemFile.cs)</sup>
+<sup>Relevant files: [[Shared:ItemFile.cs]](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/ItemFile.cs) [[Shared:ItemPrefab.cs]](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/Items/ItemPrefab.cs)</sup>
 - **Required by core package:** Yes
 
 This content type is used to define various interactables, namely machinery and items that can be picked up.
 
-Items consist of one or more “item components” that determine the functionality of the item. For example, an item could have a “Holdable” component that makes it possible to hold it in your hands and an “ItemContainer” component that lets you contain other items inside it.
+## Attributes
+Each XML element that defines an item must have at least the following attribute:
+- `identifier`: This is used to be able to make references to the item, as well as determine what to remove when [overriding](../Intro/Overrides.md). If `nameidentifier` and `name` are not defined, it is also used to fetch the required [name](Text.md) to display in the player's inventory.
+
+The following attributes can also be defined:
+- `nameidentifier`: If defined, this is the tag used to fetch the name to display in the player's inventory.
+- `fallbacknameidentifier`: If defined, this is used as a fallback if the tag given by `nameidentifier` is not defined for the current language.
+- `descriptionidentifier`: If defined, this is the tag used to fetch the description to display in the player's inventory.
+- `name`: If defined, and the previous optional identifiers are not defined, and the identifier is not found in a Text file, this string is used directly as the name to display in the player's inventory.
+- `aliases`: A list of additional identifiers that can be used to reference this item elsewhere, such as in fabrication recipes or item assemblies. Each item in the list is separated by a comma.
+- `tags`: A list of strings that can be used to group items. They are used, for example, by [characters](Character.md) to select targets and the level generator to place resources in the level.
+- `category`: The category the item is in when interacting with stores and the [submarine editor](../Editors/SubmarineEditor.md). It can be one of the following:
+  - Decorative
+  - Machine
+  - Medical
+  - Weapon
+  - Diving
+  - Equipment
+  - Fuel
+  - Electrical
+  - Material
+  - Alien
+  - Wrecked
+  - Misc
+- `allowasextracargo`: Whether or not this item can be selected as extra cargo in the server settings. Can be `true` or `false`.
+- `InteractDistance` : `float`
+- `InteractPriority` : `float`
+- `InteractThroughWalls` : `bool`
+- `HideConditionBar` : `bool`
+- `HideConditionInTooltip` : `bool`
+- `RequireBodyInsideTrigger` : `bool`
+- `RequireCursorInsideTrigger` : `bool`
+- `RequireCampaignInteract` : `bool`
+- `FocusOnSelected` : `bool`
+- `OffsetOnSelected` : `float`
+- `Health` : `float`
+- `AllowSellingWhenBroken` : `bool`
+- `Indestructible` : `bool`
+- `DamagedByExplosions` : `bool`
+- `ExplosionDamageMultiplier` : `float`
+- `DamagedByProjectiles` : `bool`
+- `DamagedByMeleeWeapons` : `bool`
+- `DamagedByRepairTools` : `bool`
+- `DamagedByMonsters` : `bool`
+- `FireProof` : `bool`
+- `WaterProof` : `bool`
+- `ImpactTolerance` : `float`
+- `OnDamagedThreshold` : `float`
+- `SonarSize` : `float`
+- `UseInHealthInterface` : `bool`
+- `DisableItemUsageWhenSelected` : `bool`
+- `CargoContainerIdentifier` : `string`
+- `UseContainedSpriteColor` : `bool`
+- `UseContainedInventoryIconColor` : `bool`
+- `AddedRepairSpeedMultiplier` : `float`
+- `AddedPickingSpeedMultiplier` : `float`
+- `CannotRepairFail` : `bool`
+- `EquipConfirmationText` : `string`
+- `AllowRotatingInEditor` : `bool`
+- `ShowContentsInTooltip` : `bool`
+- `CanFlipX` : `bool`
+- `CanFlipY` : `bool`
+- `IsDangerous` : `bool`
+- `MaxStackSize` : `int`
+- `AllowDroppingOnSwap` : `bool`
+
+## Child elements
+Each XML element that defines an item can have the following child elements:
+- `sprite`: The section of a texture to use to render this item in the level, along with scaling and offset properties.
+  - Example:
+```xml
+<Item identifier="alienwrench" name="Alien Wrench" variantof="wrench" scale="0.2">
+  <Sprite texture="%ModDir%/alienwrench.png" sourcerect="0,0,256,112" depth="0.55" origin="0.5,0.1" scale="0.1" />
+  <!-- ... -->
+```
+- `price`: Pricing information for this item in the campaign stores.
+- `preferredcontainer`: Tag or identifier of a container item that should be chosen when randomly generating this item.
+  - Example:
+```xml
+<Item identifier="fiberplant" category="Material" Tags="smallitem,plant" maxstacksize="8" canbepicked="true" cargocontaineridentifier="metalcrate" scale="0.5" impactsoundtag="impact_soft">
+  <PreferredContainer primary="medfabcab" minamount="0" maxamount="4" spawnprobability="1"/>
+  <PreferredContainer secondary="wreckstoragecab" minamount="0" maxamount="2" spawnprobability="0.05"/>
+  <Price baseprice="100">
+    <Price storeidentifier="merchantoutpost" sold="false" multiplier="1.3" />
+    <Price storeidentifier="merchantcity" multiplier="1.25" minavailable="3"/>
+    <Price storeidentifier="merchantresearch" multiplier="0.9" minavailable="6"/>
+    <Price storeidentifier="merchantmilitary" sold="false" />
+    <Price storeidentifier="merchantmine" sold="false" multiplier="0.9" />
+  </Price>
+  <!-- ... -->
+```
+- `fabricate`: A fabrication recipe for this item, along with a list of identifiers or tags of suitable fabricators.
+- `deconstruct`: The result of deconstructing this item.
+  - Example:
+```xml
+<Item identifier="toolbelt" category="Equipment" tags="smallitem,mobilecontainer,tool" cargocontaineridentifier="metalcrate" showcontentsintooltip="true" Scale="0.5" fireproof="true" description="" impactsoundtag="impact_soft">
+  <Deconstruct time="10">
+    <Item identifier="organicfiber" />
+  </Deconstruct>
+  <Fabricate suitablefabricators="fabricator" requiredtime="20">
+    <Item identifier="organicfiber" />
+  </Fabricate>
+  <!-- ... -->
+```
+- `swappableitem`: A list of items that this item can be swapped to when upgrading the submarine in a campaign.
+  - Example:
+```xml
+<Item identifier="coilgun" Tags="turret" category="Machine,Weapon" interactthroughwalls="true" Scale="0.5" interactdistance="10" spritecolor="1.0,1.0,1.0,1.0" focusonselected="true" offsetonselected="750" linkable="true" allowedlinks="coilgunequipment">
+  <SwappableItem price="5000" replacementonuninstall="turrethardpoint" origin="128,215" swapidentifier="basicturret">
+    <SchematicSprite texture="Content/UI/WeaponUI.png" sourcerect="256,0,256,389" />
+    <SwapConnectedItem tag="periscope" swapto="periscope" />
+    <SwapConnectedItem tag="turretammosource" swapto="coilgunloader" />
+  </SwappableItem>
+  <!-- ... -->
+```
+- `trigger`: This determines a rectangular area where a character must be within to be able to interact with the item.
+  - Example:
+```xml
+<Item identifier="ladder" tags="ladder" resizevertical="true" scale="0.5" allowrotatingineditor="false">
+  <Ladder canbeselected="true" msg="ItemMsgClimbSelect">
+    <BackgroundSprite texture="Content/Items/Ladder/ladder.png" depth="0.05" sourcerect="8,8,26,240" origin="1.0,0.0"/>
+  </Ladder>
+  <trigger x="-40" y="20" width="90"/>
+  <!-- ... -->
+```
+- `levelresource`: This tells the map generator the rules to follow when placing this item as an automatically generated resource.
+  - Example:
+```xml
+<Item identifier="bornite" category="Material" Tags="smallitem,ore" maxstacksize="8" canbepicked="true" description="" cargocontaineridentifier="metalcrate" scale="0.5" impactsoundtag="impact_metal_light">
+    <LevelResource deattachduration="4" randomoffsetfromwall="80">
+      <Commonness commonness="0.80" />
+      <Commonness commonness="0.70" leveltype="ridgebasic" />
+      <Commonness commonness="0.50" leveltype="plateaubasic" />
+      <Commonness commonness="0.20" leveltype="greatseabasic" />
+      <Commonness commonness="0.15" leveltype="wastesbasic" />
+      <RequiredItem items="cuttingequipment" type="Equipped" />
+    </LevelResource>
+    <!-- ... -->
+```
+- `suitabletreatment`: This tells the game which [afflictions](Afflictions.md) this item is a suitable treatment for.
+  - Example:
+```xml
+<Item identifier="tonicliquid" category="Medical" maxstacksize="8" cargocontaineridentifier="chemicalcrate" Tags="smallitem,chem,medical" description="" useinhealthinterface="true" scale="0.5" impactsoundtag="impact_metal_light" RequireAimToUse="True">
+  <SuitableTreatment type="damage" suitability="1" />
+  <SuitableTreatment type="burn" suitability="-10" />
+  <SuitableTreatment identifier="opiateoverdose" suitability="-10" />
+  <SuitableTreatment identifier="oxygenlow" suitability="-10" />
+  <SuitableTreatment identifier="opiatewithdrawal" suitability="-10" />
+  <!-- ... -->
+```
+
+### Item component types
+On top of the previously mentioned child elements, items also consist of one or more "item components" that determine the functionality of the item. For example, an item could have a "[Holdable](../ItemComponents/Holdable.md)" component that makes it possible to hold it in your hands and an "[ItemContainer](../ItemComponents/ItemContainer.md)" component that lets you contain other items inside it.
 
 If you are familiar with Unity, you can think of items as Unity's GameObjects, and item components as the Components attached to the GameObjects.
 

@@ -25,8 +25,8 @@ public class SubElementRipper : FolderSyntaxWalker
         string className = node.Identifier.ValueText;
         if (!typesToLookFor.Contains(className)) { return; }
 
-        var constructors = node.DescendantNodes().OfType<ConstructorDeclarationSyntax>().ToArray();
-        if (constructors.Length != 1) { return; }
+        //var constructors = node.DescendantNodes().OfType<ConstructorDeclarationSyntax>().ToArray();
+        //if (constructors.Length != 1) { return; }
 
         var properties = node.DescendantNodes().OfType<PropertyDeclarationSyntax>();
         var serializableProperties = properties
