@@ -1,3 +1,6 @@
+---
+has_toc: true
+---
 # Item
 <sup>Relevant files: [[Shared:ItemFile.cs]](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/ItemFile.cs) [[Shared:ItemPrefab.cs]](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/Items/ItemPrefab.cs)</sup>
 - **Required by core package:** Yes
@@ -69,6 +72,15 @@ The following attributes can also be defined:
 - `IsDangerous` : `bool`
 - `MaxStackSize` : `int`
 - `AllowDroppingOnSwap` : `bool`
+- `ResizeHorizontal` : `bool`
+- `ResizeVertical` : `bool`
+- `Description` : `LocalizedString`
+- `AllowedUpgrades` : `string`
+- `HideInMenus` : `bool`
+- `Subcategory` : `string`
+- `Linkable` : `bool`
+- `SpriteColor` : `Color`
+- `Scale` : `float`
 
 ## Child elements
 Each XML element that defines an item can have the following child elements:

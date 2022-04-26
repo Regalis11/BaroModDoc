@@ -1,5 +1,7 @@
 # WreckAIConfig
 <sup>Relevant files: [[Shared:WreckAIConfigFile.cs]](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/WreckAIConfigFile.cs) [[Shared:WreckAIConfig.cs]](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/Characters/AI/Wreck/WreckAIConfig.cs)</sup>
+*This page was generated automatically.*
+
 - **Required by core package:** Yes
 
 

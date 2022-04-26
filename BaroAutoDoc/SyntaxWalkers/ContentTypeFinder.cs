@@ -85,8 +85,9 @@ public class ContentTypeFinder : FolderSyntaxWalker
             matchesSingular,
             matchesPlural,
             constructedTypes.ToImmutableHashSet(),
-            new[] { CurrentFile }.ToImmutableArray(),
-            ImmutableArray<ContentType.XmlAttribute>.Empty));
+            RelevantFiles: new[] { CurrentFile }.ToImmutableArray(),
+            XmlSubElements: ImmutableArray<string>.Empty,
+            XmlAttributes: ImmutableArray<ContentType.XmlAttribute>.Empty));
         
         base.VisitClassDeclaration(node);
     }
