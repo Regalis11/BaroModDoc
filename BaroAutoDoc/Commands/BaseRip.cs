@@ -87,6 +87,7 @@ public class BaseRip : Command
             markdown.Body.Components.Add(relevantFilesSup);
             markdown.Body.AddNewLine();
 
+            markdown.Body.Components.Add(new Page.NewLine());
             markdown.Body.Components.Add(new Page.InlineMarkdown("*This page was generated automatically.*\n\n"));
 
             markdown.Body.Components.Add(new Page.InlineMarkdown(

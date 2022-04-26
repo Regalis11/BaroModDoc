@@ -1,5 +1,6 @@
 # Jobs
 <sup>Relevant files: [[Shared:JobsFile.cs]](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/JobsFile.cs) [[Shared:JobPrefab.cs]](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/Characters/Jobs/JobPrefab.cs)</sup>
+
 *This page was generated automatically.*
 
 - **Required by core package:** Yes

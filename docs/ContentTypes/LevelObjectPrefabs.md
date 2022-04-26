@@ -1,5 +1,6 @@
 # LevelObjectPrefabs
 <sup>Relevant files: [[Shared:LevelObjectPrefabsFile.cs]](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/LevelObjectPrefabsFile.cs) [[Shared:LevelObjectPrefab.cs]](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/Map/Levels/LevelObjects/LevelObjectPrefab.cs)</sup>
+
 *This page was generated automatically.*
 
 - **Required by core package:** Yes

@@ -13,7 +13,28 @@ public class AttributeRipper : FolderSyntaxWalker
     public AttributeRipper(ContentType contentType)
     {
         ContentType = contentType;
-        TypeToLookFor = contentType.ConstructedTypes.FirstOrDefault() ?? "";
+
+        int numSharedStart(string a, string b)
+        {
+            for (int i=0;i<Math.Min(a.Length, b.Length);i++)
+            {
+                if (a[i] == b[i]) { continue; }
+                return i;
+            }
+            return Math.Min(a.Length, b.Length);
+        }
+        
+        TypeToLookFor = contentType.ConstructedTypes
+            .OrderByDescending(t => numSharedStart(t, contentType.Name))
+            .ThenBy(t => t).FirstOrDefault() ?? "";
+        if (string.IsNullOrEmpty(TypeToLookFor))
+        {
+            Console.WriteLine($"No constructed types from {ContentType.Name}");
+        }
+        else
+        {
+            Console.WriteLine($"Extracting attributes for {ContentType.Name}: Starting with {TypeToLookFor}");
+        }
     }
 
     public override void VisitClassDeclaration(ClassDeclarationSyntax node)
