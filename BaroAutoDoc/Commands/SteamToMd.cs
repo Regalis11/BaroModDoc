@@ -6,11 +6,8 @@ namespace BaroAutoDoc.Commands;
 
 public class SteamToMd : Command
 {
-    public override void Invoke(string[] args)
+    public void Invoke(string url, string fileName)
     {
-        string url = args[0];
-        string fileName = args[1];
-        
         HttpClient httpClient = new();
         var response = httpClient.Send(new HttpRequestMessage(HttpMethod.Get,
             new Uri(url)));

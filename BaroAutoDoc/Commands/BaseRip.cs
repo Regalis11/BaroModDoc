@@ -10,10 +10,8 @@ namespace BaroAutoDoc.Commands;
 
 public class BaseRip : Command
 {
-    public override void Invoke(string[] args)
+    public void Invoke(string repoPath = "C:/Users/juanj/Desktop/Repos/Barotrauma-development")
     {
-        string repoPath = args.Length > 0 ? args[0] : "C:/Users/juanj/Desktop/Repos/Barotrauma-development";
-        
         Directory.SetCurrentDirectory(repoPath);
 
         const string srcPathFmt = "Barotrauma/Barotrauma{0}/{0}Source";

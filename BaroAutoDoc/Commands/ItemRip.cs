@@ -75,10 +75,8 @@ public class ItemRip : Command
         public TreeNode? Parent = null;
     }
     
-    public override void Invoke(string[] args)
+    public void Invoke(string repoPath = "C:/Users/juanj/Desktop/Repos/Barotrauma-development")
     {
-        string repoPath = args.Length > 0 ? args[0] : "C:/Users/juanj/Desktop/Repos/Barotrauma-development";
-        
         Directory.SetCurrentDirectory(repoPath);
 
         const string srcPathFmt = "Barotrauma/Barotrauma{0}/{0}Source/Items";
@@ -115,19 +113,6 @@ public class ItemRip : Command
             }
             nodes.Add(newNode.Name, newNode);
         }
-
-        /*var treeTop = nodes["ItemComponent"];
-        void print(TreeNode node, int indent)
-        {
-            Console.WriteLine("{0}\\_{1}",
-                string.Concat(Enumerable.Repeat("| ", indent)), node.Name);
-            for (int i=0;i<node.Children.Count;i++)
-            {
-                var child = node.Children[i];
-                print(child, indent+1);
-            }
-        }
-        print(treeTop, 0);*/
 
         //Find references from one class to another
         var referenceFinder
