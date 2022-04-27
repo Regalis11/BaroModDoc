@@ -9,16 +9,16 @@ This content type is used to define various interactables, namely machinery and 
 
 ## Attributes
 Each XML element that defines an item must have at least the following attribute:
-- `identifier`: This is used to be able to make references to the item, as well as determine what to remove when [overriding](../Intro/Overrides.md). If `nameidentifier` and `name` are not defined, it is also used to fetch the required [name](Text.md) to display in the player's inventory.
+- `identifier`: This is used to be able to make references to the item, as well as determine what to remove when [overriding](../Intro/Overrides.md). If `nameidentifier` and `name` are not defined, it is also used to fetch the name and description of the item from a [Text content file](Text.md) using the tags `entityname.[identifier]` and `entitydescription.[identifier]`.
 
 The following attributes can also be defined:
-- `nameidentifier`: If defined, this is the tag used to fetch the name to display in the player's inventory.
+- `nameidentifier`: If defined, this is the tag used to fetch the item's name.
 - `fallbacknameidentifier`: If defined, this is used as a fallback if the tag given by `nameidentifier` is not defined for the current language.
-- `descriptionidentifier`: If defined, this is the tag used to fetch the description to display in the player's inventory.
+- `descriptionidentifier`: If defined, this is the tag used to fetch the item's description.
 - `name`: If defined, and the previous optional identifiers are not defined, and the identifier is not found in a Text file, this string is used directly as the name to display in the player's inventory.
-- `aliases`: A list of additional identifiers that can be used to reference this item elsewhere, such as in fabrication recipes or item assemblies. Each item in the list is separated by a comma.
-- `tags`: A list of strings that can be used to group items. They are used, for example, by [characters](Character.md) to select targets and the level generator to place resources in the level.
-- `category`: The category the item is in when interacting with stores and the [submarine editor](../Editors/SubmarineEditor.md). It can be one of the following:
+- `aliases`: A list of additional identifiers that can be used to reference this item. Each item in the list is separated by a comma. There is rarely the need to use this; in vanilla content, it's been used to provide backwards compatibility when old items have been removed and replaced with an item that uses a different identifier.
+- `tags`: A list of strings that can be used to group items. They are used, for example, by [characters](Character.md) to select targets, by containers to determine which items can be put inside them and by bots to figure out what the items are and where they belong.
+- `category`: The category or categories the item is in when interacting with stores and the [submarine editor](../Editors/SubmarineEditor.md). It can be one or more of the following:
   - Decorative
   - Machine
   - Medical
@@ -94,7 +94,7 @@ Each XML element that defines an item can have the following child elements:
 ```
 
 - `price`: Pricing information for this item in the campaign stores.
-- `preferredcontainer`: Tag or identifier of a container item that should be chosen when randomly generating this item.
+- `preferredcontainer`: Tag or identifier of a container item that should be chosen when randomly generating this item. Also used by bots to determine which type of container to put the item in when it's not needed.
   - Example:
 
 ```xml
@@ -151,23 +151,7 @@ Each XML element that defines an item can have the following child elements:
   <!-- ... -->
 ```
 
-- `levelresource`: This tells the map generator the rules to follow when placing this item as an automatically generated resource.
-  - Example:
-
-```xml
-<Item identifier="bornite" category="Material" Tags="smallitem,ore" maxstacksize="8" canbepicked="true" description="" cargocontaineridentifier="metalcrate" scale="0.5" impactsoundtag="impact_metal_light">
-    <LevelResource deattachduration="4" randomoffsetfromwall="80">
-      <Commonness commonness="0.80" />
-      <Commonness commonness="0.70" leveltype="ridgebasic" />
-      <Commonness commonness="0.50" leveltype="plateaubasic" />
-      <Commonness commonness="0.20" leveltype="greatseabasic" />
-      <Commonness commonness="0.15" leveltype="wastesbasic" />
-      <RequiredItem items="cuttingequipment" type="Equipped" />
-    </LevelResource>
-    <!-- ... -->
-```
-
-- `suitabletreatment`: This tells the game which [afflictions](Afflictions.md) this item is a suitable treatment for.
+- `suitabletreatment`: This tells the game which [afflictions](Afflictions.md) this item is a suitable treatment for. Used to determine which items to list as the suitable treatments in the health interface, and by bots to figure out which items are suitable for treating a character.
   - Example:
 
 ```xml
