@@ -106,18 +106,7 @@ This page describes the XML attributes and child elements for characters, which 
 </ai>
 ```
 
-- `StatusEffect`: Defines actions to perform given one of the following supported statuses the character can be in:
-  - Always
-  - OnSpawn
-  - OnActive
-  - OnEating
-  - OnImpact
-  - InWater
-  - NotInWater
-  - OnDamaged
-  - OnSevered
-  - OnFire
-  - OnDeath
+- `StatusEffect`: Defines actions to perform given one of the following supported statuses the character can be in: `Always`, `OnSpawn`, `OnActive`, `OnEating`, `OnImpact`, `InWater`, `NotInWater`, `OnDamaged`, `OnSevered`, `OnFire`, `OnDeath`.
 
   - Example:
 
