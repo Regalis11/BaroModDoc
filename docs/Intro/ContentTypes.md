@@ -11,13 +11,13 @@ Types created and edited with the [submarine editor](../Editors/SubmarineEditor.
 
 Partially auto-generated pages:
 - [Item](../ContentTypes/Item.md)
+- [Character](../ContentTypes/Character.md)
 
 Fully auto-generated pages:
 - [Afflictions](../ContentTypes/Afflictions.md)
 - [BackgroundCreaturePrefabs](../ContentTypes/BackgroundCreaturePrefabs.md)
 - [BallastFlora](../ContentTypes/BallastFlora.md)
 - [CaveGenerationParameters](../ContentTypes/CaveGenerationParameters.md)
-- [Character](../ContentTypes/Character.md)
 - [Corpses](../ContentTypes/Corpses.md)
 - [Decals](../ContentTypes/Decals.md)
 - [EventManagerSettings](../ContentTypes/EventManagerSettings.md)

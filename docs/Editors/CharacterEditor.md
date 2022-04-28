@@ -146,7 +146,7 @@ In the AI section, you can add targets with priorities and states. These are use
 
 You might also want to add some sounds and particles \(like blood\) to your character. If you want the character to drop some items, give it an inventory too.
 
-**TIP**: The AI characters only target entities that have \<aitarget/\> tags in the XML definition. For some things, like the walls, this tag is added automatically in the code.
+**TIP**: The AI characters only target entities that have `<aitarget/>` tags in the XML definition. For some things, like the walls, this tag is added automatically in the code.
 
 
 
@@ -184,7 +184,7 @@ Note that currently each limb may only have one attack \(for the sake of simplic
 ## File structure
 ![](img_CharacterEditor/FileStructure.png)
 
-When you create a new character, you are asked to define a path for the character config file \(e.g. Mods/MyMod/Characters/Mycharacter.xml\). It's strongly advised that the texture and sound files are placed in the same folder or in subfolders at the same location as the character config file.
+When you create a new character, you are asked to define a path for the character config file \(e.g. %ModDir%/Characters/Mycharacter.xml\). It's strongly advised that the texture and sound files are placed in the same folder or in subfolders at the same location as the character config file.
 
 When a new character is created in the editor, the system automatically adds the reference to the character config file in the content package and creates the animation and ragdoll files for you.
 
