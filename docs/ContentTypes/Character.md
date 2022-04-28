@@ -146,7 +146,7 @@ These child elements can only be used in characters that set `HasInfo` and `Spec
 - `names`: Defines a file to load character names from. This file defines several lists of words to use as parts of the name, and the way to join them together.
 
 - `Vars`: Defines the categories that some tags are under. This is used by the vanilla game to define gender.
-  - Example
+  - Example:
 
 ```xml
 <Vars>
@@ -178,6 +178,7 @@ These child elements can only be used in characters that set `HasInfo` and `Spec
 - `MenuCategory`: Defines the category defined in the `Vars` element to use to split the character head selection in the lobby.
 - `Pronouns`: Defines the category defined in the `Vars` element to use to determine the character's pronouns. Currently only used in the messages issued relating to traitor missions.
   - Example:
+
 ```xml
 <MenuCategory var="GENDER" />
 <Pronouns var="GENDER" />
