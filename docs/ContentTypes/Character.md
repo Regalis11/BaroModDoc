@@ -7,25 +7,25 @@ This page describes the XML attributes and child elements for characters, which 
 
 ## Root element attributes
 
-- `SpeciesName`: This is used to be able to make references to the item, as well as determine what to remove when [overriding](../Intro/Overrides.md). If `SpeciesTranslationOverride` and `DisplayName` are not defined, it is also used to fetch the required [name](Text.md) to display in the player's inventory.
+- `SpeciesName`: Used for referencing the character, like [Item identifier](../ContentTypes/Item.md).
 - `VariantOf`: If defined, this tells the game to inherit the child elements and attributes of another species. More details in the [Variants](#variants) section.
-- `SpeciesTranslationOverride`: If defined, this is the tag used to fetch the name to display when hovering over this character or selecting it in the character editor.
-- `DisplayName`: If defined, this is displayed when hovering over this character or selecting it in the character editor.
+- `SpeciesTranslationOverride`: References to another species. Used only if we want to reuse the name defined for it in the [Text files](../ContentTypes/Text.md).
+- `DisplayName`: Overrides the name of the character, shown to the player. Leave blank, if the name is defined in the [Text files](../ContentTypes/Text.md) (e.g. `<character.crawler>Crawler</character.crawler>`)!
 - `Group`: If defined, different species of the same group consider each other friendly and do not attack each other.
 - `Humanoid`: If set to `true`, the character is a humanoid and has different animation constraints relative to non-humanoid characters.
 - `HasInfo`: If set to `true`, [jobs](Jobs.md) can be assigned to characters of this species.
 - `SpecifierTags`: If set to `true` and `HasInfo` is also set to true, tags can be attached to characters of this species. More details in the [Characters with specifier tags](#characters-with-specifier-tags) section.
-- `CanInteract`: If set to `true`, this character can interact with items and other characters in the level.
+- `CanInteract`: If set to `true`, this character can interact with items.
 - `Husk`: If set to `true`, this character is treated as a husk by the AI.
-- `UseHuskAppendage`: If set to `true`, and `Husk` is set to `true`, then this husk has a husk appendage.
-- `NeedsAir`: If set to `true`, this character needs to be in a hull full with air to survive; this also makes the character vulnerable to high pressure when swimming outside of the submarine.
-- `NeedsWater`: If set to `true`, this character needs to be in water to survive.
+- `UseHuskAppendage`: If set to `true`, this character uses a special husk appendage, attached to the ragdoll, when it turns into a husk. The appendage is defined in the character file of the huskified species, e.g. `<huskappendage affliction="huskinfection" path="Content/Characters/Humanhusk/Huskappendage.xml" />` in Humanhusk.xml.
+- `NeedsAir`: If set to `true`, this character needs oxygen to survive. This also makes the character vulnerable to high pressure when swimming outside of the submarine.
+- `NeedsWater`: If set to `true`, the character slowly suffocates when it's not in water, like a fish.
 - `CanSpeak`: If set to `true`, this character is able to send messages in the chat.
-- `UseBossHealthBar`: If set to `true`, this character's health is shown at the top of the player's screen when within range.
-- `Noise`: How much sound this character makes when moving, which determines the range in which AI can detect it. Defaults to 100.
-- `Visibility`: This value is used as part of the calculation AI makes to determine whether or not it can see this character. Defaults to 100.
+- `UseBossHealthBar`: If set to `true`, this character's health is shown at the top of the player's screen when they are in an active encounter.
+- `Noise`: Determines the amount of sound this character makes when it moves, affecting how far the other monsters can detect the character. Also the character's size affects this. Defaults to 100.
+- `Visibility`: Defines how visible the character is to the other monsters. Also the character size and the movement speed affects the actual range in which the monsters can detect the character. Defaults to 100.
 - `BloodDecal`: The identifier of the [decal](Decals.md) to use when this character bleeds.
-- `BleedParticleAir`: The identifier of the [particle](Particles.md) to use when bleeding out of water.
+- `BleedParticleAir`: The identifier of the [particle](Particles.md) to use when bleeding in dry places.
 - `BleedParticleWater`: The identifier of the [particle](Particles.md) to use when bleeding in water.
 - `BleedParticleMultiplier`: A multiplier to increase or decrease the number of bleeding particles to create.
 - `CanEat`: If set to `true`, this character is able to eat bodies. This only works for non-humanoids.
@@ -34,9 +34,9 @@ This page describes the XML attributes and child elements for characters, which 
 - `PathFinderPriority`: A lower value decreases the intensive path finding call frequency. Set to a lower value for insignificant creatures to improve performance.
 - `HideInSonar`: If set to `true`, this character doesn't appear in the sonar.
 - `HideInThermalGoggles`: If set to `true`, this character isn't visible when using thermal goggles.
-- `SonarDisruption`: If set to a value greater than zero, this character creates noise on the sonar when within range.
-- `DistantSonarRange`: Range at which "long distance" blips for this character will appear on the sonar.
-- `DisableDistance`: The maximum distance from a player where characters of this species will still have physics and AI enabled.
+- `SonarDisruption`: If set to a value greater than zero, this character creates disrupting noise on the sonar when within range.
+- `DistantSonarRange`: Range at which "long distance" blips for this character will appear on the sonar (used on some of the Abyss monsters).
+- `DisableDistance`: The maximum distance (in pixels) from the closest player at which the character will stay active in the level.
 - `SoundInterval`: The time the game waits between each time it plays this character's sounds.
 - `DrawLast`: If set to `true`, this character will be drawn on top of characters that do not have this set. This currently has no effect if the character has no deformable sprites.
 
@@ -54,7 +54,7 @@ This page describes the XML attributes and child elements for characters, which 
 <gibemitter particle="gib" particleamount="20" velocitymin="200" velocitymax="700" anglemin="0" anglemax="360" scalemin="1" scalemax="1" emitinterval="0" particlespersecond="0" highqualitycollisiondetection="False" copyentityangle="False" />
 ```
 
-- `health`: Defines numerous properties relating to this character's health, such as max vitality, crush depth and health regeneration. In the case of playable characters, it's also used to determine the appearance of the healing UI.
+- `health`: Defines numerous properties relating to this character's health, such as max vitality, crush depth and health regeneration. In the case of playable characters, it's also used to determine the appearance of the healing UI. Note that the ´healthindex´ defined for each limb on the ragdoll file refers to the limb(health) definitions laid out here.
   - Example:
 
 ```xml
@@ -91,7 +91,7 @@ This page describes the XML attributes and child elements for characters, which 
 </Inventory>
 ```
 
-- `ai`: Defines the action the AI will attempt to perform for several targets.
+- `ai`: Defines the targets and the priorities that the AI uses for making decisions. There are too many parameters to list here, but fortunately you can see them all in the character editor. Note that some of them has an effect only when used with a specific `attackpattern`. Others, like `threshold` are generic parameters that have different meaning depending on the targeting `state`. Check for examples in the game files.
   - Example:
 
 ```xml
@@ -106,6 +106,7 @@ This page describes the XML attributes and child elements for characters, which 
 </ai>
 ```
 
+[TODO: status effects require a dedicated page]
 - `StatusEffect`: Defines actions to perform given one of the following supported statuses the character can be in: `Always`, `OnSpawn`, `OnActive`, `OnEating`, `OnImpact`, `InWater`, `NotInWater`, `OnDamaged`, `OnSevered`, `OnFire`, `OnDeath`.
 
   - Example:
@@ -157,7 +158,9 @@ These child elements can only be used in characters that set `HasInfo` and `Spec
 ```
 
 
-- `Heads`: Defines the heads that can be selected when generating characters in an outpost or creating a character in the lobby. Each head must have a unique set of tags associated to it.
+- `Heads`: Defines the heads that can be selected when creating the character. Each head must have a unique set of tags associated to it.
+
+The sprites use the same `sourcerect` as the head limb defined in the ragdoll file. For the vanilla human that would be 128x128 pixels. `sheetindex` is then used to offset the position of the sprite in the texture sheet, i.e. the first two components in the `sourcerect` definition (x and y). As a result, you don't need to define the source rect for each head variant separately, just mark where they are in the imaginary grid.
   - Example:
 
 ```xml
@@ -184,7 +187,7 @@ These child elements can only be used in characters that set `HasInfo` and `Spec
 <Pronouns var="GENDER" />
 ```
 
-- `HeadAttachments`: Defines hair, facial hair, and accessories that can be assigned for each tag or set of tags.
+- `HeadAttachments`: Defines hair, facial hair, and accessories that can be assigned for each tag or set of tags. Uses the same logic for offsetting as the head definitions.
   - Example:
 
 ```xml
