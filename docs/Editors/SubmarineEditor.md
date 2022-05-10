@@ -14,11 +14,13 @@ This is the Barotrauma dev team's official manual for building your own fleets. 
 ## Submarine structures
 Different kinds of walls and platforms are used to keep oxygen inside and monsters outside, and to divide the interior space into smaller rooms and compartments.
 
-When making a new submarine, it’s always a good idea to have a general idea of its shape and layout before building the outer hull. It’s a lot easier to add room inside for that oxygen generator you forgot to include, at first, if you don’t have to move all those carefully placed shell pieces, fins and lights just to create a bit more space. So starting with the outside hull is not necessarily the best course of action.
+When making a new submarine, it’s always a good idea to have a general plan of its shape and layout before building the outer hull. It’s a lot easier to add room inside for that oxygen generator you forgot to include, at first, if you don’t have to move all those carefully placed shell pieces, fins and lights just to create a bit more space. So starting with the outside hull is not necessarily the best course of action.
 
 ![](img_SubmarineEditor/SubmarineStructures.png)
 
-Outside walls are sturdier than inside walls, shuttle wall pieces are somewhere in between. We suggest using the walls as labeled for a more balanced experience, but of course it’s not mandatory. Best results often come when experimenting with different options.
+Outside walls are by default sturdier than inside walls. Shuttle wall pieces are somewhere in between. You can edit the "max health" for each wall piece individually. This value is used as the base health for the walls, boosted multiplicatively by the hull upgrades the player can buy.
+
+We suggest using the walls as labeled for a more balanced experience, but of course it’s not mandatory. Best results often come when experimenting with different options.
 
 After a piece of a wall \(or most things in the editor, really\) is placed, it can be **flipped** by it’s x\- or y\-axis by selecting it and pressing ‘Mirror X’ and ‘Mirror Y’ \-buttons or CTRL+N or CTRL+M. Nudge it via the arrow keys.
 
@@ -38,7 +40,7 @@ In non\-rectangular rooms, it’s often necessary to use multiple hull objects t
 
 **TIP** : Hulls can be named in the editor. The main purpose this serves is to provide an easy, customizable way to refer to different spaces. In some cases the AI also uses hull names to navigate, and, for example, bots prefer to use hulls with ‘airlock’ in their name when entering/exiting the submarine.
 
-Where hulls separate spaces, **gaps** connect them, allowing water and oxygen to flow from hull to another. Gap objects are placed automatically between hulls when a door or hatch is placed. For neighboring hulls with no walls, doors or hatches between them, a gap has to be placed manually. In the editor, red color means that a gap is currently closed, while blue means it is open \(you may need to reopen the editor for the colors to update\).
+Where hulls separate spaces, **gaps** connect them, allowing water and oxygen to flow from hull to another. Gap objects are placed automatically between hulls when a door or hatch is placed. For neighboring hulls with no walls, doors or hatches between them, a gap has to be placed manually for the water and oxygen to flow between the hulls. In the editor, red color means that a gap is currently closed, while blue means it is open \(you may need to reopen the editor for the colors to update\).
 
 ![](img_SubmarineEditor/Hulls_and_gaps.png)
 
@@ -92,11 +94,11 @@ Engines and ballast levels are controlled via the navigation terminal. The termi
 
 
 ## Weapons systems
-**Coilguns** and **railguns** are a basic defense measure any standard sub should have. They both consist of a turret, a loader and a periscope.
+Turrets are the basic defense measure any standard sub should have. All turrets consists of a gun to launch the projectiles, a loader to load the ammunition, and a periscope to control the gun.
 
-Both coil\- and railguns use a lot of power, more than regular batteries can provide, in short bursts when firing. This causes the power grid to fluctuate wildly, so it's best to use supercapacitors to power the sub's guns. Their capacity is low and the output high.
+All turrets use a lot of power in short bursts when they fire. These power spikes are more than regular batteries can handle, which can causes the power grid to fluctuate wildly. Therefore, it's best to use supercapacitors to power the sub's guns. Their capacity is low and the output high.
 
-For either type of gun to work, their loaders must be linked to the gun \(by selecting one, then holding space and clicking on the other\) and a periscope must be placed somewhere to control them. Periscopes output a ‘position_out’ and a ‘trigger_out’ signals, which should be connected to ‘position_in’ and ‘trigger_in’ inputs in the turret itself.
+For any type of turret to work, their loaders must be linked to the gun \(by selecting one, then holding space and clicking on the other\) and a periscope must be placed somewhere to control them. Periscopes output a ‘position_out’ and a ‘trigger_out’ signals, which should be connected to ‘position_in’ and ‘trigger_in’ inputs in the turret itself.
 
 ![](img_SubmarineEditor/Submarine_weapons.png)
 
@@ -122,17 +124,44 @@ The amount of oxygen needed is based on the hull volume and the size of the crew
 ## Airlock, docking and cargo bay
 Any submarine worth its salt has a way for a person to enter and exit it without excessive flooding. A standard **airlock** has a setup of multiple doors that stop the water before it gets further inside and a water pump to get rid of it once the airlock is closed.
 
+![](img_SubmarineEditor/airlock.png)
+
 **Docking ports** are devices that clamp two structures \(submarines, shuttles, outposts etc.\) together, making it possible to walk from one to the other without getting your feet wet. Docking ports act independently from hatches and doors, so remember to also place a hatch wherever a port is to control passage.
 
 **TIP:** A good way to wire a docking port is to link it to its hatch. When the port is engaged, the hatch opens. Find a working example in the sub editor’s Item assemblies category.
 
 
+## Containers
+There are quite a lot of items in the game, which the player can find or buy in the stores. All these items need a place somewhere in the submarine, and for that we need various containers. You can set a container to be filled automatically by enabling the 'Auto Fill' flag for the 'ItemContainer' component. For the autofilling to work, you'll need to mark the container with a tag, so that the game knows what kind of items the container should contain.
+
+![](img_SubmarineEditor/container.png)
+
+Some tags are defined in the prefab level, in the .xml files. Others need to be manually added in the editor. The important tags that need to be manually added are:
+
+engcab	- Tools and other items need for the maintenance tasks
+reactorcab - Reactor fuel, screwdrivers, and other items that might be needed in the reactor room
+divingcab - Items needed when you exit the submarine. Plasma cutters, underwater scooters etc
+supplycab - Emergency items and a diving mask
+armcab - Weapons and ammunition
+secarmcab - Lethal weapons and explosives
+medcab - Medicines
+medfabcab - Medical ingredients
+toxcab - Poisons and dangerous substances
+storagecab - Materials used for fabricating
+mineralcab - Minerals
+
+**TIP:** You can also exclude certain items to be placed in the container by adding tags or identifiers in the 'Containable Restrictions' field.
+
 ## Equipment and security
-To prevent traitors and other undesirables from causing too much damage, it may be smart to lock weapons and explosives somewhere where only authorized personnel can reach them. To do this, add a tag to the 'picked required' field of a door. For example: to only allow security officers to open a door, add a tag 'id_security' to the door and to the security officer’s spawn point.
+To prevent traitors and other undesirables from causing too much damage, it may be smart to lock weapons and explosives somewhere where only authorized personnel can reach them.
+
+To do this, add a tag to the 'picked required' field of a door. Then add the the same tag to at least one of the spawn points. The 'ID Card tags' defined in the spawnpoint are copied for all characters that spawn at that specific point, giving them access to different parts of the submarine.
+
+For example: to only allow security officers to open a door, add a tag, e.g. 'id_security', to both the door and to the security officer’s spawn point. The tag can be whatever you define but it has to match in both places.
 
 ![](img_SubmarineEditor/Security_door_guide.png)
 
-Now anyone who spawns at this spawn point has a tag ‘id_security’ on their ID Card, allowing them to open the door.
+Now anyone who spawns at this spawn point has the tag ‘id_security’ on their ID Card, allowing them to open the door.
 
 **TIP:** To place items in containers in sub editor, right\-click on the container and select ‘Open’ to open the interface. You can now search and filter items and place them in directly. To delete items from the container, drag and drop them to the entity catalog in the bottom.
 
