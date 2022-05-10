@@ -150,7 +150,7 @@ Some tags are defined in the prefab level, in the .xml files. Others need to be 
 - **storagecab**: Materials used for fabricating.
 - **mineralcab**: Minerals.
 
-**TIP:** You can also exclude certain items to be placed in the container by adding tags or identifiers in the 'Containable Restrictions' field.
+**TIP:** You can also reserve the container for specific items only by adding tags or identifiers of those items in the 'Containable Restrictions' field.
 
 ## Equipment and security
 To prevent traitors and other undesirables from causing too much damage, it may be smart to lock weapons and explosives somewhere where only authorized personnel can reach them.
