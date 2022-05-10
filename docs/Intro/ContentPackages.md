@@ -38,5 +38,3 @@ Most mods are usually not core content packages, but instead add things to or mo
 Core packages are packages that contain all the necessary files to make the game run, instead of just adding some extra files on top of another content package. There can only be one core package selected at a time.
 
 This kind of package exists for mods that are extremely thorough and require disabling content from the vanilla game outright. Typically this is not what you want to use, as [overrides](Overrides.md) are usually sufficient and core mods are likely to break as we make updates that add more required files.
-
-[TODO: add list of required content types]
