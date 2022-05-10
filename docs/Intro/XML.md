@@ -44,7 +44,7 @@ XML also supports adding comments. These are blobs of text that will be ignored 
 ## Barotrauma-specific notes
 
 - In Barotrauma, all XML files have the following constraints:
-  - There may be only one root element other than the encoding declaration. This is the first element that appears in the file; all subsequent elements must be children of this element.
-  - All of the attributes of an element must be unique.
+  - There may be only one root element (excluding the encoding declaration mentioned above). The root element is the first element that appears in the file. All subsequent elements must be children of this element, so that they form a complete hierarchy. In other words, the files shouldn't have multiple elements on the first level, but it's completely fine to have multiple elements on the lower levels in the hierarchy.
+  - All the attributes of an element must be unique.
 - When referencing other files in a mod, the game will interpret the string `%ModDir%` as the directory your mod is contained in. This is required to allow mods to be moved to different directories when they're installed through Steam Workshop, or downloaded through a server.
 - To reference files in other mods, you may use strings of the form `%ModDir:[MOD NAME]%`, where `[MOD NAME]` is replaced with the other mod.
