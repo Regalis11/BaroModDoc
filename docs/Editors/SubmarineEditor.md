@@ -138,17 +138,17 @@ There are quite a lot of items in the game, which the player can find or buy in 
 
 Some tags are defined in the prefab level, in the .xml files. Others need to be manually added in the editor. The important tags that need to be manually added are:
 
-engcab	- Tools and other items need for the maintenance tasks
-reactorcab - Reactor fuel, screwdrivers, and other items that might be needed in the reactor room
-divingcab - Items needed when you exit the submarine. Plasma cutters, underwater scooters etc
-supplycab - Emergency items and a diving mask
-armcab - Weapons and ammunition
-secarmcab - Lethal weapons and explosives
-medcab - Medicines
-medfabcab - Medical ingredients
-toxcab - Poisons and dangerous substances
-storagecab - Materials used for fabricating
-mineralcab - Minerals
+- **engcab**: Tools and other items need for the maintenance tasks.
+- **reactorcab**: Reactor fuel, screwdrivers, and other items that might be needed in the reactor room.
+- **divingcab**: Items needed when you exit the submarine. Plasma cutters, underwater scooters etc.
+- **supplycab**: Emergency items and a diving mask.
+- **armcab**: Weapons and ammunition.
+- **secarmcab**: Lethal weapons and explosives.
+- **medcab**: Medicines.
+- **medfabcab**: Medical ingredients.
+- **toxcab**: Poisons and dangerous substances.
+- **storagecab**: Materials used for fabricating.
+- **mineralcab**: Minerals.
 
 **TIP:** You can also exclude certain items to be placed in the container by adding tags or identifiers in the 'Containable Restrictions' field.
 
