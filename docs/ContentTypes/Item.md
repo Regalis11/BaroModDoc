@@ -84,7 +84,7 @@ The following attributes can also be defined:
 
 ## Child elements
 Each XML element that defines an item can have the following child elements:
-- `sprite`: The section of a texture to use to render this item in the level, along with scaling and offset properties.
+- `sprite`: Defines what and how the item is drawn in the game. `texture` specifies the path to the texture file. `sourcerect` defines the section of the texture in pixels (x, y, width, height). `depth` is used for determining which objects are drawn in front and which behind them. Depth ranges from 0 to 1, where 0 is at the front and 1 is at the back. `origin` defines the center point of the sprite relative to the item position.
   - Example:
 
 ```xml
@@ -94,19 +94,25 @@ Each XML element that defines an item can have the following child elements:
 ```
 
 - `price`: Pricing information for this item in the campaign stores.
-- `preferredcontainer`: Tag or identifier of a container item that should be chosen when randomly generating this item. Also used by bots to determine which type of container to put the item in when it's not needed.
+- `preferredcontainer`: Which containers this item should be placed into? Preferably use tags, but identifiers are also supported. Used for placing items automatically, spawning loot, and for the bot decisions on where to place items. Note that each `preferredcontainer` element will be processed individually for spawning items: they are additive. However, multiple tags (or identifiers) in the same element are optional, meaning any container item matching these tags are accepted and the item can spawn in any of them. [TODO: Add a note about additive item loadouts with a reference to start items]
   - Example:
 
 ```xml
-<Item identifier="fiberplant" category="Material" Tags="smallitem,plant" maxstacksize="8" canbepicked="true" cargocontaineridentifier="metalcrate" scale="0.5" impactsoundtag="impact_soft">
-  <PreferredContainer primary="medfabcab" minamount="0" maxamount="4" spawnprobability="1"/>
-  <PreferredContainer secondary="wreckstoragecab" minamount="0" maxamount="2" spawnprobability="0.05"/>
-  <Price baseprice="100">
-    <Price storeidentifier="merchantoutpost" sold="false" multiplier="1.3" />
-    <Price storeidentifier="merchantcity" multiplier="1.25" minavailable="3"/>
-    <Price storeidentifier="merchantresearch" multiplier="0.9" minavailable="6"/>
-    <Price storeidentifier="merchantmilitary" sold="false" />
-    <Price storeidentifier="merchantmine" sold="false" multiplier="0.9" />
+<Item name="" identifier="shotgunshell" category="Weapon" maxstacksize="12" interactthroughwalls="true" cargocontaineridentifier="metalcrate" tags="smallitem,shotgunammo" Scale="0.5" impactsoundtag="impact_metal_light">
+  <PreferredContainer primary="shotgun" amount="6" spawnprobability="1"/>
+  <PreferredContainer primary="autoshotgun" amount="8" spawnprobability="1"/>
+  <PreferredContainer primary="shotgununique" amount="2" spawnprobability="1"/>
+  <PreferredContainer primary="secarmcab" minamount="6" maxamount="12" spawnprobability="1" notcampaign="true"/>
+  <PreferredContainer primary="outpostsecarmcab" minamount="1" maxamount="6" spawnprobability="0.5"/>
+  <PreferredContainer secondary="wreckarmcab,wrecksecarmcab,abandonedarmcab,abandonedsecarmcab" minamount="1" maxamount="3" spawnprobability="0.2"/>
+  <PreferredContainer primary="armcab" secondary="locker"/>
+  <Price baseprice="40">
+    <Price storeidentifier="merchantoutpost" sold="false" multiplier="1.5" />
+    <Price storeidentifier="merchantcity" multiplier="1.25" minavailable="4" sold="true"/>
+    <Price storeidentifier="merchantresearch" sold="false" multiplier="1.25" />
+    <Price storeidentifier="merchantmilitary" multiplier="0.9" minavailable="12" />
+    <Price storeidentifier="merchantmine" sold="false" multiplier="1.25" />
+    <Price storeidentifier="merchantarmory" multiplier="0.9" minavailable="12" />
   </Price>
   <!-- ... -->
 ```

@@ -1,6 +1,6 @@
 # Publishing to Steam Workshop
 
-Once you have put together a mod that you wish to share with the world, you can publish it to Steam Workshop through the "Publish" tab in the modding menu. It's worth nothing that this isn't required to host servers with mods, as players will be able to download any required mods directly from your server.
+Once you have put together a mod that you wish to share with the world, you can publish it to Steam Workshop through the "Publish" tab in the modding menu. It's worth noting that this isn't required to host servers with mods, as players will be able to download any required mods directly from your server.
 
 ![The Publish tab](img/Publish1.png)
 
