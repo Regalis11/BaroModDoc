@@ -35,6 +35,62 @@ public class SteamToMd : Command
                 (t.Nodes().OfType<XText>().First().Value, d))
             .ToArray();
 
+        void parseNode(XNode node, List<Page.BodyComponent> components)
+        {
+            switch (node)
+            {
+                case XText txt:
+                    components.Add(new Page.RawText(txt.Value+" "));
+                    break;
+                case XElement elem:
+                    switch (elem.Name.LocalName)
+                    {
+                        case "div":
+                            if (elem.Attribute("class")?.Value == "bb_code")
+                            {
+                                components.Add(new Page.NewLine());
+                                components.Add(new Page.CodeBlock(Lang: "", Value: elem.ElementInnerText().Unescape()));
+                                components.Add(new Page.NewLine());
+                            }
+                            break;
+                        case "br":
+                            components.Add(new Page.NewLine());
+                            break;
+                        case "b":
+                            components.Add(new Page.InlineMarkdown($"**{elem.ElementInnerText()}**"));
+                            break;
+                        case "i":
+                            components.Add(new Page.InlineMarkdown($"*{elem.ElementInnerText()}*"));
+                            break;
+                        case "a":
+                            var nestedImg = elem.Element("img");
+                            if (nestedImg != null)
+                            {
+                                components.Add(new Page.Image(Url: nestedImg.Attribute("src").Value));
+                            }
+                            else
+                            {
+                                components.Add(new Page.Hyperlink(Url: elem.Attribute("href").Value, Text: elem.ElementInnerText()));
+                            }
+                            break;
+                        case "ul":
+                            var list = new Page.BulletList(); components.Add(list);
+                            foreach (var listItem in elem.Elements("li"))
+                            {
+                                var itemComponents = new List<Page.BodyComponent>();
+                                foreach (var listItemNode in listItem.Nodes())
+                                {
+                                    parseNode(listItemNode, itemComponents);
+                                }
+                                list.Items.Add(new Page.InlineMarkdown(itemComponents.ToArray()));
+                            }
+                            break;
+                    }
+                    components.Add(new Page.RawText(" "));
+                    break;
+            }
+        }
+        
         Page markdown = new Page();
         foreach (var (title, description) in sectionsXml)
         {
@@ -43,38 +99,7 @@ public class SteamToMd : Command
             markdown.Subsections.Add(section);
             foreach (var node in description.Nodes())
             {
-                switch (node)
-                {
-                    case XText txt:
-                        section.Body.Components.Add(new Page.RawText(txt.Value+" "));
-                        break;
-                    case XElement elem:
-                        switch (elem.Name.LocalName)
-                        {
-                            case "br":
-                                section.Body.Components.Add(new Page.NewLine());
-                                break;
-                            case "b":
-                                section.Body.Components.Add(new Page.InlineMarkdown($"**{elem.ElementInnerText()}**"));
-                                break;
-                            case "i":
-                                section.Body.Components.Add(new Page.InlineMarkdown($"*{elem.ElementInnerText()}*"));
-                                break;
-                            case "a":
-                                var nestedImg = elem.Element("img");
-                                if (nestedImg != null)
-                                {
-                                    section.Body.Components.Add(new Page.Image(Url: nestedImg.Attribute("src").Value));
-                                }
-                                else
-                                {
-                                    section.Body.Components.Add(new Page.Hyperlink(Url: elem.Attribute("href").Value, Text: elem.ElementInnerText()));
-                                }
-                                break;
-                        }
-                        section.Body.Components.Add(new Page.RawText(" "));
-                        break;
-                }
+                parseNode(node, section.Body.Components);
             }
         }
         

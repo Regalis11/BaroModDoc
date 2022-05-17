@@ -29,6 +29,12 @@ public static class Extensions
         return str.ToString();
     }
 
+    public static string Unescape(this string str)
+        => str
+            .Replace("&lt;", "<")
+            .Replace("&gt;", ">")
+            .Replace("&amp;", "&");
+
     public static string? GetAttributeValue(this XElement elem, string attrName)
         => elem.Attributes().FirstOrDefault(a => a.Name.LocalName.Equals(attrName, StringComparison.OrdinalIgnoreCase))
             ?.Value;

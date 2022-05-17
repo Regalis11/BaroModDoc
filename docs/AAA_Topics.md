@@ -3,6 +3,7 @@
 ## Topics
 - Editors
   - [Submarine editor](Editors/SubmarineEditor.md)
+    - [Diving deeper](Editors/SubEditorHex.md)
   - [Character editor](Editors/CharacterEditor.md)
 
 - XML

@@ -19,6 +19,9 @@ public class Page
     
     public record InlineMarkdown(string Value = "") : BodyComponent
     {
+        public InlineMarkdown(params BodyComponent[] subComponents)
+            : this(string.Join("", subComponents.Select(c => c.ToMarkdown()))) { }
+
         public override string ToMarkdown()
             => Value;
     }
