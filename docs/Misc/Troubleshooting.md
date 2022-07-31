@@ -3,7 +3,7 @@ has_toc: true
 ---
 # Troubleshooting
 ## I've added or renamed files in the filelist.xml but changes in those files aren't showing up.
-You must restart the game to pick up new files in the LocalMods directory.
+You must restart the game to pick up new or renamed files in the LocalMods directory.
 
 ## The custom submarines/item assemblies/mods I made before v0.17 have disappeared
 The game will not attempt to delete any of the mods you've created in past versions of the game, so the files should still exist.
