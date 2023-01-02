@@ -17,8 +17,9 @@ public class XmlNames : Command
 
         const string gameRoot = "Barotrauma/BarotraumaShared";
         const string contentPackagePath = $"{gameRoot}/Content/ContentPackages/Vanilla.xml";
-        XDocument contentPackageFileList = XDocument.Load(contentPackagePath);
-        var files = contentPackageFileList.Root.Elements()
+        var contentPackageFileList = XDocument.Load(contentPackagePath)?.Root
+            ?? throw new Exception("Failed to load Vanilla.xml");
+        var files = contentPackageFileList.Elements()
             .Where(e => e.Name.LocalName.Equals(contentType, StringComparison.OrdinalIgnoreCase))
             .Select(e => e.Attribute("file")!.Value)
             .ToArray();
@@ -28,7 +29,7 @@ public class XmlNames : Command
         foreach (var filePath in files)
         {
             var file = XDocument.Load(Path.Combine(gameRoot, filePath));
-            XElement[] elems = { file.Root };
+            XElement[] elems = { file?.Root ?? throw new Exception($"Failed to load {filePath}") };
             for (int i = 0; i < startDepth; i++)
             {
                 elems = elems.SelectMany(e => e.Elements()).ToArray();
