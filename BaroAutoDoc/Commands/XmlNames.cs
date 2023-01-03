@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Xml.Linq;
+﻿using System.Xml.Linq;
 
 namespace BaroAutoDoc.Commands;
 

@@ -1,6 +1,4 @@
 ﻿using System.Collections.Immutable;
-using System.Diagnostics;
-using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace BaroAutoDoc.SyntaxWalkers;

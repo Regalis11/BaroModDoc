@@ -1,10 +1,5 @@
 ﻿using System.Reflection;
-using System.Text;
-using System.Xml;
-using System.Xml.Linq;
 using BaroAutoDoc.SyntaxWalkers;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
 
 namespace BaroAutoDoc.Commands;
 
