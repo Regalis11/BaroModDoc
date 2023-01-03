@@ -3,7 +3,7 @@ using Microsoft.CodeAnalysis.CSharp;
 
 namespace BaroAutoDoc.SyntaxWalkers;
 
-public class FolderSyntaxWalker : CSharpSyntaxWalker
+class FolderSyntaxWalker : CSharpSyntaxWalker
 {
     public string CurrentFile = "";
     

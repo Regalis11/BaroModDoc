@@ -2,13 +2,13 @@
 
 namespace BaroAutoDoc.Commands;
 
-public class XmlNames : Command
+class XmlNames : Command
 {
     public void Invoke(
         string contentType,
         int startDepth,
         int maxDepth = -1,
-        string repoPath = "C:/Users/juanj/Desktop/Repos/Barotrauma-development")
+        string repoPath = Constants.DefaultRepoPath)
     {
         Directory.SetCurrentDirectory(repoPath);
         

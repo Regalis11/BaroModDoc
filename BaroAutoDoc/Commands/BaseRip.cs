@@ -3,9 +3,9 @@ using BaroAutoDoc.SyntaxWalkers;
 
 namespace BaroAutoDoc.Commands;
 
-public class BaseRip : Command
+class BaseRip : Command
 {
-    public void Invoke(string repoPath = "C:/Users/juanj/Desktop/Repos/Barotrauma-development")
+    public void Invoke(string repoPath = Constants.DefaultRepoPath)
     {
         Directory.SetCurrentDirectory(repoPath);
 
@@ -27,8 +27,31 @@ public class BaseRip : Command
             string srcPath = string.Format(srcPathFmt, p);
             for (int i = 0; i < contentTypes.Length; i++)
             {
-                var attrRipper = new AttributeRipper(contentTypes[i]);
-                string typeToLookFor;
+                var contentType = contentTypes[i];
+                
+                int numSharedStart(string a, string b)
+                {
+                    for (int i=0;i<Math.Min(a.Length, b.Length);i++)
+                    {
+                        if (a[i] == b[i]) { continue; }
+                        return i;
+                    }
+                    return Math.Min(a.Length, b.Length);
+                }
+        
+                var typeToLookFor = contentType.ConstructedTypes
+                    .OrderByDescending(t => numSharedStart(t, contentType.Name))
+                    .ThenBy(t => t).FirstOrDefault() ?? "";
+                if (string.IsNullOrEmpty(typeToLookFor))
+                {
+                    Console.WriteLine($"No constructed types from {contentType.Name}");
+                }
+                else
+                {
+                    Console.WriteLine($"Extracting attributes for {contentType.Name}: Starting with {typeToLookFor}");
+                }
+                
+                var attrRipper = new AttributeRipper(contentType, typeToLookFor);
                 do
                 {
                     typeToLookFor = attrRipper.TypeToLookFor;

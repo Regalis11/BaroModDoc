@@ -3,36 +3,15 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace BaroAutoDoc.SyntaxWalkers;
 
-public class AttributeRipper : FolderSyntaxWalker
+class AttributeRipper : FolderSyntaxWalker
 {
     public string TypeToLookFor { get; private set; }
     public ContentType ContentType { get; private set; }
     
-    public AttributeRipper(ContentType contentType)
+    public AttributeRipper(ContentType contentType, string typeToLookFor)
     {
         ContentType = contentType;
-
-        int numSharedStart(string a, string b)
-        {
-            for (int i=0;i<Math.Min(a.Length, b.Length);i++)
-            {
-                if (a[i] == b[i]) { continue; }
-                return i;
-            }
-            return Math.Min(a.Length, b.Length);
-        }
-        
-        TypeToLookFor = contentType.ConstructedTypes
-            .OrderByDescending(t => numSharedStart(t, contentType.Name))
-            .ThenBy(t => t).FirstOrDefault() ?? "";
-        if (string.IsNullOrEmpty(TypeToLookFor))
-        {
-            Console.WriteLine($"No constructed types from {ContentType.Name}");
-        }
-        else
-        {
-            Console.WriteLine($"Extracting attributes for {ContentType.Name}: Starting with {TypeToLookFor}");
-        }
+        TypeToLookFor = typeToLookFor;
     }
 
     public override void VisitClassDeclaration(ClassDeclarationSyntax node)

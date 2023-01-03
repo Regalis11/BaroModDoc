@@ -2,7 +2,7 @@
 
 namespace BaroAutoDoc;
 
-public record ContentType(
+record ContentType(
     string Name,
     ImmutableArray<string> AltNames,
     bool RequiredByCorePackage,

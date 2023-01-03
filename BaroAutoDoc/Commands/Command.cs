@@ -3,7 +3,7 @@ using System.Globalization;
 
 namespace BaroAutoDoc.Commands;
 
-public abstract class Command
+abstract class Command
 {
     public static ImmutableHashSet<Type> CommandTypes
         = typeof(Command).Assembly.GetTypes().Where(t => t.IsSubclassOf(typeof(Command)))

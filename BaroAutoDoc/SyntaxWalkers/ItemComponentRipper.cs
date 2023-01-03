@@ -2,7 +2,7 @@
 
 namespace BaroAutoDoc.SyntaxWalkers;
 
-public class ItemComponentRipper : FolderSyntaxWalker
+class ItemComponentRipper : FolderSyntaxWalker
 {
     public readonly Dictionary<string, ClassDeclarationSyntax> Types = new();
 

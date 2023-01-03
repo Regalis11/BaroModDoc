@@ -2,6 +2,10 @@
 
 if (!args.Any())
 {
+    Console.WriteLine("Available commands:");
+    Console.WriteLine(string.Join(", ", Command.CommandTypes.Select(c => c.Name)));
+    Console.WriteLine("");
+
     Console.WriteLine("Command to invoke:");
     string cmd = Console.ReadLine() ?? "";
     args = cmd.Split(' ');

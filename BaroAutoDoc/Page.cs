@@ -5,7 +5,7 @@ using System.Xml.Linq;
 
 namespace BaroAutoDoc;
 
-public class Page
+class Page
 {
     public abstract record BodyComponent
     {

@@ -4,7 +4,7 @@ using System.Xml.Linq;
 
 namespace BaroAutoDoc.Commands;
 
-public class SteamToMd : Command
+class SteamToMd : Command
 {
     public void Invoke(string url, string fileName)
     {

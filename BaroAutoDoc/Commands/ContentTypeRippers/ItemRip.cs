@@ -9,7 +9,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace BaroAutoDoc.Commands;
 
-public class ItemRip : Command
+class ItemRip : Command
 {
     private record TreeNode(ClassDeclarationSyntax Class)
     {
@@ -74,7 +74,7 @@ public class ItemRip : Command
         public TreeNode? Parent = null;
     }
     
-    public void Invoke(string repoPath = "C:/Users/juanj/Desktop/Repos/Barotrauma-development")
+    public void Invoke(string repoPath = Constants.DefaultRepoPath)
     {
         Directory.SetCurrentDirectory(repoPath);
 
