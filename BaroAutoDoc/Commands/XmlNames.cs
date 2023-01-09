@@ -7,11 +7,10 @@ class XmlNames : Command
     public void Invoke(
         string contentType,
         int startDepth,
-        int maxDepth = -1,
-        string repoPath = Constants.DefaultRepoPath)
+        int maxDepth = -1)
     {
-        Directory.SetCurrentDirectory(repoPath);
-        
+        Directory.SetCurrentDirectory(GlobalConfig.RepoPath);
+
         if (maxDepth < 0) { maxDepth = startDepth; }
 
         const string gameRoot = "Barotrauma/BarotraumaShared";

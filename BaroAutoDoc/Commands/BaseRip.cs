@@ -5,9 +5,9 @@ namespace BaroAutoDoc.Commands;
 
 class BaseRip : Command
 {
-    public void Invoke(string repoPath = Constants.DefaultRepoPath)
+    public void Invoke()
     {
-        Directory.SetCurrentDirectory(repoPath);
+        Directory.SetCurrentDirectory(GlobalConfig.RepoPath);
 
         const string srcPathFmt = "Barotrauma/Barotrauma{0}/{0}Source";
         const string contentFilePathFmt = $"{srcPathFmt}/ContentManagement/ContentFile";

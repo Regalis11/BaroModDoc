@@ -1,4 +1,19 @@
-﻿using BaroAutoDoc.Commands;
+﻿using System.Runtime.CompilerServices;
+using BaroAutoDoc.Commands;
+
+try
+{
+    // invoke the global config constructor to initialize the config
+    RuntimeHelpers.RunClassConstructor(typeof(GlobalConfig).TypeHandle);
+}
+catch (TypeInitializationException exception)
+{
+    if (exception.InnerException is not { } e) { throw; }
+
+    // print any errors that GlobalConfig constructor threw
+    Console.WriteLine($"{e.GetType().Name}: {e.Message}");
+    return;
+}
 
 if (!args.Any())
 {

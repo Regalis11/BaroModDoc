@@ -74,9 +74,9 @@ class ItemRip : Command
         public TreeNode? Parent = null;
     }
     
-    public void Invoke(string repoPath = Constants.DefaultRepoPath)
+    public void Invoke()
     {
-        Directory.SetCurrentDirectory(repoPath);
+        Directory.SetCurrentDirectory(GlobalConfig.RepoPath);
 
         const string srcPathFmt = "Barotrauma/Barotrauma{0}/{0}Source/Items";
         string[] srcPathParams = {"Shared"};
