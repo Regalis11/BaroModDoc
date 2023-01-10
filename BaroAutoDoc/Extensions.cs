@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using System.Xml;
 using System.Xml.Linq;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace BaroAutoDoc;
 
@@ -18,7 +19,9 @@ public static class Extensions
 
         return -1;
     }
-    
+
+    public static string GetIdentifierString(this IdentifierNameSyntax identifier) => identifier.Identifier.Text;
+
     public static string ElementInnerText(this XElement el)
     {
         StringBuilder str = new StringBuilder();

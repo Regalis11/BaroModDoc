@@ -1,11 +1,11 @@
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
 using System.Reflection;
 using System.Xml;
 using System.Xml.Linq;
 using BaroAutoDoc;
 
+[AttributeUsage(AttributeTargets.Field)]
 public sealed class ConfigValue : Attribute { }
 
 [SuppressMessage("ReSharper", "ConvertToConstant.Global")]
