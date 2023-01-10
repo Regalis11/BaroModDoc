@@ -3,12 +3,12 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace BaroAutoDoc.SyntaxWalkers;
 
-class AttributeRipper : FolderSyntaxWalker
+class ContentTypeAttributeRipper : FolderSyntaxWalker
 {
     public string TypeToLookFor { get; private set; }
     public ContentType ContentType { get; private set; }
     
-    public AttributeRipper(ContentType contentType, string typeToLookFor)
+    public ContentTypeAttributeRipper(ContentType contentType, string typeToLookFor)
     {
         ContentType = contentType;
         TypeToLookFor = typeToLookFor;
@@ -25,19 +25,14 @@ class AttributeRipper : FolderSyntaxWalker
             .ToArray();
         var subElemSwitches = switchStatements.Where(s => s.Expression.ToString().Contains("subElement.Name")).ToArray();
 
-        var properties = node.DescendantNodes().OfType<PropertyDeclarationSyntax>();
-        var serializableProperties = properties
-            .Where(p => p.AttributeLists
-                .SelectMany(l => l.Attributes)
-                .Any(a => a.Name is IdentifierNameSyntax {Identifier.ValueText: "Serialize"}))
-            .ToArray();
+        var serializableProperties = node.GetSerializableProperties().ToArray();
         TypeToLookFor = node.BaseList?.Types.FirstOrDefault()?.Type.ToString() ?? "";
 
         ContentType = ContentType with
         {
             XmlAttributes = ContentType.XmlAttributes.Union(
                 serializableProperties.Select(p
-                    => new ContentType.XmlAttribute(p.Type.ToString(), p.Identifier.ValueText)))
+                    => new ContentType.XmlAttribute(p.Type, p.Name)))
                 .ToImmutableArray(),
             XmlSubElements = ContentType.XmlSubElements.Union(
                 subElemSwitches.SelectMany(s => s.Sections.Select(

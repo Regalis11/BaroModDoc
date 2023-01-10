@@ -51,7 +51,7 @@ class BaseRip : Command
                     Console.WriteLine($"Extracting attributes for {contentType.Name}: Starting with {typeToLookFor}");
                 }
                 
-                var attrRipper = new AttributeRipper(contentType, typeToLookFor);
+                var attrRipper = new ContentTypeAttributeRipper(contentType, typeToLookFor);
                 do
                 {
                     typeToLookFor = attrRipper.TypeToLookFor;

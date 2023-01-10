@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Xml;
 using System.Xml.Linq;
-using BaroAutoDoc;
+namespace BaroAutoDoc;
 
 [AttributeUsage(AttributeTargets.Field)]
 public sealed class ConfigValue : Attribute { }
