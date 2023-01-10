@@ -67,7 +67,7 @@ class AfflictionsRip : Command
                 {
                     if (field.Name != assignedVariableName) { continue; }
 
-                    string xmlIdentifier = assignmentArgumentList[0].ToString(); // TODO parse nameof()
+                    string xmlIdentifier = assignmentArgumentList[0].ToString().EvaluateAsCSharpExpression();
                     xmlAssignedFields.Add(new XMLAssignedField(field, xmlIdentifier));
                     break;
                 }

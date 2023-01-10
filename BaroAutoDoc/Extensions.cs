@@ -22,6 +22,28 @@ public static class Extensions
     }
 
     public static string GetIdentifierString(this IdentifierNameSyntax identifier) => identifier.Identifier.Text;
+
+    public static string EvaluateAsCSharpExpression(this string expr)
+    {
+        while (true)
+        {
+            int nameofIndex = expr.IndexOf("nameof(", StringComparison.Ordinal);
+            if (nameofIndex < 0) { break; }
+
+            int indexOfClosingParenthesis = expr.IndexOf(")", nameofIndex, StringComparison.Ordinal);
+            if (indexOfClosingParenthesis < 0) { break; }
+
+            string name = expr[nameofIndex..indexOfClosingParenthesis];
+            name = name[(name.IndexOf("(", StringComparison.Ordinal)+1)..];
+
+            int indexOfLastDot = name.LastIndexOf(".", StringComparison.Ordinal);
+            if (indexOfLastDot > 0) { name = name[(indexOfLastDot+1)..]; }
+
+            expr = expr[..nameofIndex]+$"\"{name}\""+expr[(indexOfClosingParenthesis+1)..];
+        }
+        
+        return CSharpScript.EvaluateAsync<string>(expr).Result;
+    }
     
     public static IEnumerable<SerializableProperty> GetSerializableProperties(this ClassDeclarationSyntax @class)
     {
@@ -37,7 +59,7 @@ public static class Extensions
                 => v.EndsWith("f") ? v[..^1] : v;
             
             string cleanupDescription(string desc)
-                => CSharpScript.EvaluateAsync<string>(desc).Result;
+                => desc.EvaluateAsCSharpExpression();
 
             string getArgument(string argName)
             {
