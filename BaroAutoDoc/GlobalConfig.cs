@@ -1,5 +1,6 @@
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Reflection;
 using System.Xml;
 using System.Xml.Linq;
@@ -13,14 +14,12 @@ internal static class GlobalConfig
     [ConfigValue]
     public static readonly string RepoPath = Constants.DefaultRepoPath;
 
-    private readonly record struct ConfigValueParser(Func<string, object> Parse);
-
-    private static readonly ImmutableDictionary<Type, ConfigValueParser> ConfigValueParsers = new Dictionary<Type, ConfigValueParser>
+    private static readonly ImmutableDictionary<Type, Func<string, object>> ConfigValueParsers = new Dictionary<Type, Func<string, object>>
     {
-        [typeof(string)] = new ConfigValueParser(static s => s),
-        [typeof(int)] = new ConfigValueParser(static s => int.Parse(s)),
-        [typeof(float)] = new ConfigValueParser(static s => float.Parse(s)),
-        [typeof(bool)] = new ConfigValueParser(static s => bool.Parse(s))
+        [typeof(string)] = static s => s,
+        [typeof(int)] = static s => int.Parse(s),
+        [typeof(float)] = static s => float.Parse(s),
+        [typeof(bool)] = static s => bool.Parse(s)
     }.ToImmutableDictionary();
 
     private readonly static string ConfigPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config.xml");
@@ -45,7 +44,7 @@ internal static class GlobalConfig
             object parsedValue;
             try
             {
-                parsedValue = ConfigValueParsers[field.FieldType].Parse(value);
+                parsedValue = ConfigValueParsers[field.FieldType](value);
             }
             catch (KeyNotFoundException)
             {
