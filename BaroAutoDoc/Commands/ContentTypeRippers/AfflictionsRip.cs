@@ -47,6 +47,7 @@ class AfflictionsRip : Command
 
             foreach (StatementSyntax statement in constructorStatements)
             {
+                // FIXME this is genuinely unreadable (not like this form of code is readable anyway) but I can do better
                 switch (statement)
                 {
                     case ExpressionStatementSyntax
