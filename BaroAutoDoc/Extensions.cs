@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Collections.Immutable;
+using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
@@ -8,6 +9,27 @@ namespace BaroAutoDoc;
 
 public static class Extensions
 {
+    public static IReadOnlyCollection<BlockSyntax> FindInitializerMethodBodies(this ClassDeclarationSyntax cls, params string[] methodNames)
+    {
+        List<BlockSyntax> bodies = new();
+
+        foreach (MemberDeclarationSyntax member in cls.Members)
+        {
+            switch (member)
+            {
+                // always include constructor
+                case ConstructorDeclarationSyntax { Body: { } body }:
+                    bodies.Add(body);
+                    break;
+                case MethodDeclarationSyntax { Body: { } body, Identifier.Text: var name } when methodNames.Contains(name):
+                    bodies.Add(body);
+                    break;
+            }
+        }
+
+        return bodies.ToImmutableArray();
+    }
+
     public static int FindIndex<T>(this IReadOnlyList<T> list, Predicate<T> predicate)
     {
         for (int i = 0; i < list.Count; i++)

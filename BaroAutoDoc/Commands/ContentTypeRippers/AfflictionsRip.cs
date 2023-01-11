@@ -41,25 +41,11 @@ class AfflictionsRip : Command
                 select new DeclaredField(name, type);
 
 
-            List<BlockSyntax> ctorBodies = new();
-            foreach (MemberDeclarationSyntax member in cls.Members)
-            {
-                switch (member)
-                {
-                    case ConstructorDeclarationSyntax { Body: { } body }:
-                        ctorBodies.Add(body);
-                        break;
-                    case MethodDeclarationSyntax { Body: { } body, Identifier.Text: "LoadEffects" }:
-                        ctorBodies.Add(body);
-                        break;
-                }
-            }
-
-            var constructorStatements = ctorBodies.SelectMany(static ctorBody => ctorBody.Statements);
+            var ctorBodies = cls.FindInitializerMethodBodies("LoadEffects");
 
             List<XMLAssignedField> xmlAssignedFields = new();
 
-            foreach (StatementSyntax statement in constructorStatements)
+            foreach (StatementSyntax statement in ctorBodies.SelectMany(static ctorBody => ctorBody.Statements))
             {
                 // FIXME this is genuinely unreadable (not like this form of code is readable anyway) but I can do better
                 if (statement is not ExpressionStatementSyntax
