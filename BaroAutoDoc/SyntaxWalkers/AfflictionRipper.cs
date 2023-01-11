@@ -20,9 +20,5 @@ class AfflictionRipper : FolderSyntaxWalker
         {
             AfflictionPrefabs.TryAdd(typeName, node);
         }
-        else
-        {
-           Console.WriteLine(typeName);
-        }
     }
 }

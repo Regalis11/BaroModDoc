@@ -7,7 +7,7 @@ namespace BaroAutoDoc.Commands.ContentTypeSpecific;
 
 class AfflictionsRip : Command
 {
-    public readonly record struct DeclaredField(string Name, string Type, FieldDeclarationSyntax Syntax);
+    public readonly record struct DeclaredField(string Name, string Type);
 
     public readonly record struct XMLAssignedField(DeclaredField Field, string XMLIdentifier);
 
@@ -25,8 +25,10 @@ class AfflictionsRip : Command
         }
 
         // TODO we probably want to reuse this for other content types
-        foreach (var (key, cls) in contentTypeFinder.AfflictionPrefabs)
+        foreach (var (key, cls) in contentTypeFinder.AfflictionPrefabs.Union(contentTypeFinder.AfflictionTypes))
         {
+
+            Console.WriteLine($"{key}:");
             ImmutableArray<DeclaredField> fields = cls.Members
                                                       .OfType<FieldDeclarationSyntax>()
                                                       .SelectMany(ConvertField)
@@ -36,21 +38,31 @@ class AfflictionsRip : Command
                 from variable in field.Declaration.Variables
                 let name = variable.Identifier.Text
                 let type = field.Declaration.Type.ToString()
-                select new DeclaredField(name, type, field);
+                select new DeclaredField(name, type);
 
-            var constructorStatements = cls.Members.OfType<ConstructorDeclarationSyntax>()
-                                           .Select(static ctor => ctor.Body)
-                                           .OfType<BlockSyntax>() // filter nulls
-                                           .SelectMany(static ctorBody => ctorBody.Statements);
+
+            List<BlockSyntax> ctorBodies = new();
+            foreach (MemberDeclarationSyntax member in cls.Members)
+            {
+                switch (member)
+                {
+                    case ConstructorDeclarationSyntax { Body: { } body }:
+                        ctorBodies.Add(body);
+                        break;
+                    case MethodDeclarationSyntax { Body: { } body, Identifier.Text: "LoadEffects" }:
+                        ctorBodies.Add(body);
+                        break;
+                }
+            }
+
+            var constructorStatements = ctorBodies.SelectMany(static ctorBody => ctorBody.Statements);
 
             List<XMLAssignedField> xmlAssignedFields = new();
 
             foreach (StatementSyntax statement in constructorStatements)
             {
                 // FIXME this is genuinely unreadable (not like this form of code is readable anyway) but I can do better
-                switch (statement)
-                {
-                    case ExpressionStatementSyntax
+                if (statement is not ExpressionStatementSyntax
                     {
                         Expression: AssignmentExpressionSyntax
                         {
@@ -61,59 +73,34 @@ class AfflictionsRip : Command
                             },
                             Left: IdentifierNameSyntax leftIdentifier
                         }
-                    }:
-                    {
-                        string assignmentMethodName = rightIdentifier.GetIdentifierString(),
-                               assignedVariableName = leftIdentifier.GetIdentifierString();
+                    }) { continue; }
 
-                        // probably a better way to do this
-                        if (!assignmentMethodName.StartsWith("GetAttribute", StringComparison.OrdinalIgnoreCase)) { continue; }
+                string assignmentMethodName = rightIdentifier.GetIdentifierString(),
+                       assignedVariableName = leftIdentifier.GetIdentifierString();
 
-                        foreach (DeclaredField field in fields)
-                        {
-                            if (field.Name != assignedVariableName) { continue; }
-                            string xmlIdentifier = assignmentArgumentList[0].ToString().EvaluateAsCSharpExpression();
+                // probably a better way to do this
+                if (!assignmentMethodName.StartsWith("GetAttribute", StringComparison.OrdinalIgnoreCase)) { continue; }
 
-                            xmlAssignedFields.Add(new XMLAssignedField(field, xmlIdentifier));
-                            break;
-                        }
-                        break;
-                    }
-                    // FIXME filter statements that iterate XML sub elements
-                    case ForEachStatementSyntax
-                    {
-                        Statement: BlockSyntax { Statements: var statements }
-                    }:
-                    {
-                        Dictionary<string, string> xmlSubElementAffectors = new();
-                        foreach (StatementSyntax syntax in statements)
-                        {
-                            // FIXME filter statements that access the XML name
-                            if (syntax is not SwitchStatementSyntax switchStatement) { continue; }
+                foreach (DeclaredField field in fields)
+                {
+                    if (field.Name != assignedVariableName) { continue; }
 
-                            foreach (SwitchSectionSyntax switchSection in switchStatement.Sections)
-                            {
-                                foreach (CaseSwitchLabelSyntax caseLabel in switchSection.Labels.OfType<CaseSwitchLabelSyntax>())
-                                {
-                                    // FIXME continue this bs tomorrow
-                                    xmlSubElementAffectors.Add(caseLabel.Value.ToString(), switchSection.Statements[0].ToString());
-                                }
-                            }
-                        }
+                    string xmlIdentifier = assignmentArgumentList[0].ToString().EvaluateAsCSharpExpression();
 
-                        foreach (var (xmlName, bruh) in xmlSubElementAffectors)
-                        {
-                            Console.WriteLine($"Sub element named {xmlName} affects field {bruh}");
-                        }
-                        break;
-                    }
+                    xmlAssignedFields.Add(new XMLAssignedField(field, xmlIdentifier));
+                    break;
                 }
-
             }
 
-            foreach (XMLAssignedField field in xmlAssignedFields)
+            foreach (var ctorBody in ctorBodies)
             {
-                Console.WriteLine($"{key} {field.Field.Name} {field.Field.Type} {field.XMLIdentifier}");
+                foreach (SupportedSubElement affectedElement in  SubElementFinder.FindSubElementsFrom(ctorBody))
+                {
+                    // TODO we need to consider that a lot of lists are created in the constructor and then assigned into the global variable
+                    // one such case is the descriptions in affliction
+                    if (affectedElement.AffectedField.Length is 0 || !fields.Any(f => affectedElement.AffectedField.Contains(f.Name))) { continue; }
+                    Console.WriteLine($"    {affectedElement.XMLName} {string.Join(',', affectedElement.AffectedField)}");
+                }
             }
         }
     }
