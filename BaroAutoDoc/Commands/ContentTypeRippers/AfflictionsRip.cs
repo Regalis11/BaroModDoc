@@ -1,7 +1,5 @@
-﻿using System.Collections.Immutable;
-using System.Text.RegularExpressions;
+﻿using System.Reflection;
 using BaroAutoDoc.SyntaxWalkers;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace BaroAutoDoc.Commands.ContentTypeSpecific;
 
@@ -21,11 +19,11 @@ class AfflictionsRip : Command
             contentTypeFinder.VisitAllInDirectory(srcPath);
         }
 
-        // TODO we probably want to reuse this for other content types
-        foreach (var (key, cls) in contentTypeFinder.AfflictionPrefabs.Union(contentTypeFinder.AfflictionTypes))
-        {
-            Console.WriteLine($"{key}:");
+        Directory.SetCurrentDirectory(Path.GetDirectoryName(Assembly.GetCallingAssembly().Location)!);
 
+        // TODO we probably want to reuse this for other content types
+        foreach (var (key, cls) in contentTypeFinder.AfflictionPrefabs)
+        {
             PrefabClassParser parser = new PrefabClassParser(new ClassParsingOptions
             {
                 InitializerMethodNames = new[] { "LoadEffects" },
@@ -33,18 +31,53 @@ class AfflictionsRip : Command
 
             parser.ParseClass(cls);
 
+            Page page = new()
+            {
+                Title = key
+            };
+
+            Page.Section attributesSection = new();
+            page.Subsections.Add(attributesSection);
+            attributesSection.Title = "Attributes";
+
+            Page.Table attributesTable = new()
+            {
+                HeadRow = new Page.Table.Row("Attribute", "Type", "Default value", "Description")
+            };
+
             foreach (XMLAssignedField field in parser.XMLAssignedFields)
             {
-                Console.WriteLine($"    {field.Field.Name}: \"{field.XMLIdentifier}\" ({field.Field.Type}) \"{field.Field.Description}\"");
+                attributesTable.BodyRows.Add(new Page.Table.Row(field.XMLIdentifier, field.Field.Type, "TODO", field.Field.Description));
             }
+
+            if (attributesTable.BodyRows.Any())
+            {
+                attributesSection.Body.Components.Add(attributesTable);
+            }
+
+            Page.Section subElementSection = new();
+            page.Subsections.Add(subElementSection);
+            subElementSection.Title = "Sub Elements";
+            
+            Page.Table subElementTable = new()
+            {
+                HeadRow = new Page.Table.Row("Element")
+            };
 
             foreach (SupportedSubElement affectedElement in parser.SupportedSubElements)
             {
                 // TODO we need to consider that a lot of lists are created in the constructor and then assigned into the global variable
                 // one such case is the descriptions in affliction
                 if (affectedElement.AffectedField.Length is 0) { continue; }
-                Console.WriteLine($"    <{affectedElement.XMLName}> {string.Join(',', affectedElement.AffectedField)}");
+                subElementTable.BodyRows.Add(new Page.Table.Row(affectedElement.XMLName));
             }
+
+            if (subElementTable.BodyRows.Any())
+            {
+                subElementSection.Body.Components.Add(subElementTable);
+            }
+
+            File.WriteAllText($"{key}.md", page.ToMarkdown());
         }
     }
 }
