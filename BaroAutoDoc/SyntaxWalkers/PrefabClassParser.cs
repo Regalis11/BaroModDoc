@@ -9,7 +9,7 @@ public readonly record struct SupportedSubElement(string XMLName, ImmutableArray
 
 public readonly record struct DeclaredField(string Name, string Type);
 
-public readonly record struct CorrectedField(string Global, string Local);
+public readonly record struct CorrelatedField(string Global, string Local);
 
 public readonly record struct XMLAssignedField(DeclaredField Field, string XMLIdentifier);
 
@@ -42,21 +42,36 @@ internal sealed class PrefabClassParser
 
         foreach (BlockSyntax block in initializers)
         {
-            var localVariables = GetLocalVariables(block);
-
-            ImmutableHashSet<CorrectedField> correlatedFields = GetAssignmentsToGlobalVariable(block, declaredFields, localVariables);
-
-            XMLAssignedFields = XMLAssignedFields.Union(FindXMLAssignedFields(declaredFields, correlatedFields, block));
+            XMLAssignedFields = XMLAssignedFields.Union(FindXMLAssignedFields(block));
         }
     }
 
-    private static ImmutableHashSet<XMLAssignedField> FindXMLAssignedFields(ImmutableHashSet<DeclaredField> fields, ImmutableHashSet<CorrectedField> correlatedFields, BlockSyntax blockSyntax)
+    private ImmutableHashSet<XMLAssignedField> FindXMLAssignedFields(BlockSyntax blockSyntax)
+    {
+        var correlatedFields = GetAssignmentsToGlobalVariable(blockSyntax, declaredFields, GetLocalVariables(blockSyntax));
+
+        var result = ImmutableHashSet.CreateBuilder<XMLAssignedField>();
+
+        result.AddRange(FindXMLFieldsInStatement(blockSyntax, correlatedFields));
+
+        foreach (StatementSyntax syntax in blockSyntax.Statements)
+        {
+            // TODO we probably want to extract the condition here?
+            if (syntax is not IfStatementSyntax { Statement: BlockSyntax ifBlock }) { continue; }
+
+            result.AddRange(FindXMLFieldsInStatement(ifBlock, correlatedFields));
+        }
+
+        return result.ToImmutable();
+    }
+
+    private ImmutableHashSet<XMLAssignedField> FindXMLFieldsInStatement(BlockSyntax blockSyntax, IReadOnlyCollection<CorrelatedField> correlatedFields)
     {
         var result = ImmutableHashSet.CreateBuilder<XMLAssignedField>();
 
         foreach (StatementSyntax statement in blockSyntax.Statements)
         {
-            // FIXME this is genuinely unreadable (not like this form of code is readable anyway) but I can do better
+            // good lord in heavens above
             if (statement is not ExpressionStatementSyntax
                 {
                     Expression: AssignmentExpressionSyntax
@@ -76,13 +91,13 @@ internal sealed class PrefabClassParser
             // probably a better way to do this
             if (!assignmentMethodName.StartsWith("GetAttribute", StringComparison.OrdinalIgnoreCase)) { continue; }
 
-            foreach (DeclaredField declaredField in fields)
+            foreach (DeclaredField declaredField in declaredFields)
             {
                 DeclaredField field = declaredField;
-                // this is backwards??
-                foreach (CorrectedField correctedField in correlatedFields)
+
+                foreach (CorrelatedField correctedField in correlatedFields)
                 {
-                    if (correctedField.Global != declaredField.Name) { continue; }
+                    if (correctedField.Local != declaredField.Name) { continue; }
                     field = field with { Name = correctedField.Global };
                 }
 
@@ -113,9 +128,9 @@ internal sealed class PrefabClassParser
         return result.ToImmutable();
     }
 
-    private static ImmutableHashSet<CorrectedField> GetAssignmentsToGlobalVariable(BlockSyntax block, ImmutableHashSet<DeclaredField> globalVariables, ImmutableHashSet<DeclaredField> localVariables)
+    private static ImmutableHashSet<CorrelatedField> GetAssignmentsToGlobalVariable(BlockSyntax block, ImmutableHashSet<DeclaredField> globalVariables, ImmutableHashSet<DeclaredField> localVariables)
     {
-        var result = ImmutableHashSet.CreateBuilder<CorrectedField>();
+        var result = ImmutableHashSet.CreateBuilder<CorrelatedField>();
 
         foreach (var assignment in block.Statements.OfType<ExpressionStatementSyntax>())
         {
@@ -134,7 +149,7 @@ internal sealed class PrefabClassParser
                     Expression: MemberAccessExpressionSyntax { Expression: IdentifierNameSyntax rightIdentifier }
                 } when localVariables.Any(field => field.Name == rightIdentifier.GetIdentifierString()):
                 {
-                    result.Add(new CorrectedField(leftIdentifier.GetIdentifierString(), rightIdentifier.GetIdentifierString()));
+                    result.Add(new CorrelatedField(leftIdentifier.GetIdentifierString(), rightIdentifier.GetIdentifierString()));
                     break;
                 }
             }

@@ -9,6 +9,15 @@ namespace BaroAutoDoc;
 
 public static class Extensions
 {
+
+    public static void AddRange<T>(this ImmutableHashSet<T>.Builder builder, IEnumerable<T> items)
+    {
+        foreach (var item in items)
+        {
+            builder.Add(item);
+        }
+    }
+
     public static IReadOnlyCollection<BlockSyntax> FindInitializerMethodBodies(this ClassDeclarationSyntax cls, params string[] methodNames)
     {
         List<BlockSyntax> bodies = new();
