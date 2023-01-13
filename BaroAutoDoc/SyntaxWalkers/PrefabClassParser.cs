@@ -1,4 +1,5 @@
 using System.Collections.Immutable;
+using System.Diagnostics;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
@@ -7,7 +8,7 @@ namespace BaroAutoDoc.SyntaxWalkers;
 // TODO what other info do we want to extract? possible errors for example by parsing AddWaring/ThrowError?
 public readonly record struct SupportedSubElement(string XMLName, ImmutableArray<string> AffectedField);
 
-public readonly record struct DeclaredField(string Name, string Type);
+public readonly record struct DeclaredField(string Name, string Type, string Description);
 
 public readonly record struct CorrelatedField(string Global, string Local);
 
@@ -121,7 +122,10 @@ internal sealed class PrefabClassParser
         {
             foreach (VariableDeclaratorSyntax variableName in localDeclaration.Declaration.Variables)
             {
-                result.Add(new DeclaredField(variableName.Identifier.ToString(), localDeclaration.Declaration.Type.ToString()));
+                result.Add(new DeclaredField(
+                    Name: variableName.Identifier.ToString(),
+                    Type: localDeclaration.Declaration.Type.ToString(),
+                    Description: ""));
             }
         }
 
@@ -166,7 +170,12 @@ internal sealed class PrefabClassParser
         {
             foreach (var variable in field.Declaration.Variables)
             {
-                result.Add(new DeclaredField(variable.Identifier.ToString(), field.Declaration.Type.ToString()));
+                var comment = field.FindCommentAttachedToMember();
+
+                result.Add(new DeclaredField(
+                    Name: variable.Identifier.ToString(),
+                    Type: field.Declaration.Type.ToString(),
+                    Description: comment));
             }
         }
 

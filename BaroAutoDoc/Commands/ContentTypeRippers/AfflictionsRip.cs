@@ -35,7 +35,7 @@ class AfflictionsRip : Command
 
             foreach (XMLAssignedField field in parser.XMLAssignedFields)
             {
-                Console.WriteLine($"    {field.Field.Name}: \"{field.XMLIdentifier}\" ({field.Field.Type})");
+                Console.WriteLine($"    {field.Field.Name}: \"{field.XMLIdentifier}\" ({field.Field.Type}) \"{field.Field.Description}\"");
             }
 
             foreach (SupportedSubElement affectedElement in parser.SupportedSubElements)

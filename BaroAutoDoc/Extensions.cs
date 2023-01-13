@@ -2,6 +2,7 @@
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
@@ -9,7 +10,6 @@ namespace BaroAutoDoc;
 
 public static class Extensions
 {
-
     public static void AddRange<T>(this ImmutableHashSet<T>.Builder builder, IEnumerable<T> items)
     {
         foreach (var item in items)
@@ -74,6 +74,36 @@ public static class Extensions
         }
         
         return CSharpScript.EvaluateAsync<string>(expr).Result;
+    }
+
+    public static string FindCommentAttachedToMember(this SyntaxNode member)
+    {
+        char[] trimChars =
+        {
+            // Whitespace
+            ' ',
+            '\t',
+
+            // Comment syntax
+            '/',
+            '*'
+        };
+
+        while (member is { Parent: not null } and not TypeDeclarationSyntax)
+        {
+            var leadingTrivia = member.GetLeadingTrivia();
+            var triviaText = string.Join("\n",
+                leadingTrivia
+                    .Select(t => t.ToString()
+                        .TrimEnd(trimChars)
+                        .TrimStart(trimChars))
+                    .Where(s => !string.IsNullOrWhiteSpace(s)));
+            if (!string.IsNullOrEmpty(triviaText)) { return triviaText; }
+
+            member = member.Parent;
+        }
+
+        return "";
     }
     
     public static IEnumerable<SerializableProperty> GetSerializableProperties(this ClassDeclarationSyntax @class)
