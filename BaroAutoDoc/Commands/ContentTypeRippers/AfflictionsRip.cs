@@ -65,10 +65,11 @@ class AfflictionsRip : Command
 
             foreach (SupportedSubElement affectedElement in parser.SupportedSubElements)
             {
-                // TODO we need to consider that a lot of lists are created in the constructor and then assigned into the global variable
-                // one such case is the descriptions in affliction
                 if (affectedElement.AffectedField.Length is 0 ||
                     affectedElement.AffectedField.Contains("DebugConsole")) { continue; }
+
+                // TODO we probably need to generate a list of all these elements and then link to them
+                // for example sprite, sound, effect
                 subElementTable.BodyRows.Add(new Page.Table.Row(affectedElement.XMLName));
             }
 
