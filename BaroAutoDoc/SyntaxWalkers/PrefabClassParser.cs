@@ -18,12 +18,12 @@ public record struct ClassParsingOptions(string[] InitializerMethodNames);
 
 internal sealed class PrefabClassParser
 {
-    public ImmutableHashSet<SupportedSubElement> SupportedSubElements = ImmutableHashSet<SupportedSubElement>.Empty;
+    public ImmutableArray<SupportedSubElement> SupportedSubElements = ImmutableArray<SupportedSubElement>.Empty;
 
-    public ImmutableHashSet<XMLAssignedField> XMLAssignedFields = ImmutableHashSet<XMLAssignedField>.Empty;
+    public ImmutableArray<XMLAssignedField> XMLAssignedFields = ImmutableArray<XMLAssignedField>.Empty;
 
     private readonly ClassParsingOptions options;
-    private ImmutableHashSet<DeclaredField> declaredFields = ImmutableHashSet<DeclaredField>.Empty;
+    private ImmutableArray<DeclaredField> declaredFields = ImmutableArray<DeclaredField>.Empty;
 
     public PrefabClassParser(ClassParsingOptions options)
     {
@@ -32,26 +32,26 @@ internal sealed class PrefabClassParser
 
     public void ParseClass(ClassDeclarationSyntax cls)
     {
-        declaredFields = declaredFields.Union(GetDeclaredFields(cls));
+        declaredFields = declaredFields.Union(GetDeclaredFields(cls)).ToImmutableArray();
 
         var initializers = cls.FindInitializerMethodBodies(options.InitializerMethodNames);
 
         // TODO figure out a way to concat this
         SupportedSubElements = initializers
                                .SelectMany(static syntax => FindSubElementsFrom(syntax))
-                               .ToImmutableHashSet();
+                               .ToImmutableArray();
 
         foreach (BlockSyntax block in initializers)
         {
-            XMLAssignedFields = XMLAssignedFields.Union(FindXMLAssignedFields(block));
+            XMLAssignedFields = XMLAssignedFields.Union(FindXMLAssignedFields(block)).ToImmutableArray();
         }
     }
 
-    private ImmutableHashSet<XMLAssignedField> FindXMLAssignedFields(BlockSyntax blockSyntax)
+    private ImmutableArray<XMLAssignedField> FindXMLAssignedFields(BlockSyntax blockSyntax)
     {
         var correlatedFields = GetAssignmentsToGlobalVariable(blockSyntax, declaredFields, GetLocalVariables(blockSyntax));
 
-        var result = ImmutableHashSet.CreateBuilder<XMLAssignedField>();
+        var result = ImmutableArray.CreateBuilder<XMLAssignedField>();
 
         result.AddRange(FindXMLFieldsInStatement(blockSyntax, correlatedFields));
 
@@ -66,9 +66,9 @@ internal sealed class PrefabClassParser
         return result.ToImmutable();
     }
 
-    private ImmutableHashSet<XMLAssignedField> FindXMLFieldsInStatement(BlockSyntax blockSyntax, IReadOnlyCollection<CorrelatedField> correlatedFields)
+    private ImmutableArray<XMLAssignedField> FindXMLFieldsInStatement(BlockSyntax blockSyntax, IReadOnlyCollection<CorrelatedField> correlatedFields)
     {
-        var result = ImmutableHashSet.CreateBuilder<XMLAssignedField>();
+        var result = ImmutableArray.CreateBuilder<XMLAssignedField>();
 
         foreach (StatementSyntax statement in blockSyntax.Statements)
         {
@@ -115,9 +115,9 @@ internal sealed class PrefabClassParser
         return result.ToImmutable();
     }
 
-    private static ImmutableHashSet<DeclaredField> GetLocalVariables(BlockSyntax block)
+    private static ImmutableArray<DeclaredField> GetLocalVariables(BlockSyntax block)
     {
-        var result = ImmutableHashSet.CreateBuilder<DeclaredField>();
+        var result = ImmutableArray.CreateBuilder<DeclaredField>();
 
         foreach (var localDeclaration in block.Statements.OfType<LocalDeclarationStatementSyntax>())
         {
@@ -133,9 +133,9 @@ internal sealed class PrefabClassParser
         return result.ToImmutable();
     }
 
-    private static ImmutableHashSet<CorrelatedField> GetAssignmentsToGlobalVariable(BlockSyntax block, ImmutableHashSet<DeclaredField> globalVariables, ImmutableHashSet<DeclaredField> localVariables)
+    private static ImmutableArray<CorrelatedField> GetAssignmentsToGlobalVariable(BlockSyntax block, ImmutableArray<DeclaredField> globalVariables, ImmutableArray<DeclaredField> localVariables)
     {
-        var result = ImmutableHashSet.CreateBuilder<CorrelatedField>();
+        var result = ImmutableArray.CreateBuilder<CorrelatedField>();
 
         foreach (var assignment in block.Statements.OfType<ExpressionStatementSyntax>())
         {
@@ -163,9 +163,9 @@ internal sealed class PrefabClassParser
         return result.ToImmutable();
     }
 
-    private static ImmutableHashSet<DeclaredField> GetDeclaredFields(ClassDeclarationSyntax cls)
+    private static ImmutableArray<DeclaredField> GetDeclaredFields(ClassDeclarationSyntax cls)
     {
-        var result = ImmutableHashSet.CreateBuilder<DeclaredField>();
+        var result = ImmutableArray.CreateBuilder<DeclaredField>();
 
         foreach (var field in cls.Members.OfType<FieldDeclarationSyntax>())
         {
