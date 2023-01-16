@@ -1,4 +1,5 @@
 ﻿using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
@@ -78,6 +79,9 @@ public static class Extensions
         return CSharpScript.EvaluateAsync<string>(expr).Result;
     }
 
+    public static XElement? ElementOfName(this XElement element, string name, StringComparison comparison = StringComparison.OrdinalIgnoreCase)
+        => element.Elements().FirstOrDefault(e => e.Name.LocalName.Equals(name, comparison));
+
     public static string FindCommentAttachedToMember(this SyntaxNode member)
     {
         char[] trimChars =
@@ -85,6 +89,8 @@ public static class Extensions
             // Whitespace
             ' ',
             '\t',
+            '\n',
+            '\r',
 
             // Comment syntax
             '/',
@@ -96,10 +102,17 @@ public static class Extensions
             var leadingTrivia = member.GetLeadingTrivia();
             var triviaText = string.Join("\n",
                 leadingTrivia
-                    .Select(t => t.ToString()
-                        .TrimEnd(trimChars)
-                        .TrimStart(trimChars))
+                    .Select(t => t.ToString())
+                    .SelectMany(t => t.Split("\n"))
+                    .Select(t => t.Trim(trimChars))
                     .Where(s => !string.IsNullOrWhiteSpace(s)));
+
+            var xml = XElement.Parse($"<root>{triviaText}</root>");
+
+            triviaText = xml.ElementOfName("summary") is { } summary
+                ? summary.ElementInnerText().Trim(trimChars)
+                : triviaText;
+
             if (!string.IsNullOrEmpty(triviaText)) { return triviaText; }
 
             member = member.Parent;
