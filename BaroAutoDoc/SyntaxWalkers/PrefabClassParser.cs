@@ -20,7 +20,7 @@ internal sealed class PrefabClassParser
 {
     public ImmutableHashSet<SupportedSubElement> SupportedSubElements = ImmutableHashSet<SupportedSubElement>.Empty;
 
-    public ImmutableHashSet<XMLAssignedField> XMLAssignedFields = ImmutableHashSet<XMLAssignedField>.Empty; 
+    public ImmutableHashSet<XMLAssignedField> XMLAssignedFields = ImmutableHashSet<XMLAssignedField>.Empty;
 
     private readonly ClassParsingOptions options;
     private ImmutableHashSet<DeclaredField> declaredFields = ImmutableHashSet<DeclaredField>.Empty;
@@ -99,6 +99,7 @@ internal sealed class PrefabClassParser
                 foreach (CorrelatedField correctedField in correlatedFields)
                 {
                     if (correctedField.Local != declaredField.Name) { continue; }
+
                     field = field with { Name = correctedField.Global };
                 }
 
@@ -210,7 +211,7 @@ internal sealed class PrefabClassParser
         {
             switch (syntax)
             {
-                case SwitchStatementSyntax switchStatement:
+                case SwitchStatementSyntax switchStatement when IsExpressionRelatedToXML(switchStatement.Expression):
                     elements.AddRange(FindSubElementsFromSwitch(switchStatement));
                     break;
                 case IfStatementSyntax:
@@ -220,6 +221,58 @@ internal sealed class PrefabClassParser
         }
 
         return elements;
+    }
+
+    private static bool IsExpressionRelatedToXML(ExpressionSyntax expression)
+    {
+        ImmutableArray<string> calls = FindMemberAccessses(expression).ToImmutableArray();
+
+        // TODO do we care about extracting this?
+        bool isCaseSensitive = !calls.Any(static call => call.Equals("ToLower", StringComparison.OrdinalIgnoreCase) ||
+                                                         call.Equals("ToLowerInvariant", StringComparison.OrdinalIgnoreCase));
+
+        // TODO is hardcoding this the best way to do this?
+        return calls.Last().Equals("subElement", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static IEnumerable<string> FindMemberAccessses(ExpressionSyntax expression)
+    {
+        // this is a mess
+        switch (expression)
+        {
+            case InvocationExpressionSyntax
+            {
+                Expression: var subExpression,
+            }:
+            {
+                foreach (string memberAccesss in FindMemberAccessses(subExpression))
+                {
+                    yield return memberAccesss;
+                }
+
+                yield break;
+            }
+            case IdentifierNameSyntax identifierNameSyntax:
+            {
+                yield return identifierNameSyntax.GetIdentifierString();
+                yield break;
+            }
+            case MemberAccessExpressionSyntax
+            {
+                Name: var name,
+                Expression: var nestedExpression
+            }:
+            {
+                yield return name.GetIdentifierString();
+
+                foreach (string memberAccesss in FindMemberAccessses(nestedExpression))
+                {
+                    yield return memberAccesss;
+                }
+
+                break;
+            }
+        }
     }
 
     private static IEnumerable<SupportedSubElement> FindSubElementsFromSwitch(SwitchStatementSyntax switchStatement) =>
