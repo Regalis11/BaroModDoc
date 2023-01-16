@@ -21,7 +21,6 @@ class AfflictionsRip : Command
 
         Directory.SetCurrentDirectory(Path.GetDirectoryName(Assembly.GetCallingAssembly().Location)!);
 
-        // TODO we probably want to reuse this for other content types
         foreach (var (key, cls) in contentTypeFinder.AfflictionPrefabs)
         {
             PrefabClassParser parser = new PrefabClassParser(new ClassParsingOptions
@@ -58,7 +57,7 @@ class AfflictionsRip : Command
             Page.Section subElementSection = new();
             page.Subsections.Add(subElementSection);
             subElementSection.Title = "Sub Elements";
-            
+
             Page.Table subElementTable = new()
             {
                 HeadRow = new Page.Table.Row("Element")
@@ -68,7 +67,8 @@ class AfflictionsRip : Command
             {
                 // TODO we need to consider that a lot of lists are created in the constructor and then assigned into the global variable
                 // one such case is the descriptions in affliction
-                if (affectedElement.AffectedField.Length is 0) { continue; }
+                if (affectedElement.AffectedField.Length is 0 ||
+                    affectedElement.AffectedField.Contains("DebugConsole")) { continue; }
                 subElementTable.BodyRows.Add(new Page.Table.Row(affectedElement.XMLName));
             }
 

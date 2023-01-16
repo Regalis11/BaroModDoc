@@ -18,12 +18,12 @@ public record struct ClassParsingOptions(string[] InitializerMethodNames);
 
 internal sealed class PrefabClassParser
 {
-    private ImmutableHashSet<DeclaredField> declaredFields = ImmutableHashSet<DeclaredField>.Empty;
     public ImmutableHashSet<SupportedSubElement> SupportedSubElements = ImmutableHashSet<SupportedSubElement>.Empty;
 
     public ImmutableHashSet<XMLAssignedField> XMLAssignedFields = ImmutableHashSet<XMLAssignedField>.Empty; 
 
     private readonly ClassParsingOptions options;
+    private ImmutableHashSet<DeclaredField> declaredFields = ImmutableHashSet<DeclaredField>.Empty;
 
     public PrefabClassParser(ClassParsingOptions options)
     {
@@ -240,9 +240,6 @@ internal sealed class PrefabClassParser
                     break;
                 case ExpressionStatementSyntax { Expression: InvocationExpressionSyntax { Expression: MemberAccessExpressionSyntax memberAccess } }:
                     yield return memberAccess.Expression.ToString();
-                    break;
-                default:
-                    Console.WriteLine(syntax.ToString());
                     break;
             }
         }
