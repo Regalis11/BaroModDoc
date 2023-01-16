@@ -46,7 +46,7 @@ class AfflictionsRip : Command
 
             foreach (XMLAssignedField field in parser.XMLAssignedFields)
             {
-                attributesTable.BodyRows.Add(new Page.Table.Row(field.XMLIdentifier, field.Field.Type, "TODO", field.Field.Description));
+                attributesTable.BodyRows.Add(new Page.Table.Row(field.XMLIdentifier, field.Field.Type, field.DefaultValue, field.Field.Description));
             }
 
             if (attributesTable.BodyRows.Any())

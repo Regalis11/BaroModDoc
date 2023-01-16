@@ -54,6 +54,7 @@ public static class Extensions
 
     public static string GetIdentifierString(this IdentifierNameSyntax identifier) => identifier.Identifier.Text;
     public static string GetIdentifierString(this SimpleNameSyntax name) => name.Identifier.Text;
+    public static T? OfType<T>(this BinaryExpressionSyntax binaryExpression) where T : ExpressionSyntax => binaryExpression.Left as T ?? binaryExpression.Right as T;
 
     public static string EvaluateAsCSharpExpression(this string expr)
     {

@@ -12,7 +12,7 @@ public readonly record struct DeclaredField(string Name, string Type, string Des
 
 public readonly record struct CorrelatedField(string Global, string Local);
 
-public readonly record struct XMLAssignedField(DeclaredField Field, string XMLIdentifier);
+public readonly record struct XMLAssignedField(DeclaredField Field, string XMLIdentifier, string DefaultValue);
 
 public record struct ClassParsingOptions(string[] InitializerMethodNames);
 
@@ -107,12 +107,58 @@ internal sealed class PrefabClassParser
 
                 string xmlIdentifier = assignmentArgumentList[0].ToString().EvaluateAsCSharpExpression();
 
-                result.Add(new XMLAssignedField(field, xmlIdentifier));
+                result.Add(new XMLAssignedField(field, xmlIdentifier, ParseDefaultValueExpression(assignmentArgumentList[1].Expression)));
                 break;
             }
         }
 
         return result.ToImmutable();
+    }
+
+    private static string ParseDefaultValueExpression(ExpressionSyntax expressionSyntax)
+    {
+        // FIXME link code to xml identifiers, as in "Same as X" needs to point to the XML identifier that assigns field X
+        switch (expressionSyntax)
+        {
+            // true, 1.0f, "", null
+            case LiteralExpressionSyntax literalExpression:
+            {
+                return literalExpression.Token.Value switch
+                {
+                    // TODO most of the case the default value being null isn't actually the case, how do we handle that?
+                    null => "-",
+                    string literalValue => $"\"{literalValue}\"",
+                    _ => literalExpression.Token.ValueText
+                };
+            }
+            // -1
+            case PrefixUnaryExpressionSyntax prefixUnaryExpression:
+            {
+                return prefixUnaryExpression.ToString();
+            }
+            // MaxStrength
+            case IdentifierNameSyntax identifierName:
+            {
+                return $"Same as {identifierName.GetIdentifierString()}";
+            }
+            // Value * 0.Xf
+            case BinaryExpressionSyntax
+            {
+                OperatorToken.ValueText: "*"
+            } binaryExpression:
+            {
+                var value = binaryExpression.OfType<LiteralExpressionSyntax>();
+                var identifier = binaryExpression.OfType<IdentifierNameSyntax>();
+
+                if (value?.Token.Value is not float floatValue) { return "???"; } // TODO error handling
+
+                float percentage = floatValue * 100;
+
+                return $"{percentage}% of {identifier?.Identifier.ValueText}";
+            }
+        }
+
+        return "TODO";
     }
 
     private static ImmutableArray<DeclaredField> GetLocalVariables(BlockSyntax block)
