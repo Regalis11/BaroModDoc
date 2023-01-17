@@ -22,6 +22,8 @@ internal sealed class PrefabClassParser
 
     public ImmutableArray<XMLAssignedField> XMLAssignedFields = ImmutableArray<XMLAssignedField>.Empty;
 
+    public ImmutableArray<SerializableProperty> SerializableProperties = ImmutableArray<SerializableProperty>.Empty;
+
     private readonly ClassParsingOptions options;
     private ImmutableArray<DeclaredField> declaredFields = ImmutableArray<DeclaredField>.Empty;
 
@@ -30,10 +32,11 @@ internal sealed class PrefabClassParser
         this.options = options;
     }
 
-    // FIXME this class does not parse serialized fields
     public void ParseClass(ClassDeclarationSyntax cls)
     {
         declaredFields = declaredFields.Union(GetDeclaredFields(cls)).ToImmutableArray();
+
+        SerializableProperties = SerializableProperties.Union(cls.GetSerializableProperties()).ToImmutableArray();
 
         var initializers = cls.FindInitializerMethodBodies(options.InitializerMethodNames);
 

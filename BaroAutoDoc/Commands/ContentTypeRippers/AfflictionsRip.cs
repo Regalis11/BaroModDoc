@@ -66,6 +66,11 @@ class AfflictionsRip : Command
                 HeadRow = new Page.Table.Row("Attribute", "Type", "Default value", "Description")
             };
 
+            foreach (SerializableProperty property in parser.SerializableProperties)
+            {
+                attributesTable.BodyRows.Add(new Page.Table.Row(property.Name, property.Type, property.DefaultValue, property.Description));
+            }
+
             foreach (XMLAssignedField field in parser.XMLAssignedFields)
             {
                 attributesTable.BodyRows.Add(new Page.Table.Row(field.XMLIdentifier, field.Field.Type, field.DefaultValue, field.Field.Description));
