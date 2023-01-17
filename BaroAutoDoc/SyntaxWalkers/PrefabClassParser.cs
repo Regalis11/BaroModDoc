@@ -30,6 +30,7 @@ internal sealed class PrefabClassParser
         this.options = options;
     }
 
+    // FIXME this class does not parse serialized fields
     public void ParseClass(ClassDeclarationSyntax cls)
     {
         declaredFields = declaredFields.Union(GetDeclaredFields(cls)).ToImmutableArray();

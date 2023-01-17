@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using BaroAutoDoc.SyntaxWalkers;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace BaroAutoDoc.Commands.ContentTypeSpecific;
 
@@ -35,8 +36,28 @@ class AfflictionsRip : Command
                 Title = key
             };
 
+            page.Subsections.Add(CreateSection(key, parser));
+
+            foreach (ClassDeclarationSyntax syntax in cls.Members.OfType<ClassDeclarationSyntax>())
+            {
+                PrefabClassParser subParser = new PrefabClassParser(new ClassParsingOptions());
+                subParser.ParseClass(syntax);
+
+                page.Subsections.Add(CreateSection(syntax.Identifier.ValueText, subParser));
+            }
+
+            File.WriteAllText($"{key}.md", page.ToMarkdown());
+        }
+
+        static Page.Section CreateSection(string name, PrefabClassParser parser)
+        {
+            Page.Section mainSection = new()
+            {
+                Title = name
+            };
+
             Page.Section attributesSection = new();
-            page.Subsections.Add(attributesSection);
+            mainSection.Subsections.Add(attributesSection);
             attributesSection.Title = "Attributes";
 
             Page.Table attributesTable = new()
@@ -55,7 +76,7 @@ class AfflictionsRip : Command
             }
 
             Page.Section subElementSection = new();
-            page.Subsections.Add(subElementSection);
+            mainSection.Subsections.Add(subElementSection);
             subElementSection.Title = "Sub Elements";
 
             Page.Table subElementTable = new()
@@ -78,7 +99,7 @@ class AfflictionsRip : Command
                 subElementSection.Body.Components.Add(subElementTable);
             }
 
-            File.WriteAllText($"{key}.md", page.ToMarkdown());
+            return mainSection;
         }
     }
 }
