@@ -57,10 +57,10 @@ class Page
 
     public record Table : BodyComponent
     {
-        public record Row(params string[] Values)
+        public record Row(params string?[] Values)
         {
             public string ToMarkdown()
-                => $"| {string.Join("|", Values)} |";
+                => $"| {string.Join("|", Values.Select(s => (s ?? "").Replace("\r", "").Replace("\n", "<br/>")))} |";
         }
 
         public Row? HeadRow;
