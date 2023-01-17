@@ -152,11 +152,21 @@ internal sealed class PrefabClassParser
                 var value = binaryExpression.OfType<LiteralExpressionSyntax>();
                 var identifier = binaryExpression.OfType<IdentifierNameSyntax>();
 
-                if (value?.Token.Value is not float floatValue) { return "UNIMPLEMENTED{binaryExpression}"; } // TODO error handling
+                if (value?.Token.Value is not float floatValue) { return "UNIMPLEMENTED{binaryExpression(*)}"; } // TODO error handling
 
                 float percentage = floatValue * 100;
 
                 return $"{percentage}% of {identifier?.Identifier.ValueText}";
+            }
+            // X && Y
+            case BinaryExpressionSyntax
+            {
+                OperatorToken.ValueText: "&&"
+            }:
+            {
+                // TODO I genuinely don't think it's worth parsing this and instead just manually writing description for it
+                // This is what you'd have to parse: !IsBuff && AfflictionType != "geneticmaterialbuff" && AfflictionType != "geneticmaterialdebuff"
+                return "UNIMPLEMENTED{binaryExpression(&&)}";
             }
             // Identifier.Empty, String.Empty
             case MemberAccessExpressionSyntax memberAccess:
