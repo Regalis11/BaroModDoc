@@ -107,6 +107,8 @@ internal sealed class PrefabClassParser
 
                 string xmlIdentifier = assignmentArgumentList[0].ToString().EvaluateAsCSharpExpression();
 
+                xmlIdentifier = xmlIdentifier.GuessCaseFromMemberName(field.Name);
+
                 result.Add(new XMLAssignedField(field, xmlIdentifier, ParseDefaultValueExpression(assignmentArgumentList[1].Expression)));
                 break;
             }
