@@ -150,11 +150,22 @@ internal sealed class PrefabClassParser
                 var value = binaryExpression.OfType<LiteralExpressionSyntax>();
                 var identifier = binaryExpression.OfType<IdentifierNameSyntax>();
 
-                if (value?.Token.Value is not float floatValue) { return "???"; } // TODO error handling
+                if (value?.Token.Value is not float floatValue) { return "TODO"; } // TODO error handling
 
                 float percentage = floatValue * 100;
 
                 return $"{percentage}% of {identifier?.Identifier.ValueText}";
+            }
+            case MemberAccessExpressionSyntax memberAccess:
+            {
+                var accesses = FindMemberAccessses(memberAccess).ToImmutableArray();
+
+                if (accesses.Length is 2 && accesses[0] is ("String" or "Identifier") && accesses[1] is "Empty")
+                {
+                    return @"""";
+                }
+
+                return "TODO";
             }
         }
 
