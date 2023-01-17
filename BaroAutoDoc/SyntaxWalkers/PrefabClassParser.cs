@@ -42,8 +42,8 @@ internal sealed class PrefabClassParser
 
         // TODO figure out a way to concat this
         SupportedSubElements = initializers
-                               .SelectMany(static syntax => FindSubElementsFrom(syntax))
-                               .ToImmutableArray();
+           .SelectMany(static syntax => FindSubElementsFrom(syntax))
+           .ToImmutableArray();
 
         foreach (BlockSyntax block in initializers)
         {
@@ -55,22 +55,31 @@ internal sealed class PrefabClassParser
     {
         var correlatedFields = GetAssignmentsToGlobalVariable(blockSyntax, declaredFields, GetLocalVariables(blockSyntax));
 
+        string elementName = "";
+        if (blockSyntax.Parent is BaseMethodDeclarationSyntax methodSyntax)
+        {
+            var elementParameter =
+                methodSyntax.ParameterList.Parameters
+                    .FirstOrDefault(p => (p.Type?.ToString() ?? "").Contains("XElement"));
+            elementName = elementParameter?.Identifier.ValueText ?? "";
+        }
+
         var result = ImmutableArray.CreateBuilder<XMLAssignedField>();
 
-        result.AddRange(FindXMLFieldsInStatement(blockSyntax, correlatedFields));
+        result.AddRange(FindXMLFieldsInStatement(elementName, blockSyntax, correlatedFields));
 
         foreach (StatementSyntax syntax in blockSyntax.Statements)
         {
             // TODO we probably want to extract the condition here?
             if (syntax is not IfStatementSyntax { Statement: BlockSyntax ifBlock }) { continue; }
 
-            result.AddRange(FindXMLFieldsInStatement(ifBlock, correlatedFields));
+            result.AddRange(FindXMLFieldsInStatement(elementName, ifBlock, correlatedFields));
         }
 
         return result.ToImmutable();
     }
 
-    private ImmutableArray<XMLAssignedField> FindXMLFieldsInStatement(BlockSyntax blockSyntax, IReadOnlyCollection<CorrelatedField> correlatedFields)
+    private ImmutableArray<XMLAssignedField> FindXMLFieldsInStatement(string elementName, BlockSyntax blockSyntax, IReadOnlyCollection<CorrelatedField> correlatedFields)
     {
         var result = ImmutableArray.CreateBuilder<XMLAssignedField>();
 
@@ -83,7 +92,11 @@ internal sealed class PrefabClassParser
                     {
                         Right: InvocationExpressionSyntax
                         {
-                            Expression: MemberAccessExpressionSyntax { Name: IdentifierNameSyntax rightIdentifier },
+                            Expression: MemberAccessExpressionSyntax
+                            {
+                                Expression: var methodOwner,
+                                Name: IdentifierNameSyntax rightIdentifier
+                            },
                             ArgumentList.Arguments: var assignmentArgumentList
                         },
                         Left: IdentifierNameSyntax leftIdentifier
@@ -95,6 +108,11 @@ internal sealed class PrefabClassParser
 
             // probably a better way to do this
             if (!assignmentMethodName.StartsWith("GetAttribute", StringComparison.OrdinalIgnoreCase)) { continue; }
+
+            if (!string.IsNullOrEmpty(elementName) && !methodOwner.ToString().Equals(elementName))
+            {
+                continue;
+            }
 
             foreach (DeclaredField declaredField in declaredFields)
             {
