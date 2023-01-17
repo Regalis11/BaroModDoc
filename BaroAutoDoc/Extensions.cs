@@ -91,23 +91,43 @@ public static class Extensions
             return guyWithAllTheCaps;
         }
 
-        int sharedStartLength
-            = Enumerable.Range(1, Math.Min(xmlIdentifier.Length, fieldName.Length))
-                .FirstOrDefault(i => !xmlIdentifier[..i].Equals(fieldName[..i], StringComparison.OrdinalIgnoreCase)) - 1;
-
-        if (fieldName.StartsWith(xmlIdentifier, StringComparison.OrdinalIgnoreCase)) { sharedStartLength = xmlIdentifier.Length; }
-        if (xmlIdentifier.StartsWith(fieldName, StringComparison.OrdinalIgnoreCase)) { sharedStartLength = fieldName.Length; }
-
-        if (sharedStartLength <= 0) { return xmlIdentifier; }
-
-        string sharedStart = guyWithAllTheCaps[..sharedStartLength];
-
-        string result = sharedStart;
-
-        if (xmlIdentifier.Length > sharedStart.Length)
+        var words = new List<string>();
+        int wordStart = 0; string pendingWord = "";
+        for (int i = 0; i < guyWithAllTheCaps.Length; i++)
         {
-            result += char.ToUpper(xmlIdentifier[sharedStart.Length])
-                + xmlIdentifier[(sharedStart.Length+1)..];
+            if (char.IsUpper(guyWithAllTheCaps[i]) && wordStart != i)
+            {
+                words.Add(pendingWord);
+                wordStart = i;
+                pendingWord = "";
+            }
+
+            pendingWord += guyWithAllTheCaps[i];
+        }
+        if (!string.IsNullOrEmpty(pendingWord)) { words.Add(pendingWord); }
+
+        string result = "";
+
+        foreach (var word in words)
+        {
+            string concat = result+word;
+            if (xmlIdentifier.StartsWith(concat, StringComparison.OrdinalIgnoreCase))
+            {
+                result = concat;
+            }
+        }
+
+        if (xmlIdentifier.Length > result.Length)
+        {
+            if (xmlIdentifier.Length > result.Length+1)
+            {
+                result += char.ToUpper(xmlIdentifier[result.Length])
+                          + xmlIdentifier[(result.Length+1)..];
+            }
+            else
+            {
+                result += xmlIdentifier[result.Length];
+            }
         }
 
         return result;
