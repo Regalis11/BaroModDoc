@@ -56,9 +56,10 @@ class AfflictionsRip : Command
                 Title = name
             };
 
-            Page.Section attributesSection = new();
-            mainSection.Subsections.Add(attributesSection);
-            attributesSection.Title = "Attributes";
+            Page.Section attributesSection = new()
+            {
+                Title = "Attributes"
+            };
 
             Page.Table attributesTable = new()
             {
@@ -73,11 +74,13 @@ class AfflictionsRip : Command
             if (attributesTable.BodyRows.Any())
             {
                 attributesSection.Body.Components.Add(attributesTable);
+                mainSection.Subsections.Add(attributesSection);
             }
 
-            Page.Section subElementSection = new();
-            mainSection.Subsections.Add(subElementSection);
-            subElementSection.Title = "Sub Elements";
+            Page.Section subElementSection = new()
+            {
+                Title = "Elements"
+            };
 
             Page.Table subElementTable = new()
             {
@@ -97,6 +100,7 @@ class AfflictionsRip : Command
             if (subElementTable.BodyRows.Any())
             {
                 subElementSection.Body.Components.Add(subElementTable);
+                mainSection.Subsections.Add(subElementSection);
             }
 
             return mainSection;
