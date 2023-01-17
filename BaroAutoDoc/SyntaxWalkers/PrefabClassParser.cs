@@ -278,6 +278,16 @@ internal sealed class PrefabClassParser
             }
         }
 
+        foreach (var property in cls.Members.OfType<PropertyDeclarationSyntax>())
+        {
+            var comment = property.FindCommentAttachedToMember();
+
+            result.Add(new DeclaredField(
+                Name: property.Identifier.ToString(),
+                Type: property.Type.ToString(),
+                Description: comment));
+        }
+
         return result.ToImmutable();
     }
 
