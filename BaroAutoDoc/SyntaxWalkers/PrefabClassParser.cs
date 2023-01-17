@@ -152,12 +152,13 @@ internal sealed class PrefabClassParser
                 var value = binaryExpression.OfType<LiteralExpressionSyntax>();
                 var identifier = binaryExpression.OfType<IdentifierNameSyntax>();
 
-                if (value?.Token.Value is not float floatValue) { return "TODO"; } // TODO error handling
+                if (value?.Token.Value is not float floatValue) { return "UNIMPLEMENTED{binaryExpression}"; } // TODO error handling
 
                 float percentage = floatValue * 100;
 
                 return $"{percentage}% of {identifier?.Identifier.ValueText}";
             }
+            // Identifier.Empty, String.Empty
             case MemberAccessExpressionSyntax memberAccess:
             {
                 var accesses = FindMemberAccessses(memberAccess).ToImmutableArray();
@@ -167,11 +168,34 @@ internal sealed class PrefabClassParser
                     return @"""";
                 }
 
-                return "TODO";
+                return "UNIMPLEMENTED{memberAccess}";
+            }
+            // Math.Max(0, Value)
+            case InvocationExpressionSyntax
+            {
+                Expression: MemberAccessExpressionSyntax
+                {
+                    Name: IdentifierNameSyntax { Identifier.ValueText: "Max" },
+                    Expression: IdentifierNameSyntax { Identifier.ValueText: "Math" or "MathF" }
+                },
+                ArgumentList.Arguments: { Count: 2 } argumentList
+            }:
+            {
+                static string ParseArgument(ArgumentSyntax argument)
+                {
+                    return argument.Expression switch
+                    {
+                        LiteralExpressionSyntax literalExpression => literalExpression.Token.ValueText,
+                        IdentifierNameSyntax identifierName => identifierName.GetIdentifierString(),
+                        _ => "UNIMPLEMENTED{ParseArgument}"
+                    };
+                }
+
+                return $"max({ParseArgument(argumentList[0])}, {ParseArgument(argumentList[1])})";
             }
         }
 
-        return "TODO";
+        return "UNIMPLEMENTED{ParseDefaultValueExpression}";
     }
 
     private static ImmutableArray<DeclaredField> GetLocalVariables(BlockSyntax block)
