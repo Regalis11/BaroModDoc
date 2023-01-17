@@ -191,7 +191,8 @@ internal sealed class PrefabClassParser
                     };
                 }
 
-                return $"max({ParseArgument(argumentList[0])}, {ParseArgument(argumentList[1])})";
+                // TODO how do we communicate this?
+                return $"max( {ParseArgument(argumentList[0])} , {ParseArgument(argumentList[1])} )";
             }
         }
 
