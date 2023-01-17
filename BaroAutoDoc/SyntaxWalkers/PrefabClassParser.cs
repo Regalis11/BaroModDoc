@@ -208,6 +208,18 @@ internal sealed class PrefabClassParser
                 // TODO how do we communicate this?
                 return $"max( {ParseArgument(argumentList[0])} , {ParseArgument(argumentList[1])} )";
             }
+            // Array.Empty<T>()
+            case InvocationExpressionSyntax
+            {
+                Expression: MemberAccessExpressionSyntax
+                {
+                    Name: GenericNameSyntax { Identifier.ValueText: "Empty" },
+                    Expression: IdentifierNameSyntax { Identifier.ValueText: "Array" or "ImmutableArray" or "ImmutableHashSet" }
+                }
+            }:
+            {
+                return "[]";
+            }
         }
 
         return "UNIMPLEMENTED{ParseDefaultValueExpression}";
