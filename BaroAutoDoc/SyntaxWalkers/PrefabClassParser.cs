@@ -177,12 +177,13 @@ internal sealed class PrefabClassParser
             {
                 var accesses = FindMemberAccessses(memberAccess).ToImmutableArray();
 
-                if (accesses.Length is 2 && accesses[0] is ("String" or "Identifier") && accesses[1] is "Empty")
+                if (accesses.Length is 2 && accesses[0] is "Empty" && accesses[1] is ("String" or "Identifier"))
                 {
-                    return @"""";
+                    return "\"\"";
                 }
 
-                return "UNIMPLEMENTED{memberAccess}";
+                // enums
+                return accesses[0];
             }
             // Math.Max(0, Value)
             case InvocationExpressionSyntax
