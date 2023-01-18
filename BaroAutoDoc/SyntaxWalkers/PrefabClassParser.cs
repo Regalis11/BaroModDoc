@@ -1,12 +1,13 @@
 using System.Collections.Immutable;
-using System.Diagnostics;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace BaroAutoDoc.SyntaxWalkers;
 
 // TODO what other info do we want to extract? possible errors for example by parsing AddWaring/ThrowError?
-public readonly record struct SupportedSubElement(string XMLName, ImmutableArray<string> AffectedField);
+public readonly record struct SupportedSubElement(string XMLName, ImmutableArray<SubElementField> AffectedField);
+
+public readonly record struct SubElementField(string Name, string Type);
 
 public readonly record struct DeclaredField(string Name, string Type, string Description);
 
@@ -427,21 +428,53 @@ internal sealed class PrefabClassParser
         from caseLabel in switchSection.Labels.OfType<CaseSwitchLabelSyntax>()
         select new SupportedSubElement(caseLabel.Value.ToString().EvaluateAsCSharpExpression(), ParseStatements(switchSection.Statements).ToImmutableArray());
 
-    private static IEnumerable<string> ParseStatements(SyntaxList<StatementSyntax> syntaxes)
+    private static IEnumerable<SubElementField> ParseStatements(SyntaxList<StatementSyntax> syntaxes)
     {
         foreach (StatementSyntax syntax in syntaxes)
         {
             switch (syntax)
             {
                 case ExpressionStatementSyntax { Expression: AssignmentExpressionSyntax assignment }:
-                    yield return assignment.Left.ToString();
+                    yield return new SubElementField(assignment.Left.ToString(), GetTypeFromAssignment(assignment.Right));
                     break;
                 case BreakStatementSyntax:
                     break;
-                case ExpressionStatementSyntax { Expression: InvocationExpressionSyntax { Expression: MemberAccessExpressionSyntax memberAccess } }:
-                    yield return memberAccess.Expression.ToString();
+                case ExpressionStatementSyntax { Expression: InvocationExpressionSyntax
+                {
+                    Expression: MemberAccessExpressionSyntax
+                    {
+                        Name.Identifier.Text: "Add" or "TryAdd"
+                    } memberAccess,
+                    ArgumentList.Arguments: var arguments
+                } }:
+                    yield return new SubElementField(memberAccess.Expression.ToString(), GetTypeFromArguments(arguments));
                     break;
             }
+        }
+
+        static string GetTypeFromAssignment(ExpressionSyntax syntax) =>
+            syntax switch
+            {
+                ObjectCreationExpressionSyntax { Type: var type } => type.ToString(),
+                InvocationExpressionSyntax
+                {
+                    Expression: MemberAccessExpressionSyntax
+                    {
+                        Name.Identifier.Text: "Load",
+                        Expression: IdentifierNameSyntax nameSyntax
+                    }
+                } => nameSyntax.GetIdentifierString(),
+                _ => "???"
+            };
+
+        static string GetTypeFromArguments(IReadOnlyCollection<ArgumentSyntax> arguments)
+        {
+            foreach (ExpressionSyntax syntax in arguments.Select(static a => a.Expression))
+            {
+                return GetTypeFromAssignment(syntax);
+            }
+
+            return "???";
         }
     }
 }
