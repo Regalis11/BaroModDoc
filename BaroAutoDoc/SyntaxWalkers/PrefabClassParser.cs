@@ -28,6 +28,8 @@ internal sealed class PrefabClassParser
     private readonly ClassParsingOptions options;
     private ImmutableArray<DeclaredField> declaredFields = ImmutableArray<DeclaredField>.Empty;
 
+    public ImmutableArray<string> Comments = ImmutableArray<string>.Empty;
+
     public PrefabClassParser(ClassParsingOptions options)
     {
         this.options = options;
@@ -36,6 +38,8 @@ internal sealed class PrefabClassParser
     public void ParseClass(ClassDeclarationSyntax cls)
     {
         declaredFields = declaredFields.Union(GetDeclaredFields(cls)).ToImmutableArray();
+
+        Comments = Comments.Add(cls.FindCommentAttachedToMember());
 
         SerializableProperties = SerializableProperties.Union(cls.GetSerializableProperties()).ToImmutableArray();
 

@@ -53,8 +53,14 @@ class AfflictionsRip : Command
         {
             Page.Section mainSection = new()
             {
-                Title = name
+                Title = name,
             };
+
+            foreach (string s in parser.Comments)
+            {
+                if (string.IsNullOrWhiteSpace(s)) { continue; }
+                mainSection.Body.Components.Add(new Page.RawText(s));
+            }
 
             Page.Section attributesSection = new()
             {
