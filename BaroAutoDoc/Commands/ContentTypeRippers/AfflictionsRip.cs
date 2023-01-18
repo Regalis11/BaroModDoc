@@ -53,8 +53,14 @@ class AfflictionsRip : Command
         {
             Page.Section mainSection = new()
             {
-                Title = name
+                Title = name,
             };
+
+            foreach (string s in parser.Comments)
+            {
+                if (string.IsNullOrWhiteSpace(s)) { continue; }
+                mainSection.Body.Components.Add(new Page.RawText(s));
+            }
 
             Page.Section attributesSection = new()
             {
@@ -89,17 +95,16 @@ class AfflictionsRip : Command
 
             Page.Table subElementTable = new()
             {
-                HeadRow = new Page.Table.Row("Element")
+                HeadRow = new Page.Table.Row("Element", "Type")
             };
 
             foreach (SupportedSubElement affectedElement in parser.SupportedSubElements)
             {
-                if (affectedElement.AffectedField.Length is 0 ||
-                    affectedElement.AffectedField.Contains("DebugConsole")) { continue; }
+                if (affectedElement.AffectedField.Length is 0) { continue; }
 
                 // TODO we probably need to generate a list of all these elements and then link to them
                 // for example sprite, sound, effect
-                subElementTable.BodyRows.Add(new Page.Table.Row(affectedElement.XMLName));
+                subElementTable.BodyRows.Add(new Page.Table.Row(affectedElement.XMLName, affectedElement.AffectedField.First().Type));
             }
 
             if (subElementTable.BodyRows.Any())

@@ -151,7 +151,7 @@ public static class Extensions
             '*'
         };
 
-        while (member is { Parent: not null } and not TypeDeclarationSyntax)
+        while (member is { Parent: not null })
         {
             var leadingTrivia = member.GetLeadingTrivia();
             var triviaText = string.Join("\n",
@@ -170,6 +170,8 @@ public static class Extensions
             if (!string.IsNullOrEmpty(triviaText)) { return triviaText; }
 
             member = member.Parent;
+
+            if (member is TypeDeclarationSyntax) { break; }
         }
 
         return "";
