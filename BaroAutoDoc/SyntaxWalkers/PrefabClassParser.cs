@@ -42,8 +42,8 @@ internal sealed class PrefabClassParser
 
         // TODO figure out a way to concat this
         SupportedSubElements = initializers
-           .SelectMany(static syntax => FindSubElementsFrom(syntax))
-           .ToImmutableArray();
+                               .SelectMany(static syntax => FindSubElementsFrom(syntax))
+                               .ToImmutableArray();
 
         foreach (BlockSyntax block in initializers)
         {
@@ -60,7 +60,7 @@ internal sealed class PrefabClassParser
         {
             var elementParameter =
                 methodSyntax.ParameterList.Parameters
-                    .FirstOrDefault(p => (p.Type?.ToString() ?? "").Contains("XElement"));
+                            .FirstOrDefault(p => (p.Type?.ToString() ?? "").Contains("XElement"));
             elementName = elementParameter?.Identifier.ValueText ?? "";
         }
 
@@ -141,6 +141,8 @@ internal sealed class PrefabClassParser
 
     private static string ParseDefaultValueExpression(ExpressionSyntax expressionSyntax)
     {
+        const string defaultValue = "See description";
+
         // FIXME link code to xml identifiers, as in "Same as X" needs to point to the XML identifier that assigns field X
         switch (expressionSyntax)
         {
@@ -174,7 +176,7 @@ internal sealed class PrefabClassParser
                 var value = binaryExpression.OfType<LiteralExpressionSyntax>();
                 var identifier = binaryExpression.OfType<IdentifierNameSyntax>();
 
-                if (value?.Token.Value is not float floatValue) { return "UNIMPLEMENTED{binaryExpression(*)}"; } // TODO error handling
+                if (value?.Token.Value is not float floatValue) { return defaultValue; } // TODO error handling
 
                 float percentage = floatValue * 100;
 
@@ -188,7 +190,7 @@ internal sealed class PrefabClassParser
             {
                 // TODO I genuinely don't think it's worth parsing this and instead just manually writing description for it
                 // This is what you'd have to parse: !IsBuff && AfflictionType != "geneticmaterialbuff" && AfflictionType != "geneticmaterialdebuff"
-                return "UNIMPLEMENTED{binaryExpression(&&)}";
+                return defaultValue;
             }
             // Identifier.Empty, String.Empty
             case MemberAccessExpressionSyntax memberAccess:
@@ -214,18 +216,24 @@ internal sealed class PrefabClassParser
                 ArgumentList.Arguments: { Count: 2 } argumentList
             }:
             {
-                static string ParseArgument(ArgumentSyntax argument)
-                {
-                    return argument.Expression switch
+                static string ParseArgument(ArgumentSyntax argument) =>
+                    argument.Expression switch
                     {
                         LiteralExpressionSyntax literalExpression => literalExpression.Token.ValueText,
                         IdentifierNameSyntax identifierName => identifierName.GetIdentifierString(),
-                        _ => "UNIMPLEMENTED{ParseArgument}"
+                        _ => string.Empty // unparsable
                     };
+
+                string firstArgument = ParseArgument(argumentList[0]),
+                       secondArgument = ParseArgument(argumentList[1]);
+
+                if (string.IsNullOrWhiteSpace(firstArgument) || string.IsNullOrWhiteSpace(secondArgument))
+                {
+                    return defaultValue;
                 }
 
                 // TODO how do we communicate this?
-                return $"max( {ParseArgument(argumentList[0])} , {ParseArgument(argumentList[1])} )";
+                return $"max( {firstArgument} , {secondArgument} )";
             }
             // Array.Empty<T>()
             case InvocationExpressionSyntax
@@ -241,7 +249,7 @@ internal sealed class PrefabClassParser
             }
         }
 
-        return "UNIMPLEMENTED{ParseDefaultValueExpression}";
+        return defaultValue;
     }
 
     private static ImmutableArray<DeclaredField> GetLocalVariables(BlockSyntax block)
