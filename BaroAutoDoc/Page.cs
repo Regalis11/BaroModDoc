@@ -59,10 +59,12 @@ class Page
     {
         public sealed record Row(params string?[] Values)
         {
-            public ImmutableArray<int> Lengths => Values.Select(static v => v?.Length ?? 0).ToImmutableArray();
+            public ImmutableArray<int> Lengths => FormattedValues.Select(static v => v.Length).ToImmutableArray();
+
+            public ImmutableArray<string> FormattedValues => Values.Select(static s => (s ?? string.Empty).Replace("\r", "").Replace("\n", "<br/>")).ToImmutableArray();
 
             public string ToMarkdown(IReadOnlyList<int> lengths)
-                => $"| {string.Join(" | ", Values.Select((s, i) => (s ?? "").PadRight(lengths[i]).Replace("\r", "").Replace("\n", "<br/>")))} |";
+                => $"| {string.Join(" | ", FormattedValues.Select((s, i) => s.PadRight(lengths[i])))} |";
         }
 
         public Row? HeadRow;
