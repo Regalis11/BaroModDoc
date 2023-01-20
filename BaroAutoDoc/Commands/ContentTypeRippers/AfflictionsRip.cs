@@ -74,7 +74,9 @@ class AfflictionsRip : Command
 
             foreach (SerializableProperty property in parser.SerializableProperties)
             {
-                attributesTable.BodyRows.Add(new Page.Table.Row(property.Name, property.Type, property.DefaultValue, property.Description));
+                string defaultValue = DefaultValue.MakeMorePresentable(property.DefaultValue, property.Type);
+                
+                attributesTable.BodyRows.Add(new Page.Table.Row(property.Name, property.Type, defaultValue, property.Description));
             }
 
             foreach (XMLAssignedField field in parser.XMLAssignedFields)
