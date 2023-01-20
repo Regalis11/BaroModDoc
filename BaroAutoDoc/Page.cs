@@ -57,33 +57,51 @@ class Page
 
     public record Table : BodyComponent
     {
-        public record Row(params string?[] Values)
+        public sealed record Row(params string?[] Values)
         {
-            public string ToMarkdown()
-                => $"| {string.Join("|", Values.Select(s => (s ?? "").Replace("\r", "").Replace("\n", "<br/>")))} |";
+            public ImmutableArray<int> Lengths => Values.Select(static v => v?.Length ?? 0).ToImmutableArray();
+
+            public string ToMarkdown(IReadOnlyList<int> lengths)
+                => $"| {string.Join(" | ", Values.Select((s, i) => (s ?? "").PadRight(lengths[i]).Replace("\r", "").Replace("\n", "<br/>")))} |";
         }
 
         public Row? HeadRow;
         public readonly List<Row> BodyRows = new();
 
+        private IEnumerable<Row> AllRows => (HeadRow is null ? Array.Empty<Row>() : new[] { HeadRow }).Concat(BodyRows);
+
         public override string ToMarkdown()
         {
             List<string> lines = new List<string>();
+
+            var rowLengths = GetLengths(AllRows.ToImmutableArray());
+
             if (HeadRow != null)
             {
-                lines.Add(HeadRow.ToMarkdown());
-                lines.Add($"| {string.Join("|", HeadRow.Values.Select(_ => "---"))} |");
+                lines.Add(HeadRow.ToMarkdown(rowLengths));
+                lines.Add($"|-{string.Join("-|-", HeadRow.Values.Select((_, i) => new string('-', rowLengths[i])))}-|");
             }
 
             foreach (var row in BodyRows)
             {
-                lines.Add(row.ToMarkdown());
+                lines.Add(row.ToMarkdown(rowLengths));
             }
 
             return $"\n{string.Join("\n", lines)}\n";
+
+            static ImmutableArray<int> GetLengths(IReadOnlyCollection<Row> rows)
+            {
+                var builder = ImmutableArray.CreateBuilder<int>();
+                for (int i = 0; i < rows.Max(static r => r.Values.Length); i++)
+                {
+                    builder.Add(rows.Select(row => row.Lengths[i]).Max());
+                }
+
+                return builder.ToImmutable();
+            }
         }
     }
-    
+
     public record NewLine : BodyComponent
     {
         public override string ToMarkdown() => "\n";
