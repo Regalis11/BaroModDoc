@@ -28,7 +28,7 @@ internal sealed class PrefabClassParser
     private readonly ClassParsingOptions options;
     private ImmutableArray<DeclaredField> declaredFields = ImmutableArray<DeclaredField>.Empty;
 
-    public ImmutableArray<string> Comments = ImmutableArray<string>.Empty;
+    public ImmutableArray<CodeComment> Comments = ImmutableArray<CodeComment>.Empty;
 
     public PrefabClassParser(ClassParsingOptions options)
     {
@@ -318,7 +318,7 @@ internal sealed class PrefabClassParser
                 result.Add(new DeclaredField(
                     Name: variable.Identifier.ToString(),
                     Type: field.Declaration.Type.ToString(),
-                    Description: comment));
+                    Description: comment.Text));
             }
         }
 
@@ -329,7 +329,7 @@ internal sealed class PrefabClassParser
             result.Add(new DeclaredField(
                 Name: property.Identifier.ToString(),
                 Type: property.Type.ToString(),
-                Description: comment));
+                Description: comment.Text));
         }
 
         return result.ToImmutable();

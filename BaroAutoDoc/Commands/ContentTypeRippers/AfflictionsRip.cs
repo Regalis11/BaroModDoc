@@ -56,10 +56,10 @@ class AfflictionsRip : Command
                 Title = name,
             };
 
-            foreach (string s in parser.Comments)
+            foreach (CodeComment s in parser.Comments)
             {
-                if (string.IsNullOrWhiteSpace(s)) { continue; }
-                mainSection.Body.Components.Add(new Page.RawText(s));
+                if (string.IsNullOrWhiteSpace(s.Text)) { continue; }
+                mainSection.Body.Components.Add(new Page.RawText(s.Text));
             }
 
             Page.Section attributesSection = new()
