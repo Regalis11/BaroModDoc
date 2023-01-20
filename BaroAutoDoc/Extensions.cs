@@ -9,7 +9,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace BaroAutoDoc;
 
-public readonly record struct CodeComment(string Text, XElement element);
+public readonly record struct CodeComment(string Text, XElement Element);
 
 public static class Extensions
 {
