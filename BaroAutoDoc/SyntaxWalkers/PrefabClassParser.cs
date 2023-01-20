@@ -107,7 +107,7 @@ internal sealed class PrefabClassParser
             switch (element.Name.ToString().ToLower())
             {
                 case "override":
-                    overrides[Enum.Parse<DocAttributeType>(GetAttribute("Type"))] = element.Value;
+                    overrides[Enum.Parse<DocAttributeType>(GetAttribute("Type"))] = element.Value.Trim('\n');
                     break;
                 case "field":
                     string fieldType = GetAttribute("Type"),
