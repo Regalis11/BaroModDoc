@@ -6,6 +6,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace BaroAutoDoc.SyntaxWalkers;
 
+// FIXME allow this to override sub element types
 public enum DocAttributeType
 {
     DefaultValue,
