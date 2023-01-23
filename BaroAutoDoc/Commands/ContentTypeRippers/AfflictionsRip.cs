@@ -128,7 +128,7 @@ class AfflictionsRip : Command
             return true;
         }
 
-        static bool ConstructEnumTable(ImmutableDictionary<string, ImmutableArray<string>> enums, [NotNullWhen(true)] out ImmutableArray<Page.Section>? result)
+        static bool ConstructEnumTable(ImmutableDictionary<string, ImmutableArray<(string, string)>> enums, [NotNullWhen(true)] out ImmutableArray<Page.Section>? result)
         {
             if (!enums.Any())
             {
@@ -146,12 +146,12 @@ class AfflictionsRip : Command
 
                 Page.Table table = new()
                 {
-                    HeadRow = new Page.Table.Row("Value")
+                    HeadRow = new Page.Table.Row("Value", "Description")
                 };
 
-                foreach (string value in values)
+                foreach (var (value, description) in values)
                 {
-                    table.BodyRows.Add(new Page.Table.Row(value));
+                    table.BodyRows.Add(new Page.Table.Row(value, description));
                 }
 
                 section.Body.Components.Add(table);
