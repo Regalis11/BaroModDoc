@@ -115,11 +115,18 @@ class AfflictionsRip : Command
 
             foreach (var (element, type) in elementTable)
             {
+                if (string.IsNullOrWhiteSpace(type)) { continue; }
                 string fmtType = sections.ContainsKey(type)
                     ? $"[{type}](#{type.ToLower()})"
                     : $"[{type}]({type}.md)";
 
                 table.BodyRows.Add(new Page.Table.Row(element, fmtType));
+            }
+
+            if (table.BodyRows.Count is 0)
+            {
+                result = null;
+                return false;
             }
 
             section.Body.Components.Add(table);

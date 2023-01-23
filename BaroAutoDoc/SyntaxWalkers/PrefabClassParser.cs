@@ -587,7 +587,7 @@ internal sealed class PrefabClassParser
                         Expression: IdentifierNameSyntax nameSyntax
                     }
                 } => nameSyntax.GetIdentifierString(),
-                _ => "???"
+                _ => string.Empty
             };
 
         static string GetTypeFromArguments(IReadOnlyCollection<ArgumentSyntax> arguments)
@@ -597,7 +597,7 @@ internal sealed class PrefabClassParser
                 return GetTypeFromAssignment(syntax);
             }
 
-            return "???";
+            return string.Empty;
         }
     }
 }
