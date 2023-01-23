@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using BaroAutoDoc.SyntaxWalkers;
 
@@ -6,7 +7,7 @@ namespace BaroAutoDoc.Commands.ContentTypeSpecific;
 
 class AfflictionsRip : Command
 {
-    private readonly record struct AfflictionSection(Page.Section Section, Dictionary<string, string> ElementTable);
+    private readonly record struct AfflictionSection(Page.Section Section, ImmutableDictionary<string, string> ElementTable, PrefabClassParser Parser);
 
     public void Invoke()
     {
@@ -59,7 +60,7 @@ class AfflictionsRip : Command
 
             foreach (var (identifier, section) in finalSections)
             {
-                if (ConstructTable(finalSections, section.ElementTable, out Page.Section? table))
+                if (ConstructSubElementTable(finalSections, section.ElementTable, out Page.Section? table))
                 {
                     section.Section.Subsections.Add(table);
                 }
@@ -67,6 +68,7 @@ class AfflictionsRip : Command
                 if (key != identifier || parser.BaseClasses.Length is 0)
                 {
                     page.Subsections.Add(section.Section);
+                    AddEnumTable();
                     continue;
                 }
 
@@ -79,18 +81,28 @@ class AfflictionsRip : Command
                 }
 
                 page.Subsections.Add(section.Section);
+                AddEnumTable();
+
+                void AddEnumTable()
+                {
+                    if (ConstructEnumTable(section.Parser.Enums, out ImmutableArray<Page.Section>? enums))
+                    {
+                        section.Section.Subsections.AddRange(enums);
+                    }
+                }
             }
 
             File.WriteAllText($"{key}.md", page.ToMarkdown());
         }
 
-        static bool ConstructTable(Dictionary<string, AfflictionSection> sections, Dictionary<string, string> elementTable, [NotNullWhen(true)] out Page.Section? result)
+        static bool ConstructSubElementTable(Dictionary<string, AfflictionSection> sections, ImmutableDictionary<string, string> elementTable, [NotNullWhen(true)] out Page.Section? result)
         {
             if (!elementTable.Any())
             {
                 result = null;
                 return false;
             }
+
             Page.Section section = new()
             {
                 Title = "Elements"
@@ -113,6 +125,41 @@ class AfflictionsRip : Command
             section.Body.Components.Add(table);
 
             result = section;
+            return true;
+        }
+
+        static bool ConstructEnumTable(ImmutableDictionary<string, ImmutableArray<string>> enums, [NotNullWhen(true)] out ImmutableArray<Page.Section>? result)
+        {
+            if (!enums.Any())
+            {
+                result = null;
+                return false;
+            }
+
+            var builder = ImmutableArray.CreateBuilder<Page.Section>();
+            foreach (var (type, values) in enums)
+            {
+                Page.Section section = new()
+                {
+                    Title = type
+                };
+
+                Page.Table table = new()
+                {
+                    HeadRow = new Page.Table.Row("Value")
+                };
+
+                foreach (string value in values)
+                {
+                    table.BodyRows.Add(new Page.Table.Row(value));
+                }
+
+                section.Body.Components.Add(table);
+
+                builder.Add(section);
+            }
+
+            result = builder.ToImmutable();
             return true;
         }
 
@@ -168,7 +215,7 @@ class AfflictionsRip : Command
                 elementTable.Add(affectedElement.XMLName, affectedElement.AffectedField.First().Type);
             }
 
-            return new AfflictionSection(mainSection, elementTable);
+            return new AfflictionSection(mainSection, elementTable.ToImmutableDictionary(), parser);
         }
     }
 }

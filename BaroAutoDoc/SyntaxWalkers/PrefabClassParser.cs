@@ -51,6 +51,8 @@ internal sealed class PrefabClassParser
 
     public ImmutableDictionary<string, PrefabClassParser> SubClasses = ImmutableDictionary<string, PrefabClassParser>.Empty;
 
+    public ImmutableDictionary<string, ImmutableArray<string>> Enums = ImmutableDictionary<string, ImmutableArray<string>>.Empty;
+
     public PrefabClassParser(ClassParsingOptions options)
     {
         this.options = options;
@@ -80,6 +82,12 @@ internal sealed class PrefabClassParser
 
             string identifier = syntax.Identifier.ValueText;
             SubClasses = SubClasses.Add(identifier, subParser);
+        }
+
+        foreach (EnumDeclarationSyntax syntax in cls.Members.OfType<EnumDeclarationSyntax>())
+        {
+            List<string> enumMembers = syntax.Members.Select(static member => member.Identifier.ValueText).ToList();
+            Enums = Enums.Add(syntax.Identifier.ValueText, enumMembers.ToImmutableArray());
         }
 
         SerializableProperties = SerializableProperties.Union(cls.GetSerializableProperties()).ToImmutableArray();
