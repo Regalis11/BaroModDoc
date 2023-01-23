@@ -86,6 +86,10 @@ class AfflictionsRip : Command
                 {
                     fmtType = $"[{type}](#{type.ToLower()})";
                 }
+                else
+                {
+                    fmtType = $"[{type}]({type}.md)";
+                }
                 table.BodyRows.Add(new Page.Table.Row(element, fmtType));
             }
 
