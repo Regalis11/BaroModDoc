@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 using BaroAutoDoc.SyntaxWalkers;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
@@ -6,6 +7,7 @@ namespace BaroAutoDoc.Commands.ContentTypeSpecific;
 
 class AfflictionsRip : Command
 {
+    private readonly record struct AfflictionSection(Page.Section Section, Dictionary<string, string> ElementTable);
 
     public void Invoke()
     {
@@ -24,9 +26,10 @@ class AfflictionsRip : Command
 
         foreach (var (key, cls) in contentTypeFinder.AfflictionPrefabs)
         {
+            Dictionary<string, AfflictionSection> finalSections = new();
             PrefabClassParser parser = new PrefabClassParser(new ClassParsingOptions
             {
-                InitializerMethodNames = new[] { "LoadEffects" },
+                InitializerMethodNames = new[] { "LoadEffects" }
             });
 
             parser.ParseClass(cls);
@@ -36,24 +39,67 @@ class AfflictionsRip : Command
                 Title = key
             };
 
-            page.Subsections.Add(CreateSection(key, parser));
+            finalSections.Add(key, CreateSection(key, parser));
 
             foreach (ClassDeclarationSyntax syntax in cls.Members.OfType<ClassDeclarationSyntax>())
             {
                 PrefabClassParser subParser = new PrefabClassParser(new ClassParsingOptions());
                 subParser.ParseClass(syntax);
 
-                page.Subsections.Add(CreateSection(syntax.Identifier.ValueText, subParser));
+                string identifier = syntax.Identifier.ValueText;
+                finalSections.Add(identifier, CreateSection(identifier, subParser));
+            }
+
+            foreach (AfflictionSection section in finalSections.Values)
+            {
+                if (ConstructTable(finalSections, section.ElementTable, out Page.Section? table))
+                {
+                    section.Section.Subsections.Add(table);
+                }
+                page.Subsections.Add(section.Section);
             }
 
             File.WriteAllText($"{key}.md", page.ToMarkdown());
         }
 
-        static Page.Section CreateSection(string name, PrefabClassParser parser)
+        static bool ConstructTable(Dictionary<string, AfflictionSection> sections, Dictionary<string, string> elementTable, [NotNullWhen(true)] out Page.Section? result)
+        {
+            if (!elementTable.Any())
+            {
+                result = null;
+                return false;
+            }
+            Page.Section section = new()
+            {
+                Title = "Elements"
+            };
+
+            Page.Table table = new()
+            {
+                HeadRow = new Page.Table.Row("Element", "Type")
+            };
+
+            foreach (var (element, type) in elementTable)
+            {
+                string fmtType = type;
+                if (sections.ContainsKey(type))
+                {
+                    fmtType = $"[{type}](#{type.ToLower()})";
+                }
+                table.BodyRows.Add(new Page.Table.Row(element, fmtType));
+            }
+
+            section.Body.Components.Add(table);
+
+            result = section;
+            return true;
+        }
+
+        static AfflictionSection CreateSection(string name, PrefabClassParser parser)
         {
             Page.Section mainSection = new()
             {
-                Title = name,
+                Title = name
             };
 
             foreach (CodeComment s in parser.Comments)
@@ -75,7 +121,7 @@ class AfflictionsRip : Command
             foreach (SerializableProperty property in parser.SerializableProperties)
             {
                 string defaultValue = DefaultValue.MakeMorePresentable(property.DefaultValue, property.Type);
-                
+
                 attributesTable.BodyRows.Add(new Page.Table.Row(property.Name, property.Type, defaultValue, property.Description));
             }
 
@@ -90,15 +136,7 @@ class AfflictionsRip : Command
                 mainSection.Subsections.Add(attributesSection);
             }
 
-            Page.Section subElementSection = new()
-            {
-                Title = "Elements"
-            };
-
-            Page.Table subElementTable = new()
-            {
-                HeadRow = new Page.Table.Row("Element", "Type")
-            };
+            Dictionary<string, string> elementTable = new();
 
             foreach (SupportedSubElement affectedElement in parser.SupportedSubElements)
             {
@@ -106,16 +144,10 @@ class AfflictionsRip : Command
 
                 // TODO we probably need to generate a list of all these elements and then link to them
                 // for example sprite, sound, effect
-                subElementTable.BodyRows.Add(new Page.Table.Row(affectedElement.XMLName, affectedElement.AffectedField.First().Type));
+                elementTable.Add(affectedElement.XMLName, affectedElement.AffectedField.First().Type);
             }
 
-            if (subElementTable.BodyRows.Any())
-            {
-                subElementSection.Body.Components.Add(subElementTable);
-                mainSection.Subsections.Add(subElementSection);
-            }
-
-            return mainSection;
+            return new AfflictionSection(mainSection, elementTable);
         }
     }
 }
