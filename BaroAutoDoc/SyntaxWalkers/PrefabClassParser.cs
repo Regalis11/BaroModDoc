@@ -294,16 +294,6 @@ internal sealed class PrefabClassParser
 
                 return $"{percentage}% of {identifier?.Identifier.ValueText}";
             }
-            // X && Y
-            case BinaryExpressionSyntax
-            {
-                OperatorToken.ValueText: "&&"
-            }:
-            {
-                // TODO I genuinely don't think it's worth parsing this and instead just manually writing description for it
-                // This is what you'd have to parse: !IsBuff && AfflictionType != "geneticmaterialbuff" && AfflictionType != "geneticmaterialdebuff"
-                return defaultValue;
-            }
             // Identifier.Empty, String.Empty
             case MemberAccessExpressionSyntax memberAccess:
             {
