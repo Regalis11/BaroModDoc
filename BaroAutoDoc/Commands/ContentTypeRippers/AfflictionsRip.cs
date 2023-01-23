@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using BaroAutoDoc.SyntaxWalkers;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace BaroAutoDoc.Commands.ContentTypeSpecific;
 
@@ -24,15 +23,27 @@ class AfflictionsRip : Command
 
         Directory.SetCurrentDirectory(Path.GetDirectoryName(Assembly.GetCallingAssembly().Location)!);
 
+        Dictionary<string, PrefabClassParser> parsedClasses = new();
+
         foreach (var (key, cls) in contentTypeFinder.AfflictionPrefabs)
         {
-            Dictionary<string, AfflictionSection> finalSections = new();
-            PrefabClassParser parser = new PrefabClassParser(new ClassParsingOptions
+            if (parsedClasses.TryGetValue(key, out PrefabClassParser? parser))
+            {
+                parser.ParseClass(cls);
+                continue;
+            }
+
+            parser = new PrefabClassParser(new ClassParsingOptions
             {
                 InitializerMethodNames = new[] { "LoadEffects" }
             });
-
             parser.ParseClass(cls);
+            parsedClasses.Add(key, parser);
+        }
+
+        foreach (var (key, parser) in parsedClasses)
+        {
+            Dictionary<string, AfflictionSection> finalSections = new();
 
             Page page = new()
             {
@@ -41,13 +52,9 @@ class AfflictionsRip : Command
 
             finalSections.Add(key, CreateSection(key, parser));
 
-            foreach (ClassDeclarationSyntax syntax in cls.Members.OfType<ClassDeclarationSyntax>())
+            foreach (var (subName, subParser) in parser.SubClasses)
             {
-                PrefabClassParser subParser = new PrefabClassParser(new ClassParsingOptions());
-                subParser.ParseClass(syntax);
-
-                string identifier = syntax.Identifier.ValueText;
-                finalSections.Add(identifier, CreateSection(identifier, subParser));
+                finalSections.Add(subName, CreateSection(subName, subParser));
             }
 
             foreach (var (identifier, section) in finalSections)
@@ -57,19 +64,18 @@ class AfflictionsRip : Command
                     section.Section.Subsections.Add(table);
                 }
 
-                if (key != identifier || cls.BaseList is not { } baseList)
+                if (key != identifier || parser.BaseClasses.Length is 0)
                 {
                     page.Subsections.Add(section.Section);
                     continue;
                 }
 
-                foreach (BaseTypeSyntax type in baseList.Types)
+                foreach (string type in parser.BaseClasses)
                 {
-                    string typeName = type.Type.ToString();
-                    if (!contentTypeFinder.AfflictionPrefabs.Keys.Any(k => string.Equals(k, typeName, StringComparison.OrdinalIgnoreCase))) { continue; }
+                    if (!contentTypeFinder.AfflictionPrefabs.Keys.Any(k => string.Equals(k, type, StringComparison.OrdinalIgnoreCase))) { continue; }
 
                     section.Section.Body.Components.Add(new Page.RawText("This prefab also supports the attributes defined in: "));
-                    section.Section.Body.Components.Add(new Page.Hyperlink($"{typeName}.md#{typeName.ToLower()}", typeName));
+                    section.Section.Body.Components.Add(new Page.Hyperlink($"{type}.md#{type.ToLower()}", type));
                 }
 
                 page.Subsections.Add(section.Section);

@@ -47,6 +47,10 @@ internal sealed class PrefabClassParser
 
     public ImmutableArray<CodeComment> Comments = ImmutableArray<CodeComment>.Empty;
 
+    public ImmutableArray<string> BaseClasses = ImmutableArray<string>.Empty;
+
+    public ImmutableDictionary<string, PrefabClassParser> SubClasses = ImmutableDictionary<string, PrefabClassParser>.Empty;
+
     public PrefabClassParser(ClassParsingOptions options)
     {
         this.options = options;
@@ -59,6 +63,24 @@ internal sealed class PrefabClassParser
         CodeComment comment = cls.FindCommentAttachedToMember();
 
         Comments = Comments.Add(comment);
+
+        if (cls.BaseList is { } baseList)
+        {
+            foreach (BaseTypeSyntax type in baseList.Types)
+            {
+                string typeName = type.Type.ToString();
+                BaseClasses = BaseClasses.Add(typeName);
+            }
+        }
+
+        foreach (ClassDeclarationSyntax syntax in cls.Members.OfType<ClassDeclarationSyntax>())
+        {
+            PrefabClassParser subParser = new PrefabClassParser(new ClassParsingOptions());
+            subParser.ParseClass(syntax);
+
+            string identifier = syntax.Identifier.ValueText;
+            SubClasses = SubClasses.Add(identifier, subParser);
+        }
 
         SerializableProperties = SerializableProperties.Union(cls.GetSerializableProperties()).ToImmutableArray();
 
