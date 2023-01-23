@@ -222,7 +222,7 @@ class AfflictionsRip : Command
             {
                 if (affectedElement.AffectedField.Length is 0) { continue; }
 
-                // TODO we probably need to generate a list of all these elements and then link to them
+                // TODO we probably need to generate a list of all these elements
                 // for example sprite, sound, effect
                 elementTable.Add(affectedElement.XMLName, affectedElement.AffectedField.First().Type);
             }
