@@ -50,12 +50,28 @@ class AfflictionsRip : Command
                 finalSections.Add(identifier, CreateSection(identifier, subParser));
             }
 
-            foreach (AfflictionSection section in finalSections.Values)
+            foreach (var (identifier, section) in finalSections)
             {
                 if (ConstructTable(finalSections, section.ElementTable, out Page.Section? table))
                 {
                     section.Section.Subsections.Add(table);
                 }
+
+                if (key != identifier || cls.BaseList is not { } baseList)
+                {
+                    page.Subsections.Add(section.Section);
+                    continue;
+                }
+
+                foreach (BaseTypeSyntax type in baseList.Types)
+                {
+                    string typeName = type.Type.ToString();
+                    if (!contentTypeFinder.AfflictionPrefabs.Keys.Any(k => string.Equals(k, typeName, StringComparison.OrdinalIgnoreCase))) { continue; }
+
+                    section.Section.Body.Components.Add(new Page.RawText("This prefab also supports the attributes defined in: "));
+                    section.Section.Body.Components.Add(new Page.Hyperlink($"{typeName}.md#{typeName.ToLower()}", typeName));
+                }
+
                 page.Subsections.Add(section.Section);
             }
 
@@ -81,15 +97,10 @@ class AfflictionsRip : Command
 
             foreach (var (element, type) in elementTable)
             {
-                string fmtType = type;
-                if (sections.ContainsKey(type))
-                {
-                    fmtType = $"[{type}](#{type.ToLower()})";
-                }
-                else
-                {
-                    fmtType = $"[{type}]({type}.md)";
-                }
+                string fmtType = sections.ContainsKey(type)
+                    ? $"[{type}](#{type.ToLower()})"
+                    : $"[{type}]({type}.md)";
+
                 table.BodyRows.Add(new Page.Table.Row(element, fmtType));
             }
 
