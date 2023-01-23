@@ -61,7 +61,7 @@ internal sealed class PrefabClassParser
         declaredFields = declaredFields.Union(GetDeclaredFields(cls)).ToImmutableArray();
 
         CodeComment comment = cls.FindCommentAttachedToMember();
-
+        ParsedComment parsedComment = ParseComment(comment);
         Comments = Comments.Add(comment);
 
         if (cls.BaseList is { } baseList)
@@ -86,17 +86,12 @@ internal sealed class PrefabClassParser
 
         var initializers = cls.FindInitializerMethodBodies(options.InitializerMethodNames);
 
-        // TODO figure out a way to concat this
-        SupportedSubElements = initializers
-                               .SelectMany(static syntax => FindSubElementsFrom(syntax))
-                               .ToImmutableArray();
+        SupportedSubElements = SupportedSubElements.Union(initializers.SelectMany(static syntax => FindSubElementsFrom(syntax))).ToImmutableArray();
 
         foreach (BlockSyntax block in initializers)
         {
             XMLAssignedFields = XMLAssignedFields.Union(FindXMLAssignedFields(block)).ToImmutableArray();
         }
-
-        var parsedComment = ParseComment(comment);
 
         foreach (XMLAssignedField extraField in parsedComment.ExtraFields)
         {
