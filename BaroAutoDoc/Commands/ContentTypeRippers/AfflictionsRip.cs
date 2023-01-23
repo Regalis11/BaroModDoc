@@ -115,7 +115,12 @@ class AfflictionsRip : Command
 
             foreach (var (element, type) in elementTable)
             {
-                if (string.IsNullOrWhiteSpace(type)) { continue; }
+                if (string.IsNullOrWhiteSpace(type))
+                {
+                    Console.WriteLine($"WARNING: Element {element} has no type!");
+                    continue;
+                }
+
                 string fmtType = sections.ContainsKey(type)
                     ? $"[{type}](#{type.ToLower()})"
                     : $"[{type}]({type}.md)";
