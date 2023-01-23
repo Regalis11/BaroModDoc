@@ -42,7 +42,6 @@ internal sealed class PrefabClassParser
 
     public ImmutableArray<SerializableProperty> SerializableProperties = ImmutableArray<SerializableProperty>.Empty;
 
-    private readonly ClassParsingOptions options;
     private ImmutableArray<DeclaredField> declaredFields = ImmutableArray<DeclaredField>.Empty;
 
     public ImmutableArray<CodeComment> Comments = ImmutableArray<CodeComment>.Empty;
@@ -52,6 +51,8 @@ internal sealed class PrefabClassParser
     public ImmutableDictionary<string, PrefabClassParser> SubClasses = ImmutableDictionary<string, PrefabClassParser>.Empty;
 
     public ImmutableDictionary<string, ImmutableArray<(string Value, string Description)>> Enums = ImmutableDictionary<string, ImmutableArray<(string Value, string Description)>>.Empty;
+
+    private readonly ClassParsingOptions options;
 
     public PrefabClassParser(ClassParsingOptions options)
     {
