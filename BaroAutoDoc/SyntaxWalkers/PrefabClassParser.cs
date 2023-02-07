@@ -1,19 +1,36 @@
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
+using System.Xml.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace BaroAutoDoc.SyntaxWalkers;
+
+// FIXME allow this to override sub element types
+public enum DocAttributeType
+{
+    DefaultValue,
+    Description,
+    Type
+}
 
 // TODO what other info do we want to extract? possible errors for example by parsing AddWaring/ThrowError?
 public readonly record struct SupportedSubElement(string XMLName, ImmutableArray<SubElementField> AffectedField);
 
 public readonly record struct SubElementField(string Name, string Type);
 
-public readonly record struct DeclaredField(string Name, string Type, string Description);
+public readonly record struct DeclaredField(string Name, string Type, string Description, string? OverriddenDefaultValue);
 
 public readonly record struct CorrelatedField(string Global, string Local);
 
-public readonly record struct XMLAssignedField(DeclaredField Field, string XMLIdentifier, string DefaultValue);
+public readonly record struct XMLAssignedField(DeclaredField Field, string XMLIdentifier, string DefaultValue)
+{
+    public string GetDefaultValue() => Field.OverriddenDefaultValue ?? DefaultValue;
+}
+
+public readonly record struct ParsedComment(ImmutableDictionary<DocAttributeType, string> Overrides,
+                                            ImmutableArray<XMLAssignedField> ExtraFields,
+                                            ImmutableArray<SupportedSubElement> ExtraSubElements);
 
 public record struct ClassParsingOptions(string[] InitializerMethodNames);
 
@@ -25,10 +42,17 @@ internal sealed class PrefabClassParser
 
     public ImmutableArray<SerializableProperty> SerializableProperties = ImmutableArray<SerializableProperty>.Empty;
 
-    private readonly ClassParsingOptions options;
     private ImmutableArray<DeclaredField> declaredFields = ImmutableArray<DeclaredField>.Empty;
 
-    public ImmutableArray<string> Comments = ImmutableArray<string>.Empty;
+    public ImmutableArray<CodeComment> Comments = ImmutableArray<CodeComment>.Empty;
+
+    public ImmutableArray<string> BaseClasses = ImmutableArray<string>.Empty;
+
+    public ImmutableDictionary<string, PrefabClassParser> SubClasses = ImmutableDictionary<string, PrefabClassParser>.Empty;
+
+    public ImmutableDictionary<string, ImmutableArray<(string Value, string Description)>> Enums = ImmutableDictionary<string, ImmutableArray<(string Value, string Description)>>.Empty;
+
+    private readonly ClassParsingOptions options;
 
     public PrefabClassParser(ClassParsingOptions options)
     {
@@ -39,21 +63,104 @@ internal sealed class PrefabClassParser
     {
         declaredFields = declaredFields.Union(GetDeclaredFields(cls)).ToImmutableArray();
 
-        Comments = Comments.Add(cls.FindCommentAttachedToMember());
+        CodeComment comment = cls.FindCommentAttachedToMember();
+        ParsedComment parsedComment = ParseComment(comment);
+        Comments = Comments.Add(comment);
+
+        if (cls.BaseList is { } baseList)
+        {
+            foreach (BaseTypeSyntax type in baseList.Types)
+            {
+                string typeName = type.Type.ToString();
+                BaseClasses = BaseClasses.Add(typeName);
+            }
+        }
+
+        foreach (ClassDeclarationSyntax syntax in cls.Members.OfType<ClassDeclarationSyntax>())
+        {
+            PrefabClassParser subParser = new PrefabClassParser(new ClassParsingOptions());
+            subParser.ParseClass(syntax);
+
+            string identifier = syntax.Identifier.ValueText;
+            SubClasses = SubClasses.Add(identifier, subParser);
+        }
+
+        foreach (EnumDeclarationSyntax syntax in cls.Members.OfType<EnumDeclarationSyntax>())
+        {
+            List<(string, string)> enumMembers = new();
+            foreach (var enumMember in syntax.Members)
+            {
+                enumMembers.Add((enumMember.Identifier.ValueText, enumMember.FindCommentAttachedToMember().Text));
+            }
+            Enums = Enums.Add(syntax.Identifier.ValueText, enumMembers.ToImmutableArray());
+        }
 
         SerializableProperties = SerializableProperties.Union(cls.GetSerializableProperties()).ToImmutableArray();
 
         var initializers = cls.FindInitializerMethodBodies(options.InitializerMethodNames);
 
-        // TODO figure out a way to concat this
-        SupportedSubElements = initializers
-                               .SelectMany(static syntax => FindSubElementsFrom(syntax))
-                               .ToImmutableArray();
+        SupportedSubElements = SupportedSubElements.Union(initializers.SelectMany(static syntax => FindSubElementsFrom(syntax))).ToImmutableArray();
 
         foreach (BlockSyntax block in initializers)
         {
             XMLAssignedFields = XMLAssignedFields.Union(FindXMLAssignedFields(block)).ToImmutableArray();
         }
+
+        foreach (XMLAssignedField extraField in parsedComment.ExtraFields)
+        {
+            XMLAssignedFields = XMLAssignedFields.Add(extraField);
+        }
+
+        foreach (SupportedSubElement extraElement in parsedComment.ExtraSubElements)
+        {
+            SupportedSubElements = SupportedSubElements.Add(extraElement);
+        }
+    }
+
+    private static ParsedComment ParseComment(CodeComment comment)
+    {
+        XElement xml = comment.Element;
+
+        XElement? docs = xml.ElementOfName("doc", StringComparison.OrdinalIgnoreCase);
+        if (docs is null)
+        {
+            return new ParsedComment(ImmutableDictionary<DocAttributeType, string>.Empty,
+                ImmutableArray<XMLAssignedField>.Empty,
+                ImmutableArray<SupportedSubElement>.Empty);
+        }
+
+        var overrides = ImmutableDictionary.CreateBuilder<DocAttributeType, string>();
+        var extraFields = ImmutableArray.CreateBuilder<XMLAssignedField>();
+        var extraSubElements = ImmutableArray.CreateBuilder<SupportedSubElement>();
+
+        foreach (XElement element in docs.Elements())
+        {
+            switch (element.Name.ToString().ToLower())
+            {
+                case "override":
+                    overrides[Enum.Parse<DocAttributeType>(GetAttribute("Type"))] = element.Value.Trim('\n');
+                    break;
+                case "field":
+                    string fieldType = GetAttribute("Type"),
+                           fieldIdentifier = GetAttribute("Identifier"),
+                           fieldDefault = GetAttribute("DefaultValue"),
+                           fieldDesc = GetBody().Trim('\n');
+
+                    DeclaredField declaredField = new DeclaredField(string.Empty, fieldType, fieldDesc, null);
+                    extraFields.Add(new XMLAssignedField(declaredField, fieldIdentifier, fieldDefault));
+                    break;
+                case "subelement":
+                    string subIdentifier = GetAttribute("Identifier"),
+                           subType = GetAttribute("Type");
+                    extraSubElements.Add(new SupportedSubElement(subIdentifier, ImmutableArray.Create(new SubElementField(string.Empty, subType))));
+                    break;
+            }
+
+            string GetAttribute(string name) => element.Attributes().FirstOrDefault(x => string.Equals(x.Name.ToString(), name, StringComparison.OrdinalIgnoreCase))?.Value ?? throw new Exception("Missing attribute");
+            string GetBody() => element.Value ?? throw new Exception("Missing body");
+        }
+
+        return new ParsedComment(overrides.ToImmutable(), extraFields.ToImmutable(), extraSubElements.ToImmutable());
     }
 
     private ImmutableArray<XMLAssignedField> FindXMLAssignedFields(BlockSyntax blockSyntax)
@@ -187,16 +294,6 @@ internal sealed class PrefabClassParser
 
                 return $"{percentage}% of {identifier?.Identifier.ValueText}";
             }
-            // X && Y
-            case BinaryExpressionSyntax
-            {
-                OperatorToken.ValueText: "&&"
-            }:
-            {
-                // TODO I genuinely don't think it's worth parsing this and instead just manually writing description for it
-                // This is what you'd have to parse: !IsBuff && AfflictionType != "geneticmaterialbuff" && AfflictionType != "geneticmaterialdebuff"
-                return defaultValue;
-            }
             // Identifier.Empty, String.Empty
             case MemberAccessExpressionSyntax memberAccess:
             {
@@ -268,7 +365,8 @@ internal sealed class PrefabClassParser
                 result.Add(new DeclaredField(
                     Name: variableName.Identifier.ToString(),
                     Type: localDeclaration.Declaration.Type.ToString(),
-                    Description: ""));
+                    Description: "",
+                    OverriddenDefaultValue: null));
             }
         }
 
@@ -315,24 +413,32 @@ internal sealed class PrefabClassParser
             {
                 var comment = field.FindCommentAttachedToMember();
 
+                var overrides = ParseComment(comment).Overrides;
+
                 result.Add(new DeclaredField(
                     Name: variable.Identifier.ToString(),
-                    Type: field.Declaration.Type.ToString(),
-                    Description: comment));
+                    Type: GetValueOrDefault(overrides, DocAttributeType.Type, field.Declaration.Type.ToString()),
+                    Description: GetValueOrDefault(overrides, DocAttributeType.Description, comment.Text),
+                    OverriddenDefaultValue: GetValueOrDefault(overrides, DocAttributeType.DefaultValue, null)));
             }
         }
 
         foreach (var property in cls.Members.OfType<PropertyDeclarationSyntax>())
         {
             var comment = property.FindCommentAttachedToMember();
+            var overrides = ParseComment(comment).Overrides;
 
             result.Add(new DeclaredField(
                 Name: property.Identifier.ToString(),
-                Type: property.Type.ToString(),
-                Description: comment));
+                Type: GetValueOrDefault(overrides, DocAttributeType.Type, property.Type.ToString()),
+                Description: GetValueOrDefault(overrides, DocAttributeType.Description, comment.Text),
+                OverriddenDefaultValue: GetValueOrDefault(overrides, DocAttributeType.DefaultValue, null)));
         }
 
         return result.ToImmutable();
+
+        [return:NotNullIfNotNull("def")]
+        static string? GetValueOrDefault(ImmutableDictionary<DocAttributeType, string> dict, DocAttributeType key, string? def) => dict.TryGetValue(key, out var value) ? value : def;
     }
 
     /// <summary>
@@ -443,14 +549,17 @@ internal sealed class PrefabClassParser
                     break;
                 case BreakStatementSyntax:
                     break;
-                case ExpressionStatementSyntax { Expression: InvocationExpressionSyntax
+                case ExpressionStatementSyntax
                 {
-                    Expression: MemberAccessExpressionSyntax
+                    Expression: InvocationExpressionSyntax
                     {
-                        Name.Identifier.Text: "Add" or "TryAdd"
-                    } memberAccess,
-                    ArgumentList.Arguments: var arguments
-                } }:
+                        Expression: MemberAccessExpressionSyntax
+                        {
+                            Name.Identifier.Text: "Add" or "TryAdd"
+                        } memberAccess,
+                        ArgumentList.Arguments: var arguments
+                    }
+                }:
                     yield return new SubElementField(memberAccess.Expression.ToString(), GetTypeFromArguments(arguments));
                     break;
             }
@@ -468,7 +577,7 @@ internal sealed class PrefabClassParser
                         Expression: IdentifierNameSyntax nameSyntax
                     }
                 } => nameSyntax.GetIdentifierString(),
-                _ => "???"
+                _ => string.Empty
             };
 
         static string GetTypeFromArguments(IReadOnlyCollection<ArgumentSyntax> arguments)
@@ -478,7 +587,7 @@ internal sealed class PrefabClassParser
                 return GetTypeFromAssignment(syntax);
             }
 
-            return "???";
+            return string.Empty;
         }
     }
 }

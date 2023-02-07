@@ -9,6 +9,8 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace BaroAutoDoc;
 
+public readonly record struct CodeComment(string Text, XElement Element);
+
 public static class Extensions
 {
     public static void AddRange<T>(this ImmutableHashSet<T>.Builder builder, IEnumerable<T> items)
@@ -136,7 +138,7 @@ public static class Extensions
     public static XElement? ElementOfName(this XElement element, string name, StringComparison comparison = StringComparison.OrdinalIgnoreCase)
         => element.Elements().FirstOrDefault(e => e.Name.LocalName.Equals(name, comparison));
 
-    public static string FindCommentAttachedToMember(this SyntaxNode member)
+    public static CodeComment FindCommentAttachedToMember(this SyntaxNode member)
     {
         char[] trimChars =
         {
@@ -167,14 +169,14 @@ public static class Extensions
                 ? summary.ElementInnerText().Trim(trimChars)
                 : triviaText;
 
-            if (!string.IsNullOrEmpty(triviaText)) { return triviaText; }
+            if (!string.IsNullOrEmpty(triviaText)) { return new CodeComment(triviaText, xml); }
 
             member = member.Parent;
 
             if (member is TypeDeclarationSyntax) { break; }
         }
 
-        return "";
+        return new CodeComment("", new XElement("root"));
     }
     
     public static IEnumerable<SerializableProperty> GetSerializableProperties(this ClassDeclarationSyntax @class)
