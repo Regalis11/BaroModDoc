@@ -1,4 +1,6 @@
-﻿using System.Reflection;
+﻿using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 using BaroAutoDoc.SyntaxWalkers;
 
 namespace BaroAutoDoc.Commands;
@@ -159,5 +161,40 @@ class BaseRip : Command
         File.WriteAllText("markdown/ContentTypes.md",
             string.Join("\n", contentTypeFinder.ContentTypes.Select(t
                 => $"- [{t.Name}](ContentTypes/{t.Name}.md)")));
+    }
+
+    public static bool ConstructEnumTable(ImmutableDictionary<string, ImmutableArray<(string, string)>> enums, [NotNullWhen(true)] out ImmutableArray<Page.Section>? result)
+    {
+        if (!enums.Any())
+        {
+            result = null;
+            return false;
+        }
+
+        var builder = ImmutableArray.CreateBuilder<Page.Section>();
+        foreach (var (type, values) in enums)
+        {
+            Page.Section section = new()
+            {
+                Title = type
+            };
+
+            Page.Table table = new()
+            {
+                HeadRow = new Page.Table.Row("Value", "Description")
+            };
+
+            foreach (var (value, description) in values)
+            {
+                table.BodyRows.Add(new Page.Table.Row(value, description));
+            }
+
+            section.Body.Components.Add(table);
+
+            builder.Add(section);
+        }
+
+        result = builder.ToImmutable();
+        return true;
     }
 }

@@ -1,6 +1,7 @@
-﻿using System.Reflection;
-using BaroAutoDoc.SyntaxWalkers;
+﻿using BaroAutoDoc.SyntaxWalkers;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Collections.Immutable;
+using System.Reflection;
 
 namespace BaroAutoDoc.Commands.ContentTypeSpecific;
 
@@ -110,6 +111,16 @@ class StatusEffectsRip : Command
             {
                 subElementSection.Body.Components.Add(subElementTable);
                 mainSection.Subsections.Add(subElementSection);
+            }
+
+            AddEnumTable();
+
+            void AddEnumTable()
+            {
+                if (BaseRip.ConstructEnumTable(parser.Enums, out ImmutableArray<Page.Section>? enums))
+                {
+                    mainSection.Subsections.AddRange(enums);
+                }
             }
 
             return mainSection;

@@ -1,7 +1,7 @@
-﻿using System.Collections.Immutable;
+﻿using BaroAutoDoc.SyntaxWalkers;
+using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
-using BaroAutoDoc.SyntaxWalkers;
 
 namespace BaroAutoDoc.Commands.ContentTypeSpecific;
 
@@ -85,7 +85,7 @@ class AfflictionsRip : Command
 
                 void AddEnumTable()
                 {
-                    if (ConstructEnumTable(section.Parser.Enums, out ImmutableArray<Page.Section>? enums))
+                    if (BaseRip.ConstructEnumTable(section.Parser.Enums, out ImmutableArray<Page.Section>? enums))
                     {
                         section.Section.Subsections.AddRange(enums);
                     }
@@ -140,40 +140,6 @@ class AfflictionsRip : Command
             return true;
         }
 
-        static bool ConstructEnumTable(ImmutableDictionary<string, ImmutableArray<(string, string)>> enums, [NotNullWhen(true)] out ImmutableArray<Page.Section>? result)
-        {
-            if (!enums.Any())
-            {
-                result = null;
-                return false;
-            }
-
-            var builder = ImmutableArray.CreateBuilder<Page.Section>();
-            foreach (var (type, values) in enums)
-            {
-                Page.Section section = new()
-                {
-                    Title = type
-                };
-
-                Page.Table table = new()
-                {
-                    HeadRow = new Page.Table.Row("Value", "Description")
-                };
-
-                foreach (var (value, description) in values)
-                {
-                    table.BodyRows.Add(new Page.Table.Row(value, description));
-                }
-
-                section.Body.Components.Add(table);
-
-                builder.Add(section);
-            }
-
-            result = builder.ToImmutable();
-            return true;
-        }
 
         static AfflictionSection CreateSection(string name, PrefabClassParser parser)
         {

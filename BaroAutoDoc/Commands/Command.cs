@@ -1,4 +1,5 @@
 ﻿using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 
 namespace BaroAutoDoc.Commands;
@@ -30,4 +31,5 @@ abstract class Command
             .ToArray();
         method.Invoke(this, parameterValues);
     }
+
 }
