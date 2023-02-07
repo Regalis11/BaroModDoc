@@ -55,10 +55,10 @@ class StatusEffectsRip : Command
                 Title = name
             };
 
-            foreach (string s in parser.Comments)
+            foreach (CodeComment comment in parser.Comments)
             {
-                if (string.IsNullOrWhiteSpace(s)) { continue; }
-                mainSection.Body.Components.Add(new Page.RawText(s));
+                if (string.IsNullOrWhiteSpace(comment.Text)) { continue; }
+                mainSection.Body.Components.Add(new Page.RawText(comment.Text));
             }
 
             Page.Section attributesSection = new()
@@ -94,7 +94,7 @@ class StatusEffectsRip : Command
 
             Page.Table subElementTable = new()
             {
-                HeadRow = new Page.Table.Row("Element")
+                HeadRow = new Page.Table.Row("Element", "Type")
             };
 
             foreach (SupportedSubElement affectedElement in parser.SupportedSubElements)
