@@ -1,5 +1,6 @@
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
+using System.Text;
 using System.Xml.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -202,26 +203,18 @@ internal sealed class PrefabClassParser
                 {
                     Expression: AssignmentExpressionSyntax
                     {
-                        Right: InvocationExpressionSyntax
-                        {
-                            Expression: MemberAccessExpressionSyntax
-                            {
-                                Expression: var methodOwner,
-                                Name: IdentifierNameSyntax rightIdentifier
-                            },
-                            ArgumentList.Arguments: var assignmentArgumentList
-                        },
-                        Left: IdentifierNameSyntax leftIdentifier
+                        Left: IdentifierNameSyntax leftIdentifier,
+                        Right: InvocationExpressionSyntax right
                     }
                 }) { continue; }
 
-            string assignmentMethodName = rightIdentifier.GetIdentifierString(),
-                   assignedVariableName = leftIdentifier.GetIdentifierString();
+            string assignedVariableName = leftIdentifier.GetIdentifierString();
 
-            // probably a better way to do this
-            if (!assignmentMethodName.StartsWith("GetAttribute", StringComparison.OrdinalIgnoreCase)) { continue; }
+            var (xmlIdentifier, methodOwner, defaultValue, wasFound) = FindXMLAssignmentFromExpression(right);
 
-            if (!string.IsNullOrEmpty(elementName) && !methodOwner.ToString().Equals(elementName))
+            if (!wasFound) { continue; }
+
+            if (!string.IsNullOrEmpty(elementName) && !methodOwner.Equals(elementName))
             {
                 continue;
             }
@@ -239,16 +232,79 @@ internal sealed class PrefabClassParser
 
                 if (field.Name != assignedVariableName) { continue; }
 
-                string xmlIdentifier = assignmentArgumentList[0].ToString().EvaluateAsCSharpExpression();
-
-                xmlIdentifier = xmlIdentifier.GuessCaseFromMemberName(field.Name);
-
-                result.Add(new XMLAssignedField(field, xmlIdentifier, ParseDefaultValueExpression(assignmentArgumentList[1].Expression)));
+                result.Add(new XMLAssignedField(field, xmlIdentifier.GuessCaseFromMemberName(field.Name), defaultValue));
                 break;
             }
         }
 
         return result.ToImmutable();
+    }
+
+    private static (string XMLIdentifier, string MethodOwner, string DefaultValue, bool WasFound) FindXMLAssignmentFromExpression(InvocationExpressionSyntax expression)
+    {
+        if (expression is not
+            {
+                Expression: MemberAccessExpressionSyntax
+                {
+                    Expression: var methodOwner,
+                    Name: IdentifierNameSyntax rightIdentifier
+                },
+                ArgumentList.Arguments: var assignmentArgumentList
+            }) { return default; }
+
+        string assignmentMethodName = rightIdentifier.GetIdentifierString(),
+               methodOwnerName = methodOwner.ToString();
+
+        var argumentList = assignmentArgumentList.Select(static x => x.Expression).ToImmutableArray();
+
+        var (identifier, defaultValue, wasFound) = ParseGetAttributeSyntax(assignmentMethodName, argumentList);
+
+        if (!wasFound)
+        {
+            if (methodOwnerName is not ("MathHelper" or "Math" or "MathF" or "XMLExtensions"))
+            {
+                Console.WriteLine($"WARNING: Unknown assignment method: {assignmentMethodName}");
+                return default;
+            }
+
+            foreach (InvocationExpressionSyntax syntax in argumentList.OfType<InvocationExpressionSyntax>())
+            {
+                var found = FindXMLAssignmentFromExpression(syntax);
+                if (found != default) { return found; }
+            }
+        }
+
+        return (identifier, methodOwner.ToString(), defaultValue, true);
+    }
+
+    private static (string Identifier, string DefaultValue, bool WasFound) ParseGetAttributeSyntax(string assignmentMethodName, IReadOnlyList<ExpressionSyntax> args)
+    {
+        if (!assignmentMethodName.StartsWith("GetAttribute", StringComparison.OrdinalIgnoreCase)) { return default; }
+
+        if (assignmentMethodName.Equals("GetAttributeFloat", StringComparison.OrdinalIgnoreCase) && args.Count >= 3)
+        {
+            // combine all args after the first one into a string separated by a comma
+            var builder = new StringBuilder(ExpressionToString(args[1]));
+            for (int i = 2; i < args.Count; i++)
+            {
+                builder.Append(",").Append(ExpressionToString(args[i]));
+            }
+
+            return (builder.ToString(), ParseDefaultValueExpression(args[0]), true);
+        }
+
+        if (args.Count is 1 or 0)
+        {
+            Console.WriteLine("WARNING: odd GetAttribute call");
+            return default;
+        }
+
+        string xmlIdentifier = ExpressionToString(args[0]),
+               defaultValue = ParseDefaultValueExpression(args[1]);
+
+        return (xmlIdentifier, defaultValue, true);
+
+        static string ExpressionToString(ExpressionSyntax syntax) => syntax.ToString().EvaluateAsCSharpExpression();
     }
 
     private static string ParseDefaultValueExpression(ExpressionSyntax expressionSyntax)
