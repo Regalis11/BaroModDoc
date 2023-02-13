@@ -18,8 +18,6 @@ public enum DocAttributeType
 // TODO what other info do we want to extract? possible errors for example by parsing AddWaring/ThrowError?
 public readonly record struct SupportedSubElement(string XMLName, ImmutableArray<DeclaredField> AffectedField);
 
-public readonly record struct SubElementField(string Name, string Type, DeclaredField Field);
-
 public readonly record struct DeclaredField(string Name, string Type, string Description, string? OverriddenDefaultValue);
 
 public readonly record struct CorrelatedField(string Global, string Local);
