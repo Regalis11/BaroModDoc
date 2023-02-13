@@ -7,7 +7,7 @@ namespace BaroAutoDoc.Commands.ContentTypeSpecific;
 
 sealed class AfflictionsRip : Command
 {
-    private readonly record struct AfflictionSection(Page.Section Section, ImmutableDictionary<string, string> ElementTable, PrefabClassParser Parser);
+    private readonly record struct AfflictionSection(Page.Section Section, ImmutableArray<(string, string, string)> ElementTable, PrefabClassParser Parser);
 
     public void Invoke()
     {
@@ -95,7 +95,7 @@ sealed class AfflictionsRip : Command
             File.WriteAllText($"{key}.md", page.ToMarkdown());
         }
 
-        static bool ConstructSubElementTable(Dictionary<string, AfflictionSection> sections, ImmutableDictionary<string, string> elementTable, [NotNullWhen(true)] out Page.Section? result)
+        static bool ConstructSubElementTable(Dictionary<string, AfflictionSection> sections, ImmutableArray<(string, string, string)> elementTable, [NotNullWhen(true)] out Page.Section? result)
         {
             if (!elementTable.Any())
             {
@@ -110,10 +110,10 @@ sealed class AfflictionsRip : Command
 
             Page.Table table = new()
             {
-                HeadRow = new Page.Table.Row("Element", "Type")
+                HeadRow = new Page.Table.Row("Element", "Type", "Description")
             };
 
-            foreach (var (element, type) in elementTable)
+            foreach (var (element, type, description) in elementTable)
             {
                 if (string.IsNullOrWhiteSpace(type))
                 {
@@ -125,7 +125,7 @@ sealed class AfflictionsRip : Command
                     ? $"[{type}](#{type.ToLower()})"
                     : $"[{type}]({type}.md)";
 
-                table.BodyRows.Add(new Page.Table.Row(element, fmtType));
+                table.BodyRows.Add(new Page.Table.Row(element, fmtType, description));
             }
 
             if (table.BodyRows.Count is 0)
@@ -216,7 +216,7 @@ sealed class AfflictionsRip : Command
                 mainSection.Subsections.Add(attributesSection);
             }
 
-            Dictionary<string, string> elementTable = new();
+            List<(string, string, string)> elementTable = new();
 
             foreach (SupportedSubElement affectedElement in parser.SupportedSubElements)
             {
@@ -224,10 +224,11 @@ sealed class AfflictionsRip : Command
 
                 // TODO we probably need to generate a list of all these elements
                 // for example sprite, sound, effect
-                elementTable.Add(affectedElement.XMLName, affectedElement.AffectedField.First().Type);
+                DeclaredField field = affectedElement.AffectedField.First();
+                elementTable.Add((affectedElement.XMLName, field.Type, field.Description));
             }
 
-            return new AfflictionSection(mainSection, elementTable.ToImmutableDictionary(), parser);
+            return new AfflictionSection(mainSection, elementTable.ToImmutableArray(), parser);
         }
     }
 }

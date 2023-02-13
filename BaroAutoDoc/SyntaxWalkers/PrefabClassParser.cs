@@ -16,9 +16,9 @@ public enum DocAttributeType
 }
 
 // TODO what other info do we want to extract? possible errors for example by parsing AddWaring/ThrowError?
-public readonly record struct SupportedSubElement(string XMLName, ImmutableArray<SubElementField> AffectedField);
+public readonly record struct SupportedSubElement(string XMLName, ImmutableArray<DeclaredField> AffectedField);
 
-public readonly record struct SubElementField(string Name, string Type);
+public readonly record struct SubElementField(string Name, string Type, DeclaredField Field);
 
 public readonly record struct DeclaredField(string Name, string Type, string Description, string? OverriddenDefaultValue);
 
@@ -100,7 +100,7 @@ internal sealed class PrefabClassParser
 
         var initializers = cls.FindInitializerMethodBodies(options.InitializerMethodNames);
 
-        SupportedSubElements = SupportedSubElements.Union(initializers.SelectMany(static syntax => FindSubElementsFrom(syntax))).ToImmutableArray();
+        SupportedSubElements = SupportedSubElements.Union(initializers.SelectMany(syntax => FindSubElementsFrom(syntax))).ToImmutableArray();
 
         foreach (BlockSyntax block in initializers)
         {
@@ -152,8 +152,9 @@ internal sealed class PrefabClassParser
                     break;
                 case "subelement":
                     string subIdentifier = GetAttribute("Identifier"),
-                           subType = GetAttribute("Type");
-                    extraSubElements.Add(new SupportedSubElement(subIdentifier, ImmutableArray.Create(new SubElementField(string.Empty, subType))));
+                           subType = GetAttribute("Type"),
+                           subDesc = GetBody().Trim('\n');
+                    extraSubElements.Add(new SupportedSubElement(subIdentifier, ImmutableArray.Create(new DeclaredField(string.Empty, subType, subDesc, null))));
                     break;
             }
 
@@ -502,15 +503,17 @@ internal sealed class PrefabClassParser
     /// sub elements that the content type accepts in XML
     /// </summary>
     /// <param name="blockSyntax"></param>
-    private static ImmutableArray<SupportedSubElement> FindSubElementsFrom(BlockSyntax blockSyntax)
+    private ImmutableArray<SupportedSubElement> FindSubElementsFrom(BlockSyntax blockSyntax)
     {
+        var correlatedFields = GetAssignmentsToGlobalVariable(blockSyntax, declaredFields, GetLocalVariables(blockSyntax));
+
         List<SupportedSubElement> elements = new();
         foreach (StatementSyntax statement in blockSyntax.Statements)
         {
             switch (statement)
             {
                 case ForEachStatementSyntax { Statement: BlockSyntax foreachBlock }:
-                    elements.AddRange(FindSubElementsFromBlock(foreachBlock));
+                    elements.AddRange(FindSubElementsFromBlock(foreachBlock, correlatedFields));
                     break;
             }
         }
@@ -518,7 +521,7 @@ internal sealed class PrefabClassParser
         return elements.ToImmutableArray();
     }
 
-    private static IReadOnlyCollection<SupportedSubElement> FindSubElementsFromBlock(BlockSyntax block)
+    private IReadOnlyCollection<SupportedSubElement> FindSubElementsFromBlock(BlockSyntax block, IReadOnlyCollection<CorrelatedField> correlatedFields)
     {
         List<SupportedSubElement> elements = new();
         foreach (StatementSyntax syntax in block.Statements)
@@ -526,7 +529,7 @@ internal sealed class PrefabClassParser
             switch (syntax)
             {
                 case SwitchStatementSyntax switchStatement when IsExpressionRelatedToXML(switchStatement.Expression):
-                    elements.AddRange(FindSubElementsFromSwitch(switchStatement));
+                    elements.AddRange(FindSubElementsFromSwitch(switchStatement, correlatedFields));
                     break;
                 case IfStatementSyntax:
                     // FIXME implement if statements
@@ -589,19 +592,25 @@ internal sealed class PrefabClassParser
         }
     }
 
-    private static IEnumerable<SupportedSubElement> FindSubElementsFromSwitch(SwitchStatementSyntax switchStatement) =>
+    private IEnumerable<SupportedSubElement> FindSubElementsFromSwitch(SwitchStatementSyntax switchStatement, IReadOnlyCollection<CorrelatedField> correlatedFields) =>
         from switchSection in switchStatement.Sections
         from caseLabel in switchSection.Labels.OfType<CaseSwitchLabelSyntax>()
-        select new SupportedSubElement(caseLabel.Value.ToString().EvaluateAsCSharpExpression(), ParseStatements(switchSection.Statements).ToImmutableArray());
+        select new SupportedSubElement(caseLabel.Value.ToString().EvaluateAsCSharpExpression(), ParseStatements(switchSection.Statements, correlatedFields).ToImmutableArray());
 
-    private static IEnumerable<SubElementField> ParseStatements(SyntaxList<StatementSyntax> syntaxes)
+    private IEnumerable<DeclaredField> ParseStatements(SyntaxList<StatementSyntax> syntaxes, IReadOnlyCollection<CorrelatedField> correlatedFields)
     {
         foreach (StatementSyntax syntax in syntaxes)
         {
             switch (syntax)
             {
                 case ExpressionStatementSyntax { Expression: AssignmentExpressionSyntax assignment }:
-                    yield return new SubElementField(assignment.Left.ToString(), GetTypeFromAssignment(assignment.Right));
+                    string assignmentName = assignment.Left.ToString();
+                    string assignmentType = GetTypeFromAssignment(assignment.Right);
+
+                    yield return FindRelatedFieldDeclaration(assignmentName) with
+                    {
+                        Type = assignmentType
+                    };
                     break;
                 case BreakStatementSyntax:
                     break;
@@ -616,8 +625,33 @@ internal sealed class PrefabClassParser
                         ArgumentList.Arguments: var arguments
                     }
                 }:
-                    yield return new SubElementField(memberAccess.Expression.ToString(), GetTypeFromArguments(arguments));
+                    string memeberAccessName = memberAccess.Expression.ToString();
+                    string memberType = GetTypeFromArguments(arguments);
+                    yield return FindRelatedFieldDeclaration(memeberAccessName) with
+                    {
+                        Type = memberType
+                    };
                     break;
+            }
+
+            DeclaredField FindRelatedFieldDeclaration(string name)
+            {
+                foreach (CorrelatedField field in correlatedFields)
+                {
+                    if (field.Local != name) { continue; }
+
+                    name = field.Global;
+                    break;
+                }
+
+                foreach (DeclaredField declaredField in declaredFields)
+                {
+                    if (declaredField.Name != name) { continue; }
+
+                    return declaredField;
+                }
+
+                throw new InvalidOperationException($"Could not find a field declaration for {name}");
             }
         }
 
