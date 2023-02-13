@@ -2,7 +2,7 @@
 
 namespace BaroAutoDoc.Commands;
 
-class XmlNames : Command
+sealed class XmlNames : Command
 {
     public void Invoke(
         string contentType,

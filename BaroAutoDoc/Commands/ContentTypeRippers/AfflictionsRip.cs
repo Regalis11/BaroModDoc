@@ -5,7 +5,7 @@ using BaroAutoDoc.SyntaxWalkers;
 
 namespace BaroAutoDoc.Commands.ContentTypeSpecific;
 
-class AfflictionsRip : Command
+sealed class AfflictionsRip : Command
 {
     private readonly record struct AfflictionSection(Page.Section Section, ImmutableDictionary<string, string> ElementTable, PrefabClassParser Parser);
 

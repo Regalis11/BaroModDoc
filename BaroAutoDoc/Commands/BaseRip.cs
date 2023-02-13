@@ -3,7 +3,7 @@ using BaroAutoDoc.SyntaxWalkers;
 
 namespace BaroAutoDoc.Commands;
 
-class BaseRip : Command
+sealed class BaseRip : Command
 {
     public void Invoke()
     {
