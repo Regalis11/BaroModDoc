@@ -153,29 +153,67 @@ public static class Extensions
             '*'
         };
 
-        while (member is { Parent: not null })
+        string triviaListToText(IEnumerable<SyntaxTrivia> triviaList, out XElement xml)
         {
-            var leadingTrivia = member.GetLeadingTrivia();
-            var triviaText = string.Join("\n",
-                leadingTrivia
+            var txt = string.Join("\n",
+                triviaList
                     .Select(t => t.ToString())
                     .SelectMany(t => t.Split("\n"))
                     .Select(t => t.Trim(trimChars))
                     .Where(s => !string.IsNullOrWhiteSpace(s)));
+            
+            xml = XElement.Parse($"<root>{txt}</root>");
 
-            var xml = XElement.Parse($"<root>{triviaText}</root>");
-
-            triviaText = xml.ElementOfName("summary") is { } summary
+            txt = xml.ElementOfName("summary") is { } summary
                 ? summary.ElementInnerText().Trim(trimChars)
-                : triviaText;
+                : txt;
+            return txt;
+        }
+        
+        if (member.Parent is null) { return new CodeComment(Text: "", Element: new XElement("root")); }
+        var allSiblingNodes = member.Parent.ChildNodes();
+        var allSiblingTrivia = member.Parent.DescendantTrivia();
+        var allSiblings =
+            allSiblingNodes.Select(n => (Span: n.Span, Sibling: (object) n))
+            .Concat(allSiblingTrivia.Select(t => (Span: t.Span, Sibling: (object) t)))
+            .OrderBy(t => t.Span.Start)
+            .ToArray();
 
-            if (!string.IsNullOrEmpty(triviaText)) { return new CodeComment(triviaText, xml); }
+        var inputSpanMemberTuple = (member.Span, (object) member);
+        var indexOfInputMember = allSiblings.FindIndex(t => t == inputSpanMemberTuple);
+
+        // Find trivia that comes after the input node and is on the same line
+        var triviaAfter = allSiblings[(indexOfInputMember+1)..]
+            .TakeWhile(t => t.Sibling is SyntaxTrivia && !t.Sibling.ToString()!.Contains("\n"))
+            .Select(t => (SyntaxTrivia)t.Sibling)
+            .ToArray();
+
+        var triviaAfterTxt = triviaListToText(triviaAfter, out var triviaAfterXml);
+        if (!string.IsNullOrWhiteSpace(triviaAfterTxt)) { return new CodeComment(triviaAfterTxt, triviaAfterXml); }
+
+        // Find trivia that comes before the input node and after the previous node        
+        var triviaBefore = allSiblings[..indexOfInputMember]
+            .Reverse()
+            .TakeWhile(t => t.Sibling is SyntaxTrivia)
+            .Reverse()
+            .Select(t => (SyntaxTrivia)t.Sibling)
+            .ToArray();
+        var triviaBeforeTxt = triviaListToText(triviaBefore, out var triviaBeforeXml);
+        if (!string.IsNullOrWhiteSpace(triviaBeforeTxt)) { return new CodeComment(triviaBeforeTxt, triviaBeforeXml); }
+        
+        // Couldn't find attached trivia in siblings, look for it in parents
+        while (member is { Parent: not null })
+        {
+            var leadingTrivia = triviaListToText(member.GetLeadingTrivia(), out var xml);
+
+            if (!string.IsNullOrEmpty(leadingTrivia)) { return new CodeComment(leadingTrivia, xml); }
 
             member = member.Parent;
 
             if (member is TypeDeclarationSyntax) { break; }
         }
 
+        // Failed to find any trivia at all
         return new CodeComment("", new XElement("root"));
     }
     
