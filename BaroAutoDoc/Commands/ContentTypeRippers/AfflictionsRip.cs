@@ -121,9 +121,14 @@ sealed class AfflictionsRip : Command
                     continue;
                 }
 
-                string fmtType = sections.ContainsKey(type)
-                    ? $"[{type}](#{type.ToLower()})"
-                    : $"[{type}]({type}.md)";
+                string fmtType =
+                    new Page.Hyperlink(
+                        Url: sections.ContainsKey(type)
+                            ? $"#{type.ToLower()}"
+                            : $"{type}.md",
+                        Text: type,
+                        AltText: description)
+                    .ToMarkdown();
 
                 table.BodyRows.Add(new Page.Table.Row(element, fmtType, description));
             }
