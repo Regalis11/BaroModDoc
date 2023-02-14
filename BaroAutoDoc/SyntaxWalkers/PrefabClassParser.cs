@@ -632,9 +632,9 @@ internal sealed class PrefabClassParser
                         ArgumentList.Arguments: var arguments
                     }
                 }:
-                    string memeberAccessName = memberAccess.Expression.ToString();
+                    string memberAccessName = memberAccess.Expression.ToString();
                     string memberType = GetTypeFromArguments(arguments);
-                    yield return FindRelatedFieldDeclaration(memeberAccessName) with
+                    yield return FindRelatedFieldDeclaration(memberAccessName) with
                     {
                         Type = memberType
                     };
