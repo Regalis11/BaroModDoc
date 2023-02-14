@@ -263,7 +263,6 @@ internal sealed class PrefabClassParser
         {
             if (methodOwnerName is not ("MathHelper" or "Math" or "MathF" or "XMLExtensions"))
             {
-                Console.WriteLine($"WARNING: Unknown assignment method: {assignmentMethodName}");
                 return default;
             }
 
