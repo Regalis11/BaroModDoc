@@ -1,5 +1,6 @@
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
+using System.Text;
 using System.Xml.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -15,9 +16,7 @@ public enum DocAttributeType
 }
 
 // TODO what other info do we want to extract? possible errors for example by parsing AddWaring/ThrowError?
-public readonly record struct SupportedSubElement(string XMLName, ImmutableArray<SubElementField> AffectedField);
-
-public readonly record struct SubElementField(string Name, string Type);
+public readonly record struct SupportedSubElement(string XMLName, ImmutableArray<DeclaredField> AffectedField);
 
 public readonly record struct DeclaredField(string Name, string Type, string Description, string? OverriddenDefaultValue);
 
@@ -36,21 +35,21 @@ public record struct ClassParsingOptions(string[] InitializerMethodNames);
 
 internal sealed class PrefabClassParser
 {
-    public ImmutableArray<SupportedSubElement> SupportedSubElements = ImmutableArray<SupportedSubElement>.Empty;
+    public readonly List<SupportedSubElement> SupportedSubElements = new();
 
-    public ImmutableArray<XMLAssignedField> XMLAssignedFields = ImmutableArray<XMLAssignedField>.Empty;
+    public readonly List<XMLAssignedField> XMLAssignedFields = new();
 
-    public ImmutableArray<SerializableProperty> SerializableProperties = ImmutableArray<SerializableProperty>.Empty;
+    public readonly List<SerializableProperty> SerializableProperties = new();
 
-    private ImmutableArray<DeclaredField> declaredFields = ImmutableArray<DeclaredField>.Empty;
+    public readonly List<CodeComment> Comments = new();
 
-    public ImmutableArray<CodeComment> Comments = ImmutableArray<CodeComment>.Empty;
+    public readonly List<string> BaseClasses = new();
 
-    public ImmutableArray<string> BaseClasses = ImmutableArray<string>.Empty;
+    public readonly Dictionary<string, PrefabClassParser> SubClasses = new();
 
-    public ImmutableDictionary<string, PrefabClassParser> SubClasses = ImmutableDictionary<string, PrefabClassParser>.Empty;
+    public readonly Dictionary<string, ImmutableArray<(string Value, string Description)>> Enums = new();
 
-    public ImmutableDictionary<string, ImmutableArray<(string Value, string Description)>> Enums = ImmutableDictionary<string, ImmutableArray<(string Value, string Description)>>.Empty;
+    private readonly List<DeclaredField> declaredFields = new();
 
     private readonly ClassParsingOptions options;
 
@@ -61,28 +60,28 @@ internal sealed class PrefabClassParser
 
     public void ParseClass(ClassDeclarationSyntax cls)
     {
-        declaredFields = declaredFields.Union(GetDeclaredFields(cls)).ToImmutableArray();
+        declaredFields.AddRange(GetDeclaredFields(cls));
 
         CodeComment comment = cls.FindCommentAttachedToMember();
         ParsedComment parsedComment = ParseComment(comment);
-        Comments = Comments.Add(comment);
+        Comments.Add(comment);
 
         if (cls.BaseList is { } baseList)
         {
             foreach (BaseTypeSyntax type in baseList.Types)
             {
                 string typeName = type.Type.ToString();
-                BaseClasses = BaseClasses.Add(typeName);
+                BaseClasses.Add(typeName);
             }
         }
 
         foreach (ClassDeclarationSyntax syntax in cls.Members.OfType<ClassDeclarationSyntax>())
         {
-            PrefabClassParser subParser = new PrefabClassParser(new ClassParsingOptions());
+            PrefabClassParser subParser = new PrefabClassParser(options);
             subParser.ParseClass(syntax);
 
             string identifier = syntax.Identifier.ValueText;
-            SubClasses = SubClasses.Add(identifier, subParser);
+            SubClasses.Add(identifier, subParser);
         }
 
         foreach (EnumDeclarationSyntax syntax in cls.Members.OfType<EnumDeclarationSyntax>())
@@ -92,28 +91,29 @@ internal sealed class PrefabClassParser
             {
                 enumMembers.Add((enumMember.Identifier.ValueText, enumMember.FindCommentAttachedToMember().Text));
             }
-            Enums = Enums.Add(syntax.Identifier.ValueText, enumMembers.ToImmutableArray());
+
+            Enums.Add(syntax.Identifier.ValueText, enumMembers.ToImmutableArray());
         }
 
-        SerializableProperties = SerializableProperties.Union(cls.GetSerializableProperties()).ToImmutableArray();
+        SerializableProperties.AddRange(cls.GetSerializableProperties());
 
-        var initializers = cls.FindInitializerMethodBodies(options.InitializerMethodNames);
+        var initializers = cls.FindInitializerMethodBodies(options.InitializerMethodNames ?? Array.Empty<string>());
 
-        SupportedSubElements = SupportedSubElements.Union(initializers.SelectMany(static syntax => FindSubElementsFrom(syntax))).ToImmutableArray();
+        SupportedSubElements.AddRange(initializers.SelectMany(syntax => FindSubElementsFrom(syntax)));
 
         foreach (BlockSyntax block in initializers)
         {
-            XMLAssignedFields = XMLAssignedFields.Union(FindXMLAssignedFields(block)).ToImmutableArray();
+            XMLAssignedFields.AddRange(FindXMLAssignedFields(block));
         }
 
         foreach (XMLAssignedField extraField in parsedComment.ExtraFields)
         {
-            XMLAssignedFields = XMLAssignedFields.Add(extraField);
+            XMLAssignedFields.Add(extraField);
         }
 
         foreach (SupportedSubElement extraElement in parsedComment.ExtraSubElements)
         {
-            SupportedSubElements = SupportedSubElements.Add(extraElement);
+            SupportedSubElements.Add(extraElement);
         }
     }
 
@@ -151,8 +151,9 @@ internal sealed class PrefabClassParser
                     break;
                 case "subelement":
                     string subIdentifier = GetAttribute("Identifier"),
-                           subType = GetAttribute("Type");
-                    extraSubElements.Add(new SupportedSubElement(subIdentifier, ImmutableArray.Create(new SubElementField(string.Empty, subType))));
+                           subType = GetAttribute("Type"),
+                           subDesc = GetBody().Trim('\n');
+                    extraSubElements.Add(new SupportedSubElement(subIdentifier, ImmutableArray.Create(new DeclaredField(string.Empty, subType, subDesc, null))));
                     break;
             }
 
@@ -202,26 +203,18 @@ internal sealed class PrefabClassParser
                 {
                     Expression: AssignmentExpressionSyntax
                     {
-                        Right: InvocationExpressionSyntax
-                        {
-                            Expression: MemberAccessExpressionSyntax
-                            {
-                                Expression: var methodOwner,
-                                Name: IdentifierNameSyntax rightIdentifier
-                            },
-                            ArgumentList.Arguments: var assignmentArgumentList
-                        },
-                        Left: IdentifierNameSyntax leftIdentifier
+                        Left: IdentifierNameSyntax leftIdentifier,
+                        Right: InvocationExpressionSyntax right
                     }
                 }) { continue; }
 
-            string assignmentMethodName = rightIdentifier.GetIdentifierString(),
-                   assignedVariableName = leftIdentifier.GetIdentifierString();
+            string assignedVariableName = leftIdentifier.GetIdentifierString();
 
-            // probably a better way to do this
-            if (!assignmentMethodName.StartsWith("GetAttribute", StringComparison.OrdinalIgnoreCase)) { continue; }
+            var (xmlIdentifier, methodOwner, defaultValue, wasFound) = FindXMLAssignmentFromExpression(right);
 
-            if (!string.IsNullOrEmpty(elementName) && !methodOwner.ToString().Equals(elementName))
+            if (!wasFound) { continue; }
+
+            if (!string.IsNullOrEmpty(elementName) && !methodOwner.Equals(elementName))
             {
                 continue;
             }
@@ -239,16 +232,78 @@ internal sealed class PrefabClassParser
 
                 if (field.Name != assignedVariableName) { continue; }
 
-                string xmlIdentifier = assignmentArgumentList[0].ToString().EvaluateAsCSharpExpression();
-
-                xmlIdentifier = xmlIdentifier.GuessCaseFromMemberName(field.Name);
-
-                result.Add(new XMLAssignedField(field, xmlIdentifier, ParseDefaultValueExpression(assignmentArgumentList[1].Expression)));
+                result.Add(new XMLAssignedField(field, xmlIdentifier.GuessCaseFromMemberName(field.Name), defaultValue));
                 break;
             }
         }
 
         return result.ToImmutable();
+    }
+
+    private static (string XMLIdentifier, string MethodOwner, string DefaultValue, bool WasFound) FindXMLAssignmentFromExpression(InvocationExpressionSyntax expression)
+    {
+        if (expression is not
+            {
+                Expression: MemberAccessExpressionSyntax
+                {
+                    Expression: var methodOwner,
+                    Name: IdentifierNameSyntax rightIdentifier
+                },
+                ArgumentList.Arguments: var assignmentArgumentList
+            }) { return default; }
+
+        string assignmentMethodName = rightIdentifier.GetIdentifierString(),
+               methodOwnerName = methodOwner.ToString();
+
+        var argumentList = assignmentArgumentList.Select(static x => x.Expression).ToImmutableArray();
+
+        var (identifier, defaultValue, wasFound) = ParseGetAttributeSyntax(assignmentMethodName, argumentList);
+
+        if (!wasFound)
+        {
+            if (methodOwnerName is not ("MathHelper" or "Math" or "MathF" or "XMLExtensions"))
+            {
+                return default;
+            }
+
+            foreach (InvocationExpressionSyntax syntax in argumentList.OfType<InvocationExpressionSyntax>())
+            {
+                var found = FindXMLAssignmentFromExpression(syntax);
+                if (found != default) { return found; }
+            }
+        }
+
+        return (identifier, methodOwner.ToString(), defaultValue, true);
+    }
+
+    private static (string Identifier, string DefaultValue, bool WasFound) ParseGetAttributeSyntax(string assignmentMethodName, IReadOnlyList<ExpressionSyntax> args)
+    {
+        if (!assignmentMethodName.StartsWith("GetAttribute", StringComparison.OrdinalIgnoreCase)) { return default; }
+
+        if (assignmentMethodName.Equals("GetAttributeFloat", StringComparison.OrdinalIgnoreCase) && args.Count >= 3)
+        {
+            // combine all args after the first one into a string separated by a comma
+            var builder = new StringBuilder(ExpressionToString(args[1]));
+            for (int i = 2; i < args.Count; i++)
+            {
+                builder.Append(",").Append(ExpressionToString(args[i]));
+            }
+
+            return (builder.ToString(), ParseDefaultValueExpression(args[0]), true);
+        }
+
+        if (args.Count is 1 or 0)
+        {
+            Console.WriteLine("WARNING: odd GetAttribute call");
+            return default;
+        }
+
+        string xmlIdentifier = ExpressionToString(args[0]),
+               defaultValue = ParseDefaultValueExpression(args[1]);
+
+        return (xmlIdentifier, defaultValue, true);
+
+        static string ExpressionToString(ExpressionSyntax syntax) => syntax.ToString().EvaluateAsCSharpExpression();
     }
 
     private static string ParseDefaultValueExpression(ExpressionSyntax expressionSyntax)
@@ -373,7 +428,7 @@ internal sealed class PrefabClassParser
         return result.ToImmutable();
     }
 
-    private static ImmutableArray<CorrelatedField> GetAssignmentsToGlobalVariable(BlockSyntax block, ImmutableArray<DeclaredField> globalVariables, ImmutableArray<DeclaredField> localVariables)
+    private static ImmutableArray<CorrelatedField> GetAssignmentsToGlobalVariable(BlockSyntax block, IReadOnlyCollection<DeclaredField> globalVariables, ImmutableArray<DeclaredField> localVariables)
     {
         var result = ImmutableArray.CreateBuilder<CorrelatedField>();
 
@@ -437,7 +492,7 @@ internal sealed class PrefabClassParser
 
         return result.ToImmutable();
 
-        [return:NotNullIfNotNull("def")]
+        [return: NotNullIfNotNull("def")]
         static string? GetValueOrDefault(ImmutableDictionary<DocAttributeType, string> dict, DocAttributeType key, string? def) => dict.TryGetValue(key, out var value) ? value : def;
     }
 
@@ -446,15 +501,17 @@ internal sealed class PrefabClassParser
     /// sub elements that the content type accepts in XML
     /// </summary>
     /// <param name="blockSyntax"></param>
-    private static ImmutableArray<SupportedSubElement> FindSubElementsFrom(BlockSyntax blockSyntax)
+    private ImmutableArray<SupportedSubElement> FindSubElementsFrom(BlockSyntax blockSyntax)
     {
+        var correlatedFields = GetAssignmentsToGlobalVariable(blockSyntax, declaredFields, GetLocalVariables(blockSyntax));
+
         List<SupportedSubElement> elements = new();
         foreach (StatementSyntax statement in blockSyntax.Statements)
         {
             switch (statement)
             {
                 case ForEachStatementSyntax { Statement: BlockSyntax foreachBlock }:
-                    elements.AddRange(FindSubElementsFromBlock(foreachBlock));
+                    elements.AddRange(FindSubElementsFromBlock(foreachBlock, correlatedFields));
                     break;
             }
         }
@@ -462,7 +519,7 @@ internal sealed class PrefabClassParser
         return elements.ToImmutableArray();
     }
 
-    private static IReadOnlyCollection<SupportedSubElement> FindSubElementsFromBlock(BlockSyntax block)
+    private IReadOnlyCollection<SupportedSubElement> FindSubElementsFromBlock(BlockSyntax block, IReadOnlyCollection<CorrelatedField> correlatedFields)
     {
         List<SupportedSubElement> elements = new();
         foreach (StatementSyntax syntax in block.Statements)
@@ -470,7 +527,7 @@ internal sealed class PrefabClassParser
             switch (syntax)
             {
                 case SwitchStatementSyntax switchStatement when IsExpressionRelatedToXML(switchStatement.Expression):
-                    elements.AddRange(FindSubElementsFromSwitch(switchStatement));
+                    elements.AddRange(FindSubElementsFromSwitch(switchStatement, correlatedFields));
                     break;
                 case IfStatementSyntax:
                     // FIXME implement if statements
@@ -533,19 +590,34 @@ internal sealed class PrefabClassParser
         }
     }
 
-    private static IEnumerable<SupportedSubElement> FindSubElementsFromSwitch(SwitchStatementSyntax switchStatement) =>
-        from switchSection in switchStatement.Sections
-        from caseLabel in switchSection.Labels.OfType<CaseSwitchLabelSyntax>()
-        select new SupportedSubElement(caseLabel.Value.ToString().EvaluateAsCSharpExpression(), ParseStatements(switchSection.Statements).ToImmutableArray());
+    private IEnumerable<SupportedSubElement> FindSubElementsFromSwitch(SwitchStatementSyntax switchStatement, IReadOnlyCollection<CorrelatedField> correlatedFields)
+    {
+        foreach (var switchSection in switchStatement.Sections)
+        {
+            foreach (var caseLabel in switchSection.Labels.OfType<CaseSwitchLabelSyntax>())
+            {
+                string xmlName = caseLabel.Value.ToString().EvaluateAsCSharpExpression();
+                var fields = ParseStatements(switchSection.Statements, correlatedFields).ToImmutableArray();
 
-    private static IEnumerable<SubElementField> ParseStatements(SyntaxList<StatementSyntax> syntaxes)
+                yield return new SupportedSubElement(xmlName, fields);
+            }
+        }
+    }
+
+    private IEnumerable<DeclaredField> ParseStatements(SyntaxList<StatementSyntax> syntaxes, IReadOnlyCollection<CorrelatedField> correlatedFields)
     {
         foreach (StatementSyntax syntax in syntaxes)
         {
             switch (syntax)
             {
                 case ExpressionStatementSyntax { Expression: AssignmentExpressionSyntax assignment }:
-                    yield return new SubElementField(assignment.Left.ToString(), GetTypeFromAssignment(assignment.Right));
+                    string assignmentName = assignment.Left.ToString();
+                    string assignmentType = GetTypeFromAssignment(assignment.Right);
+
+                    yield return FindRelatedFieldDeclaration(assignmentName) with
+                    {
+                        Type = assignmentType
+                    };
                     break;
                 case BreakStatementSyntax:
                     break;
@@ -555,13 +627,38 @@ internal sealed class PrefabClassParser
                     {
                         Expression: MemberAccessExpressionSyntax
                         {
-                            Name.Identifier.Text: "Add" or "TryAdd"
+                            Name.Identifier.Text: ("Add" or "TryAdd")
                         } memberAccess,
                         ArgumentList.Arguments: var arguments
                     }
                 }:
-                    yield return new SubElementField(memberAccess.Expression.ToString(), GetTypeFromArguments(arguments));
+                    string memeberAccessName = memberAccess.Expression.ToString();
+                    string memberType = GetTypeFromArguments(arguments);
+                    yield return FindRelatedFieldDeclaration(memeberAccessName) with
+                    {
+                        Type = memberType
+                    };
                     break;
+            }
+
+            DeclaredField FindRelatedFieldDeclaration(string name)
+            {
+                foreach (CorrelatedField field in correlatedFields)
+                {
+                    if (field.Local != name) { continue; }
+
+                    name = field.Global;
+                    break;
+                }
+
+                foreach (DeclaredField declaredField in declaredFields)
+                {
+                    if (declaredField.Name != name) { continue; }
+
+                    return declaredField;
+                }
+
+                throw new InvalidOperationException($"Could not find a field declaration for {name}");
             }
         }
 

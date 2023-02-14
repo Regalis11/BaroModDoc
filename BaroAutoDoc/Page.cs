@@ -132,10 +132,10 @@ class Page
         }
     }
 
-    public record Hyperlink(string Url = "", string Text = "") : BodyComponent
+    public record Hyperlink(string Url = "", string Text = "", string AltText = "") : BodyComponent
     {
         public override string ToMarkdown()
-            => $"[{Text}]({Url})";
+            => $"[{Text}]({Url}{(string.IsNullOrWhiteSpace(AltText) ? "" : $" \"{AltText}\"")})";
     }
     
     public record Image(string Url = "", string Caption = "") : BodyComponent

@@ -5,7 +5,7 @@ using BaroAutoDoc.SyntaxWalkers;
 
 namespace BaroAutoDoc.Commands;
 
-class BaseRip : Command
+sealed class BaseRip : Command
 {
     public void Invoke()
     {
@@ -163,7 +163,7 @@ class BaseRip : Command
                 => $"- [{t.Name}](ContentTypes/{t.Name}.md)")));
     }
 
-    public static bool ConstructEnumTable(ImmutableDictionary<string, ImmutableArray<(string, string)>> enums, [NotNullWhen(true)] out ImmutableArray<Page.Section>? result)
+    public static bool ConstructEnumTable(Dictionary<string, ImmutableArray<(string, string)>> enums, [NotNullWhen(true)] out ImmutableArray<Page.Section>? result)
     {
         if (!enums.Any())
         {

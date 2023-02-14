@@ -9,7 +9,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace BaroAutoDoc.Commands;
 
-class ItemRip : Command
+sealed class ItemRip : Command
 {
     private record TreeNode(ClassDeclarationSyntax Class)
     {

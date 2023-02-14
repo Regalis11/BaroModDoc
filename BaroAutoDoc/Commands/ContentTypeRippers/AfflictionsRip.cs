@@ -5,9 +5,9 @@ using System.Reflection;
 
 namespace BaroAutoDoc.Commands.ContentTypeSpecific;
 
-class AfflictionsRip : Command
+sealed class AfflictionsRip : Command
 {
-    private readonly record struct AfflictionSection(Page.Section Section, ImmutableDictionary<string, string> ElementTable, PrefabClassParser Parser);
+    private readonly record struct AfflictionSection(Page.Section Section, ImmutableArray<(string, string, string)> ElementTable, PrefabClassParser Parser);
 
     public void Invoke()
     {
@@ -65,7 +65,7 @@ class AfflictionsRip : Command
                     section.Section.Subsections.Add(table);
                 }
 
-                if (key != identifier || parser.BaseClasses.Length is 0)
+                if (key != identifier || parser.BaseClasses.Count is 0)
                 {
                     page.Subsections.Add(section.Section);
                     AddEnumTable();
@@ -95,7 +95,7 @@ class AfflictionsRip : Command
             File.WriteAllText($"{key}.md", page.ToMarkdown());
         }
 
-        static bool ConstructSubElementTable(Dictionary<string, AfflictionSection> sections, ImmutableDictionary<string, string> elementTable, [NotNullWhen(true)] out Page.Section? result)
+        static bool ConstructSubElementTable(Dictionary<string, AfflictionSection> sections, ImmutableArray<(string, string, string)> elementTable, [NotNullWhen(true)] out Page.Section? result)
         {
             if (!elementTable.Any())
             {
@@ -110,10 +110,10 @@ class AfflictionsRip : Command
 
             Page.Table table = new()
             {
-                HeadRow = new Page.Table.Row("Element", "Type")
+                HeadRow = new Page.Table.Row("Element", "Type", "Description")
             };
 
-            foreach (var (element, type) in elementTable)
+            foreach (var (element, type, description) in elementTable)
             {
                 if (string.IsNullOrWhiteSpace(type))
                 {
@@ -121,11 +121,16 @@ class AfflictionsRip : Command
                     continue;
                 }
 
-                string fmtType = sections.ContainsKey(type)
-                    ? $"[{type}](#{type.ToLower()})"
-                    : $"[{type}]({type}.md)";
+                string fmtType =
+                    new Page.Hyperlink(
+                        Url: sections.ContainsKey(type)
+                            ? $"#{type.ToLower()}"
+                            : $"{type}.md",
+                        Text: type,
+                        AltText: description)
+                    .ToMarkdown();
 
-                table.BodyRows.Add(new Page.Table.Row(element, fmtType));
+                table.BodyRows.Add(new Page.Table.Row(element, fmtType, description));
             }
 
             if (table.BodyRows.Count is 0)
@@ -139,7 +144,6 @@ class AfflictionsRip : Command
             result = section;
             return true;
         }
-
 
         static AfflictionSection CreateSection(string name, PrefabClassParser parser)
         {
@@ -182,7 +186,7 @@ class AfflictionsRip : Command
                 mainSection.Subsections.Add(attributesSection);
             }
 
-            Dictionary<string, string> elementTable = new();
+            List<(string, string, string)> elementTable = new();
 
             foreach (SupportedSubElement affectedElement in parser.SupportedSubElements)
             {
@@ -190,10 +194,11 @@ class AfflictionsRip : Command
 
                 // TODO we probably need to generate a list of all these elements
                 // for example sprite, sound, effect
-                elementTable.Add(affectedElement.XMLName, affectedElement.AffectedField.First().Type);
+                DeclaredField field = affectedElement.AffectedField.First();
+                elementTable.Add((affectedElement.XMLName, field.Type, field.Description));
             }
 
-            return new AfflictionSection(mainSection, elementTable.ToImmutableDictionary(), parser);
+            return new AfflictionSection(mainSection, elementTable.ToImmutableArray(), parser);
         }
     }
 }
