@@ -1,14 +1,20 @@
 ﻿using BaroAutoDoc.SyntaxWalkers;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Immutable;
 using System.Reflection;
+using static BaroAutoDoc.Page;
 
 namespace BaroAutoDoc.Commands.ContentTypeSpecific;
 
 sealed class StatusEffectsRip : Command
 {
+    private EnumDeclarationSyntax? actionTypes;
+
     public void Invoke()
     {
+
         Directory.SetCurrentDirectory(GlobalConfig.RepoPath);
         const string srcPathFmt = "Barotrauma/Barotrauma{0}/{0}Source/StatusEffects/";
         string[] srcPathParams = { "Shared", "Client" };
@@ -18,6 +24,24 @@ sealed class StatusEffectsRip : Command
         {
             string srcPath = string.Format(srcPathFmt, p);
             contentTypeFinder.VisitAllInDirectory(srcPath);
+        }
+
+        SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(File.ReadAllText("Barotrauma/BarotraumaShared/SharedSource/Enums.cs"));
+
+        var root = syntaxTree.GetRoot();        
+        foreach (var childNode in root.ChildNodes())
+        {
+            if (childNode is NamespaceDeclarationSyntax)
+            {
+                foreach (var grandChildNode in childNode.ChildNodes())
+                {
+                    if (grandChildNode is EnumDeclarationSyntax enumSyntax && enumSyntax.Identifier.Text == "ActionType")
+                    {
+                        actionTypes = enumSyntax;
+                        break;
+                    }
+                }
+            }
         }
 
         Directory.SetCurrentDirectory(Path.GetDirectoryName(Assembly.GetCallingAssembly().Location)!);
@@ -36,30 +60,55 @@ sealed class StatusEffectsRip : Command
                 Title = key
             };
 
-            page.Subsections.Add(CreateSection(key, parser));
+            string introductionText = File.ReadAllText("ManualDocs/StatusEffectIntroduction.md");
+            if (actionTypes != null && BaseRip.ConstructEnumTable(actionTypes, out var actionTypesTable))
+            {
+                introductionText = introductionText.Replace("TODO: list ActionTypes", string.Join('\n', actionTypesTable.Value.Select(s => s.ToMarkdown())));
+            }
+            if (parser.Enums.ContainsKey("TargetType"))
+            {
+                var targetTypes = new Dictionary<string, ImmutableArray<(string, string)>>
+                {
+                    { "TargetType", parser.Enums["TargetType"] }
+                };
+                parser.Enums.Remove("TargetType");
+                if (BaseRip.ConstructEnumTable(targetTypes, out ImmutableArray<Page.Section>? enumTable))
+                {
+                    introductionText = introductionText.Replace("TODO: list TargetTypes", string.Join('\n', enumTable.Value.Select(s => s.ToMarkdown())));
+                }
+            }
+            var introduction = new InlineMarkdown(introductionText);
+            page.Subsections.Add(CreateSection(key, parser, includeComments: false, introduction));
 
             foreach (ClassDeclarationSyntax syntax in cls.Members.OfType<ClassDeclarationSyntax>())
             {
                 PrefabClassParser subParser = new PrefabClassParser(new ClassParsingOptions());
                 subParser.ParseClass(syntax);
 
-                page.Subsections.Add(CreateSection(syntax.Identifier.ValueText, subParser));
+                page.Subsections.Add(CreateSection(syntax.Identifier.ValueText, subParser, includeComments: true, preamble: null));
             }
 
             File.WriteAllText($"{key}.md", page.ToMarkdown());
         }
 
-        static Page.Section CreateSection(string name, PrefabClassParser parser)
+        static Page.Section CreateSection(string name, PrefabClassParser parser, bool includeComments, BodyComponent? preamble)
         {
             Page.Section mainSection = new()
             {
                 Title = name
             };
 
-            foreach (CodeComment comment in parser.Comments)
+            if (includeComments)
             {
-                if (string.IsNullOrWhiteSpace(comment.Text)) { continue; }
-                mainSection.Body.Components.Add(new Page.RawText(comment.Text));
+                foreach (CodeComment comment in parser.Comments)
+                {
+                    if (string.IsNullOrWhiteSpace(comment.Text)) { continue; }
+                    mainSection.Body.Components.Add(new Page.RawText(comment.Text));
+                }
+            }
+            if (preamble != null)
+            {
+                mainSection.Body.Components.Add(preamble);
             }
 
             Page.Section attributesSection = new()
@@ -95,7 +144,7 @@ sealed class StatusEffectsRip : Command
 
             Page.Table subElementTable = new()
             {
-                HeadRow = new Page.Table.Row("Element", "Type")
+                HeadRow = new Page.Table.Row("Element", "Type", "Description")
             };
 
             foreach (SupportedSubElement affectedElement in parser.SupportedSubElements)
@@ -104,7 +153,11 @@ sealed class StatusEffectsRip : Command
 
                 // TODO we probably need to generate a list of all these elements and then link to them
                 // for example sprite, sound, effect
-                subElementTable.BodyRows.Add(new Page.Table.Row(affectedElement.XMLName, affectedElement.AffectedField.First().Type));
+                DeclaredField field = affectedElement.AffectedField.First();
+                subElementTable.BodyRows.Add(new Page.Table.Row(
+                    affectedElement.XMLName,
+                    field.Type,
+                    field.Description));
             }
 
             if (subElementTable.BodyRows.Any())
