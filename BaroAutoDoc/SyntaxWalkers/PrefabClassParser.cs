@@ -91,6 +91,7 @@ internal sealed class PrefabClassParser
             {
                 enumMembers.Add((enumMember.Identifier.ValueText, enumMember.FindCommentAttachedToMember().Text));
             }
+
             Enums.Add(syntax.Identifier.ValueText, enumMembers.ToImmutableArray());
         }
 
@@ -492,7 +493,7 @@ internal sealed class PrefabClassParser
 
         return result.ToImmutable();
 
-        [return:NotNullIfNotNull("def")]
+        [return: NotNullIfNotNull("def")]
         static string? GetValueOrDefault(ImmutableDictionary<DocAttributeType, string> dict, DocAttributeType key, string? def) => dict.TryGetValue(key, out var value) ? value : def;
     }
 
@@ -590,10 +591,19 @@ internal sealed class PrefabClassParser
         }
     }
 
-    private IEnumerable<SupportedSubElement> FindSubElementsFromSwitch(SwitchStatementSyntax switchStatement, IReadOnlyCollection<CorrelatedField> correlatedFields) =>
-        from switchSection in switchStatement.Sections
-        from caseLabel in switchSection.Labels.OfType<CaseSwitchLabelSyntax>()
-        select new SupportedSubElement(caseLabel.Value.ToString().EvaluateAsCSharpExpression(), ParseStatements(switchSection.Statements, correlatedFields).ToImmutableArray());
+    private IEnumerable<SupportedSubElement> FindSubElementsFromSwitch(SwitchStatementSyntax switchStatement, IReadOnlyCollection<CorrelatedField> correlatedFields)
+    {
+        foreach (var switchSection in switchStatement.Sections)
+        {
+            foreach (var caseLabel in switchSection.Labels.OfType<CaseSwitchLabelSyntax>())
+            {
+                string xmlName = caseLabel.Value.ToString().EvaluateAsCSharpExpression();
+                var fields = ParseStatements(switchSection.Statements, correlatedFields).ToImmutableArray();
+
+                yield return new SupportedSubElement(xmlName, fields);
+            }
+        }
+    }
 
     private IEnumerable<DeclaredField> ParseStatements(SyntaxList<StatementSyntax> syntaxes, IReadOnlyCollection<CorrelatedField> correlatedFields)
     {
