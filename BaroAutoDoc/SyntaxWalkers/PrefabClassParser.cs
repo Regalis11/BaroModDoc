@@ -35,21 +35,21 @@ public record struct ClassParsingOptions(string[] InitializerMethodNames);
 
 internal sealed class PrefabClassParser
 {
-    public List<SupportedSubElement> SupportedSubElements = new();
+    public readonly List<SupportedSubElement> SupportedSubElements = new();
 
-    public List<XMLAssignedField> XMLAssignedFields = new();
+    public readonly List<XMLAssignedField> XMLAssignedFields = new();
 
-    public List<SerializableProperty> SerializableProperties = new();
+    public readonly List<SerializableProperty> SerializableProperties = new();
 
-    private List<DeclaredField> declaredFields = new();
+    public readonly List<CodeComment> Comments = new();
 
-    public List<CodeComment> Comments = new();
+    public readonly List<string> BaseClasses = new();
 
-    public List<string> BaseClasses = new();
+    public readonly Dictionary<string, PrefabClassParser> SubClasses = new();
 
-    public Dictionary<string, PrefabClassParser> SubClasses = new();
+    public readonly Dictionary<string, ImmutableArray<(string Value, string Description)>> Enums = new();
 
-    public Dictionary<string, ImmutableArray<(string Value, string Description)>> Enums = new();
+    private readonly List<DeclaredField> declaredFields = new();
 
     private readonly ClassParsingOptions options;
 
@@ -77,7 +77,7 @@ internal sealed class PrefabClassParser
 
         foreach (ClassDeclarationSyntax syntax in cls.Members.OfType<ClassDeclarationSyntax>())
         {
-            PrefabClassParser subParser = new PrefabClassParser(new ClassParsingOptions());
+            PrefabClassParser subParser = new PrefabClassParser(options);
             subParser.ParseClass(syntax);
 
             string identifier = syntax.Identifier.ValueText;
@@ -97,7 +97,7 @@ internal sealed class PrefabClassParser
 
         SerializableProperties.AddRange(cls.GetSerializableProperties());
 
-        var initializers = cls.FindInitializerMethodBodies(options.InitializerMethodNames);
+        var initializers = cls.FindInitializerMethodBodies(options.InitializerMethodNames ?? Array.Empty<string>());
 
         SupportedSubElements.AddRange(initializers.SelectMany(syntax => FindSubElementsFrom(syntax)));
 
@@ -627,7 +627,7 @@ internal sealed class PrefabClassParser
                     {
                         Expression: MemberAccessExpressionSyntax
                         {
-                            Name.Identifier.Text: "Add" or "TryAdd"
+                            Name.Identifier.Text: ("Add" or "TryAdd")
                         } memberAccess,
                         ArgumentList.Arguments: var arguments
                     }
