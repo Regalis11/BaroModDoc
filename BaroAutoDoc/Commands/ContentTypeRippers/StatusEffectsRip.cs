@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace BaroAutoDoc.Commands.ContentTypeSpecific;
 
-class StatusEffectsRip : Command
+sealed class StatusEffectsRip : Command
 {
     public void Invoke()
     {
