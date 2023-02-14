@@ -65,7 +65,7 @@ sealed class AfflictionsRip : Command
                     section.Section.Subsections.Add(table);
                 }
 
-                if (key != identifier || parser.BaseClasses.Length is 0)
+                if (key != identifier || parser.BaseClasses.Count is 0)
                 {
                     page.Subsections.Add(section.Section);
                     AddEnumTable();
@@ -145,7 +145,7 @@ sealed class AfflictionsRip : Command
             return true;
         }
 
-        static bool ConstructEnumTable(ImmutableDictionary<string, ImmutableArray<(string, string)>> enums, [NotNullWhen(true)] out ImmutableArray<Page.Section>? result)
+        static bool ConstructEnumTable(Dictionary<string, ImmutableArray<(string, string)>> enums, [NotNullWhen(true)] out ImmutableArray<Page.Section>? result)
         {
             if (!enums.Any())
             {

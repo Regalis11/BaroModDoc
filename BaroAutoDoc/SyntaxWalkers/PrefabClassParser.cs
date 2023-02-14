@@ -35,21 +35,21 @@ public record struct ClassParsingOptions(string[] InitializerMethodNames);
 
 internal sealed class PrefabClassParser
 {
-    public ImmutableArray<SupportedSubElement> SupportedSubElements = ImmutableArray<SupportedSubElement>.Empty;
+    public List<SupportedSubElement> SupportedSubElements = new();
 
-    public ImmutableArray<XMLAssignedField> XMLAssignedFields = ImmutableArray<XMLAssignedField>.Empty;
+    public List<XMLAssignedField> XMLAssignedFields = new();
 
-    public ImmutableArray<SerializableProperty> SerializableProperties = ImmutableArray<SerializableProperty>.Empty;
+    public List<SerializableProperty> SerializableProperties = new();
 
-    private ImmutableArray<DeclaredField> declaredFields = ImmutableArray<DeclaredField>.Empty;
+    private List<DeclaredField> declaredFields = new();
 
-    public ImmutableArray<CodeComment> Comments = ImmutableArray<CodeComment>.Empty;
+    public List<CodeComment> Comments = new();
 
-    public ImmutableArray<string> BaseClasses = ImmutableArray<string>.Empty;
+    public List<string> BaseClasses = new();
 
-    public ImmutableDictionary<string, PrefabClassParser> SubClasses = ImmutableDictionary<string, PrefabClassParser>.Empty;
+    public Dictionary<string, PrefabClassParser> SubClasses = new();
 
-    public ImmutableDictionary<string, ImmutableArray<(string Value, string Description)>> Enums = ImmutableDictionary<string, ImmutableArray<(string Value, string Description)>>.Empty;
+    public Dictionary<string, ImmutableArray<(string Value, string Description)>> Enums = new();
 
     private readonly ClassParsingOptions options;
 
@@ -60,18 +60,18 @@ internal sealed class PrefabClassParser
 
     public void ParseClass(ClassDeclarationSyntax cls)
     {
-        declaredFields = declaredFields.Union(GetDeclaredFields(cls)).ToImmutableArray();
+        declaredFields.AddRange(GetDeclaredFields(cls));
 
         CodeComment comment = cls.FindCommentAttachedToMember();
         ParsedComment parsedComment = ParseComment(comment);
-        Comments = Comments.Add(comment);
+        Comments.Add(comment);
 
         if (cls.BaseList is { } baseList)
         {
             foreach (BaseTypeSyntax type in baseList.Types)
             {
                 string typeName = type.Type.ToString();
-                BaseClasses = BaseClasses.Add(typeName);
+                BaseClasses.Add(typeName);
             }
         }
 
@@ -81,7 +81,7 @@ internal sealed class PrefabClassParser
             subParser.ParseClass(syntax);
 
             string identifier = syntax.Identifier.ValueText;
-            SubClasses = SubClasses.Add(identifier, subParser);
+            SubClasses.Add(identifier, subParser);
         }
 
         foreach (EnumDeclarationSyntax syntax in cls.Members.OfType<EnumDeclarationSyntax>())
@@ -91,28 +91,28 @@ internal sealed class PrefabClassParser
             {
                 enumMembers.Add((enumMember.Identifier.ValueText, enumMember.FindCommentAttachedToMember().Text));
             }
-            Enums = Enums.Add(syntax.Identifier.ValueText, enumMembers.ToImmutableArray());
+            Enums.Add(syntax.Identifier.ValueText, enumMembers.ToImmutableArray());
         }
 
-        SerializableProperties = SerializableProperties.Union(cls.GetSerializableProperties()).ToImmutableArray();
+        SerializableProperties.AddRange(cls.GetSerializableProperties());
 
         var initializers = cls.FindInitializerMethodBodies(options.InitializerMethodNames);
 
-        SupportedSubElements = SupportedSubElements.Union(initializers.SelectMany(syntax => FindSubElementsFrom(syntax))).ToImmutableArray();
+        SupportedSubElements.AddRange(initializers.SelectMany(syntax => FindSubElementsFrom(syntax)));
 
         foreach (BlockSyntax block in initializers)
         {
-            XMLAssignedFields = XMLAssignedFields.Union(FindXMLAssignedFields(block)).ToImmutableArray();
+            XMLAssignedFields.AddRange(FindXMLAssignedFields(block));
         }
 
         foreach (XMLAssignedField extraField in parsedComment.ExtraFields)
         {
-            XMLAssignedFields = XMLAssignedFields.Add(extraField);
+            XMLAssignedFields.Add(extraField);
         }
 
         foreach (SupportedSubElement extraElement in parsedComment.ExtraSubElements)
         {
-            SupportedSubElements = SupportedSubElements.Add(extraElement);
+            SupportedSubElements.Add(extraElement);
         }
     }
 
@@ -428,7 +428,7 @@ internal sealed class PrefabClassParser
         return result.ToImmutable();
     }
 
-    private static ImmutableArray<CorrelatedField> GetAssignmentsToGlobalVariable(BlockSyntax block, ImmutableArray<DeclaredField> globalVariables, ImmutableArray<DeclaredField> localVariables)
+    private static ImmutableArray<CorrelatedField> GetAssignmentsToGlobalVariable(BlockSyntax block, IReadOnlyCollection<DeclaredField> globalVariables, ImmutableArray<DeclaredField> localVariables)
     {
         var result = ImmutableArray.CreateBuilder<CorrelatedField>();
 
