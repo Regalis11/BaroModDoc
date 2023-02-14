@@ -172,7 +172,11 @@ public static class Extensions
         
         if (member.Parent is null) { return new CodeComment(Text: "", Element: new XElement("root")); }
         var allSiblingNodes = member.Parent.ChildNodes();
-        var allSiblingTrivia = member.Parent.DescendantTrivia();
+        var allSiblingTrivia = member.Parent.DescendantTrivia()
+            // Apparently this can sometimes include
+            // the parent's leading trivia, which we
+            // don't want, so let's filter it out here
+            .Where(t => t.SpanStart > member.Parent.SpanStart);
         var allSiblings =
             allSiblingNodes.Select(n => (Span: n.Span, Sibling: (object) n))
             .Concat(allSiblingTrivia.Select(t => (Span: t.Span, Sibling: (object) t)))
