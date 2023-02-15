@@ -33,7 +33,7 @@ public readonly record struct ParsedComment(ImmutableDictionary<DocAttributeType
 
 public record struct ClassParsingOptions(string[]? InitializerMethodNames);
 
-internal sealed class PrefabClassParser
+internal class ParsedType
 {
     public readonly List<SupportedSubElement> SupportedSubElements = new();
 
@@ -45,20 +45,102 @@ internal sealed class PrefabClassParser
 
     public readonly List<string> BaseClasses = new();
 
-    public readonly Dictionary<string, PrefabClassParser> SubClasses = new();
+    public readonly Dictionary<string, ParsedType> SubClasses = new();
 
     public readonly Dictionary<string, ImmutableArray<(string Value, string Description)>> Enums = new();
 
-    private readonly List<DeclaredField> declaredFields = new();
+    protected readonly List<DeclaredField> declaredFields = new();
 
-    private readonly ClassParsingOptions options;
+    protected readonly ClassParsingOptions options;
 
-    public PrefabClassParser(ClassParsingOptions options)
+    protected ParsedType(ClassParsingOptions options)
     {
         this.options = options;
     }
 
-    public void ParseClass(TypeDeclarationSyntax cls)
+    public virtual void ParseType(TypeDeclarationSyntax type) { }
+
+    public static ParsedType CreateParser(TypeDeclarationSyntax type, ClassParsingOptions options)
+    {
+        return type switch
+        {
+            RecordDeclarationSyntax => new RecordParser(options),
+            _ => new ClassParser(options)
+        };
+    }
+}
+
+internal sealed class RecordParser : ParsedType
+{
+    public RecordParser(ClassParsingOptions options) : base(options) { }
+
+    public override void ParseType(TypeDeclarationSyntax type)
+    {
+        RecordDeclarationSyntax record = (RecordDeclarationSyntax)type;
+
+        CodeComment comment = type.FindCommentAttachedToMember();
+        Comments.Add(comment);
+
+        var localFields = GetDeclaredFields(record, comment.Element).ToImmutableArray();
+        declaredFields.AddRange(localFields);
+
+        var initializers = type.Members.OfType<ConstructorDeclarationSyntax>();
+
+        foreach (var initializer in initializers)
+        {
+            if (initializer.Initializer?.ArgumentList.Arguments is not { } baseArgs) { continue; }
+
+            for (int i = 0; i < baseArgs.Count; i++)
+            {
+                ArgumentSyntax arg = baseArgs[i];
+                DeclaredField field = localFields[i];
+
+                if (arg.Expression is not InvocationExpressionSyntax invocation) { continue; }
+
+                // TODO validate methodOwner
+                var (identifier, methodOwner, defaultValue, wasFound) =  ClassParser.FindXMLAssignmentFromExpression(invocation);
+
+                if (!wasFound) { continue; }
+
+                XMLAssignedFields.Add(new XMLAssignedField(field, identifier, defaultValue));
+            }
+        }
+    }
+
+    private static IEnumerable<DeclaredField> GetDeclaredFields(RecordDeclarationSyntax record, XElement comment)
+    {
+        foreach (DeclaredField declaredField in ClassParser.GetDeclaredFields(record))
+        {
+            yield return declaredField;
+        }
+
+        if (record.ParameterList is not { } parameterList) { yield break; }
+
+        foreach (var param in parameterList.Parameters)
+        {
+            string name = param.Identifier.ValueText;
+            string type = param.Type!.ToString(); // why can type be null?
+            string description = string.Empty;
+
+            foreach (XElement element in comment.Elements())
+            {
+                if (!element.Name.ToString().Equals("param", StringComparison.OrdinalIgnoreCase)) { continue; }
+                if (element.Attribute("name")?.Value != name) { continue; }
+
+                description = element.Value.Trim('\n');
+                break;
+            }
+
+            yield return new DeclaredField(name, type, description, null);
+        }
+    }
+}
+
+internal sealed class ClassParser : ParsedType
+{
+    public ClassParser(ClassParsingOptions options) : base(options) { }
+
+    public override void ParseType(TypeDeclarationSyntax cls)
     {
         declaredFields.AddRange(GetDeclaredFields(cls));
 
@@ -77,8 +159,8 @@ internal sealed class PrefabClassParser
 
         foreach (TypeDeclarationSyntax syntax in cls.Members.OfType<TypeDeclarationSyntax>())
         {
-            PrefabClassParser subParser = new PrefabClassParser(options);
-            subParser.ParseClass(syntax);
+            ParsedType subParser = CreateParser(syntax, options);
+            subParser.ParseType(syntax);
 
             string identifier = syntax.Identifier.ValueText;
             SubClasses.Add(identifier, subParser);
@@ -117,7 +199,7 @@ internal sealed class PrefabClassParser
         }
     }
 
-    private static ParsedComment ParseComment(CodeComment comment)
+    public static ParsedComment ParseComment(CodeComment comment)
     {
         XElement xml = comment.Element;
 
@@ -240,7 +322,7 @@ internal sealed class PrefabClassParser
         return result.ToImmutable();
     }
 
-    private static (string XMLIdentifier, string MethodOwner, string DefaultValue, bool WasFound) FindXMLAssignmentFromExpression(InvocationExpressionSyntax expression)
+    public static (string XMLIdentifier, string MethodOwner, string DefaultValue, bool WasFound) FindXMLAssignmentFromExpression(InvocationExpressionSyntax expression)
     {
         if (expression is not
             {
@@ -458,7 +540,7 @@ internal sealed class PrefabClassParser
         return result.ToImmutable();
     }
 
-    private static ImmutableArray<DeclaredField> GetDeclaredFields(TypeDeclarationSyntax cls)
+    public static ImmutableArray<DeclaredField> GetDeclaredFields(TypeDeclarationSyntax cls)
     {
         var result = ImmutableArray.CreateBuilder<DeclaredField>();
 

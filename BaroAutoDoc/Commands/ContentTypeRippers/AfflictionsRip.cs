@@ -7,7 +7,7 @@ namespace BaroAutoDoc.Commands.ContentTypeSpecific;
 
 sealed class AfflictionsRip : Command
 {
-    private readonly record struct AfflictionSection(Page.Section Section, ImmutableArray<(string, string, string)> ElementTable, PrefabClassParser Parser);
+    private readonly record struct AfflictionSection(Page.Section Section, ImmutableArray<(string, string, string)> ElementTable, ParsedType Parser);
 
     public void Invoke()
     {
@@ -24,21 +24,21 @@ sealed class AfflictionsRip : Command
 
         Directory.SetCurrentDirectory(Path.GetDirectoryName(Assembly.GetCallingAssembly().Location)!);
 
-        Dictionary<string, PrefabClassParser> parsedClasses = new();
+        Dictionary<string, ParsedType> parsedClasses = new();
 
         foreach (var (key, cls) in contentTypeFinder.AfflictionPrefabs)
         {
-            if (parsedClasses.TryGetValue(key, out PrefabClassParser? parser))
+            if (parsedClasses.TryGetValue(key, out ParsedType? parser))
             {
-                parser.ParseClass(cls);
+                parser.ParseType(cls);
                 continue;
             }
 
-            parser = new PrefabClassParser(new ClassParsingOptions
+            parser = ParsedType.CreateParser(cls, new ClassParsingOptions
             {
                 InitializerMethodNames = new[] { "LoadEffects" }
             });
-            parser.ParseClass(cls);
+            parser.ParseType(cls);
             parsedClasses.Add(key, parser);
         }
 
@@ -55,7 +55,7 @@ sealed class AfflictionsRip : Command
 
             WriteSubClasses(parser);
 
-            void WriteSubClasses(PrefabClassParser subParser)
+            void WriteSubClasses(ParsedType subParser)
             {
                 foreach (var (subName, subSubParser) in subParser.SubClasses)
                 {
@@ -186,7 +186,7 @@ sealed class AfflictionsRip : Command
             return true;
         }
 
-        static AfflictionSection CreateSection(string name, PrefabClassParser parser)
+        static AfflictionSection CreateSection(string name, ParsedType parser)
         {
             Page.Section mainSection = new()
             {
