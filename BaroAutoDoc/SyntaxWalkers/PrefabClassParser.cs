@@ -614,6 +614,12 @@ internal sealed class PrefabClassParser
                     string assignmentName = assignment.Left.ToString();
                     string assignmentType = GetTypeFromAssignment(assignment.Right);
 
+                    if (assignmentName.Contains("."))
+                    {
+                        Console.WriteLine($"WARNING: Could not parse the assignment {assignment}. Assignment to the field of some other object than the one we're parsing?");
+                        continue;
+                    }
+
                     yield return FindRelatedFieldDeclaration(assignmentName) with
                     {
                         Type = assignmentType
@@ -632,9 +638,9 @@ internal sealed class PrefabClassParser
                         ArgumentList.Arguments: var arguments
                     }
                 }:
-                    string memeberAccessName = memberAccess.Expression.ToString();
+                    string memberAccessName = memberAccess.Expression.ToString();
                     string memberType = GetTypeFromArguments(arguments);
-                    yield return FindRelatedFieldDeclaration(memeberAccessName) with
+                    yield return FindRelatedFieldDeclaration(memberAccessName) with
                     {
                         Type = memberType
                     };
