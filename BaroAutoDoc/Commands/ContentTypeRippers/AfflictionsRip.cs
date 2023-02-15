@@ -53,9 +53,15 @@ sealed class AfflictionsRip : Command
 
             finalSections.Add(key, CreateSection(key, parser));
 
-            foreach (var (subName, subParser) in parser.SubClasses)
+            WriteSubClasses(parser);
+
+            void WriteSubClasses(PrefabClassParser subParser)
             {
-                finalSections.Add(subName, CreateSection(subName, subParser));
+                foreach (var (subName, subSubParser) in subParser.SubClasses)
+                {
+                    finalSections.Add(subName, CreateSection(subName, subSubParser));
+                    WriteSubClasses(subSubParser);
+                }
             }
 
             foreach (var (identifier, section) in finalSections)

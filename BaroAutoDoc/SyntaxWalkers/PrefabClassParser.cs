@@ -31,7 +31,7 @@ public readonly record struct ParsedComment(ImmutableDictionary<DocAttributeType
                                             ImmutableArray<XMLAssignedField> ExtraFields,
                                             ImmutableArray<SupportedSubElement> ExtraSubElements);
 
-public record struct ClassParsingOptions(string[] InitializerMethodNames);
+public record struct ClassParsingOptions(string[]? InitializerMethodNames);
 
 internal sealed class PrefabClassParser
 {
@@ -58,7 +58,7 @@ internal sealed class PrefabClassParser
         this.options = options;
     }
 
-    public void ParseClass(ClassDeclarationSyntax cls)
+    public void ParseClass(TypeDeclarationSyntax cls)
     {
         declaredFields.AddRange(GetDeclaredFields(cls));
 
@@ -75,7 +75,7 @@ internal sealed class PrefabClassParser
             }
         }
 
-        foreach (ClassDeclarationSyntax syntax in cls.Members.OfType<ClassDeclarationSyntax>())
+        foreach (TypeDeclarationSyntax syntax in cls.Members.OfType<TypeDeclarationSyntax>())
         {
             PrefabClassParser subParser = new PrefabClassParser(options);
             subParser.ParseClass(syntax);
@@ -173,7 +173,7 @@ internal sealed class PrefabClassParser
         {
             var elementParameter =
                 methodSyntax.ParameterList.Parameters
-                            .FirstOrDefault(p => (p.Type?.ToString() ?? "").Contains("XElement"));
+                            .FirstOrDefault(static p => (p.Type?.ToString() ?? "").Contains("XElement"));
             elementName = elementParameter?.Identifier.ValueText ?? "";
         }
 
@@ -286,7 +286,7 @@ internal sealed class PrefabClassParser
             var builder = new StringBuilder(ExpressionToString(args[1]));
             for (int i = 2; i < args.Count; i++)
             {
-                builder.Append(",").Append(ExpressionToString(args[i]));
+                builder.Append(',').Append(ExpressionToString(args[i]));
             }
 
             return (builder.ToString(), ParseDefaultValueExpression(args[0]), true);
@@ -458,7 +458,7 @@ internal sealed class PrefabClassParser
         return result.ToImmutable();
     }
 
-    private static ImmutableArray<DeclaredField> GetDeclaredFields(ClassDeclarationSyntax cls)
+    private static ImmutableArray<DeclaredField> GetDeclaredFields(TypeDeclarationSyntax cls)
     {
         var result = ImmutableArray.CreateBuilder<DeclaredField>();
 

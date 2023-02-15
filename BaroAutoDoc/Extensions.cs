@@ -21,7 +21,7 @@ public static class Extensions
         }
     }
 
-    public static IReadOnlyCollection<BlockSyntax> FindInitializerMethodBodies(this ClassDeclarationSyntax cls, params string[] methodNames)
+    public static IReadOnlyCollection<BlockSyntax> FindInitializerMethodBodies(this TypeDeclarationSyntax cls, params string[] methodNames)
     {
         List<BlockSyntax> bodies = new();
 
@@ -217,7 +217,7 @@ public static class Extensions
         return new CodeComment("", new XElement("root"));
     }
     
-    public static IEnumerable<SerializableProperty> GetSerializableProperties(this ClassDeclarationSyntax @class)
+    public static IEnumerable<SerializableProperty> GetSerializableProperties(this TypeDeclarationSyntax @class)
     {
         foreach (var member in @class.Members)
         {
