@@ -1,6 +1,8 @@
 ﻿using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
+using System.Text;
+using System.Xml.Linq;
 using BaroAutoDoc.SyntaxWalkers;
 
 namespace BaroAutoDoc.Commands.ContentTypeSpecific;
@@ -197,6 +199,37 @@ sealed class AfflictionsRip : Command
             {
                 if (string.IsNullOrWhiteSpace(s.Text)) { continue; }
                 mainSection.Body.Components.Add(new Page.RawText(s.Text));
+                mainSection.Body.Components.Add(new Page.NewLine());
+                foreach (var element in s.Element.Elements())
+                {
+                    if (element.Name != "example") { continue; }
+
+                    if (element.Element("code") is not { } codeElement) { continue; }
+
+                    mainSection.Body.Components.Add(new Page.CodeBlock(codeElement.Attribute("lang")?.Value ?? "xml", ConstructXMLString(codeElement)));
+
+                    static string ConstructXMLString(XElement element)
+                    {
+                        var nodes = element.Nodes().ToImmutableArray();
+
+                        switch (nodes.Length)
+                        {
+                            case 0:
+                                return element.Value;
+                            case 1:
+                                return nodes[0].ToString();
+                        }
+
+                        StringBuilder sb = new StringBuilder(nodes[0].ToString());
+
+                        for (int i = 1; i < nodes.Length; i++)
+                        {
+                            sb.Append('\n').Append(nodes[i]);
+                        }
+
+                        return sb.ToString();
+                    }
+                }
             }
 
             Page.Section attributesSection = new()
