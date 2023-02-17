@@ -167,11 +167,12 @@ public static class Extensions
             txt = xml.ElementOfName("summary") is { } summary
                 ? summary.ElementInnerText().Trim(trimChars)
                 : txt;
+
             return txt;
         }
         
         if (member.Parent is null) { return new CodeComment(Text: "", Element: new XElement("root")); }
-        var allSiblingNodes = member.Parent.ChildNodes();
+        var allSiblingNodes = member.Parent.DescendantNodes();
         var allSiblingTrivia = member.Parent.DescendantTrivia()
             // Apparently this can sometimes include
             // the parent's leading trivia, which we
