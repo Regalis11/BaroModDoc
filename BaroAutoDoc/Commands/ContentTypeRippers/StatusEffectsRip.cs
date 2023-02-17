@@ -48,12 +48,12 @@ sealed class StatusEffectsRip : Command
 
         foreach (var (key, cls) in contentTypeFinder.StatusEffectTypes)
         {
-            PrefabClassParser parser = new PrefabClassParser(new ClassParsingOptions
+            ClassParser parser = new ClassParser(new ClassParsingOptions
             {
                 InitializerMethodNames = new[] { "InitProjSpecific" },
             });
 
-            parser.ParseClass(cls);
+            parser.ParseType(cls);
 
             Page page = new()
             {
@@ -82,8 +82,8 @@ sealed class StatusEffectsRip : Command
 
             foreach (ClassDeclarationSyntax syntax in cls.Members.OfType<ClassDeclarationSyntax>())
             {
-                PrefabClassParser subParser = new PrefabClassParser(new ClassParsingOptions());
-                subParser.ParseClass(syntax);
+                ClassParser subParser = new ClassParser(new ClassParsingOptions());
+                subParser.ParseType(syntax);
 
                 page.Subsections.Add(CreateSection(syntax.Identifier.ValueText, subParser, includeComments: true, preamble: null));
             }
@@ -91,7 +91,7 @@ sealed class StatusEffectsRip : Command
             File.WriteAllText($"{key}.md", page.ToMarkdown());
         }
 
-        static Page.Section CreateSection(string name, PrefabClassParser parser, bool includeComments, BodyComponent? preamble)
+        static Page.Section CreateSection(string name, ParsedType parser, bool includeComments, BodyComponent? preamble)
         {
             Page.Section mainSection = new()
             {

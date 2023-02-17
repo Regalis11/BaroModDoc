@@ -21,7 +21,7 @@ public static class Extensions
         }
     }
 
-    public static IReadOnlyCollection<BlockSyntax> FindInitializerMethodBodies(this ClassDeclarationSyntax cls, params string[] methodNames)
+    public static IReadOnlyCollection<BlockSyntax> FindInitializerMethodBodies(this TypeDeclarationSyntax cls, params string[] methodNames)
     {
         List<BlockSyntax> bodies = new();
 
@@ -172,7 +172,11 @@ public static class Extensions
         
         if (member.Parent is null) { return new CodeComment(Text: "", Element: new XElement("root")); }
         var allSiblingNodes = member.Parent.ChildNodes();
-        var allSiblingTrivia = member.Parent.DescendantTrivia();
+        var allSiblingTrivia = member.Parent.DescendantTrivia()
+            // Apparently this can sometimes include
+            // the parent's leading trivia, which we
+            // don't want, so let's filter it out here
+            .Where(t => t.SpanStart > member.Parent.SpanStart);
         var allSiblings =
             allSiblingNodes.Select(n => (Span: n.Span, Sibling: (object) n))
             .Concat(allSiblingTrivia.Select(t => (Span: t.Span, Sibling: (object) t)))
@@ -217,7 +221,7 @@ public static class Extensions
         return new CodeComment("", new XElement("root"));
     }
     
-    public static IEnumerable<SerializableProperty> GetSerializableProperties(this ClassDeclarationSyntax @class)
+    public static IEnumerable<SerializableProperty> GetSerializableProperties(this TypeDeclarationSyntax @class)
     {
         foreach (var member in @class.Members)
         {

@@ -2,12 +2,14 @@
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
+using System.Text;
+using System.Xml.Linq;
 
 namespace BaroAutoDoc.Commands.ContentTypeSpecific;
 
 sealed class AfflictionsRip : Command
 {
-    private readonly record struct AfflictionSection(Page.Section Section, ImmutableArray<(string, string, string)> ElementTable, PrefabClassParser Parser);
+    private readonly record struct AfflictionSection(Page.Section Section, ImmutableArray<(string, string, string)> ElementTable, ParsedType Parser);
 
     public void Invoke()
     {
@@ -24,21 +26,21 @@ sealed class AfflictionsRip : Command
 
         Directory.SetCurrentDirectory(Path.GetDirectoryName(Assembly.GetCallingAssembly().Location)!);
 
-        Dictionary<string, PrefabClassParser> parsedClasses = new();
+        Dictionary<string, ParsedType> parsedClasses = new();
 
         foreach (var (key, cls) in contentTypeFinder.AfflictionPrefabs)
         {
-            if (parsedClasses.TryGetValue(key, out PrefabClassParser? parser))
+            if (parsedClasses.TryGetValue(key, out ParsedType? parser))
             {
-                parser.ParseClass(cls);
+                parser.ParseType(cls);
                 continue;
             }
 
-            parser = new PrefabClassParser(new ClassParsingOptions
+            parser = ParsedType.CreateParser(cls, new ClassParsingOptions
             {
                 InitializerMethodNames = new[] { "LoadEffects" }
             });
-            parser.ParseClass(cls);
+            parser.ParseType(cls);
             parsedClasses.Add(key, parser);
         }
 
@@ -53,9 +55,15 @@ sealed class AfflictionsRip : Command
 
             finalSections.Add(key, CreateSection(key, parser));
 
-            foreach (var (subName, subParser) in parser.SubClasses)
+            WriteSubClasses(parser);
+
+            void WriteSubClasses(ParsedType subParser)
             {
-                finalSections.Add(subName, CreateSection(subName, subParser));
+                foreach (var (subName, subSubParser) in subParser.SubClasses)
+                {
+                    finalSections.Add(subName, CreateSection(subName, subSubParser));
+                    WriteSubClasses(subSubParser);
+                }
             }
 
             foreach (var (identifier, section) in finalSections)
@@ -145,7 +153,7 @@ sealed class AfflictionsRip : Command
             return true;
         }
 
-        static AfflictionSection CreateSection(string name, PrefabClassParser parser)
+        static AfflictionSection CreateSection(string name, ParsedType parser)
         {
             Page.Section mainSection = new()
             {
@@ -156,6 +164,37 @@ sealed class AfflictionsRip : Command
             {
                 if (string.IsNullOrWhiteSpace(s.Text)) { continue; }
                 mainSection.Body.Components.Add(new Page.RawText(s.Text));
+                mainSection.Body.Components.Add(new Page.NewLine());
+                foreach (var element in s.Element.Elements())
+                {
+                    if (element.Name != "example") { continue; }
+
+                    if (element.Element("code") is not { } codeElement) { continue; }
+
+                    mainSection.Body.Components.Add(new Page.CodeBlock(codeElement.Attribute("lang")?.Value ?? "xml", ConstructXMLString(codeElement)));
+
+                    static string ConstructXMLString(XElement element)
+                    {
+                        var nodes = element.Nodes().ToImmutableArray();
+
+                        switch (nodes.Length)
+                        {
+                            case 0:
+                                return element.Value;
+                            case 1:
+                                return nodes[0].ToString();
+                        }
+
+                        StringBuilder sb = new StringBuilder(nodes[0].ToString());
+
+                        for (int i = 1; i < nodes.Length; i++)
+                        {
+                            sb.Append('\n').Append(nodes[i]);
+                        }
+
+                        return sb.ToString();
+                    }
+                }
             }
 
             Page.Section attributesSection = new()
