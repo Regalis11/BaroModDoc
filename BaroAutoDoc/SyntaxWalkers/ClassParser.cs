@@ -210,7 +210,7 @@ internal sealed class ClassParser : ParsedType
 
         foreach (var subElement in initializers.SelectMany(syntax => FindSubElementsFrom(syntax)))
         {
-            if (parsedComment.Ignores[DocAttributeTarget.SubElement].Contains(subElement.XMLName)) { continue; }
+            if (parsedComment.Ignores[DocAttributeTarget.SubElement].Any(s => s.Equals(subElement.XMLName, StringComparison.OrdinalIgnoreCase))) { continue; }
 
             SupportedSubElements.Add(subElement);
         }
@@ -220,7 +220,7 @@ internal sealed class ClassParser : ParsedType
         {
             foreach (var field in FindXMLAssignedFields(block))
             {
-                if (parsedComment.Ignores[DocAttributeTarget.Field].Contains(field.XMLIdentifier)) { continue; }
+                if (parsedComment.Ignores[DocAttributeTarget.Field].Any(s => s.Equals(field.XMLIdentifier, StringComparison.OrdinalIgnoreCase))) { continue; }
 
                 XMLAssignedFields.Add(field);
             }
