@@ -125,6 +125,7 @@ In other words, the values is treated as an increase per frame, as opposed to an
 | spawnItemRandomly                | bool       | false           | If enabled, one of the items this effect is configured to spawn is selected randomly, as opposed to spawning all of them.                                                                                                                                                                                                                                                                                                                                                          |
 | delay                            | float      | 0.0             | Can be used to delay the execution of the effect. For example, you could have an effect that triggers when a character receives damage,<br/>but takes 5 seconds before it starts to do anything.                                                                                                                                                                                                                                                                                   |
 | tags                             | string[]   |                 | An arbitrary tag (or a list of tags) that describe the status effect and can be used by Conditionals to check whether some StatusEffect is running.<br/>For example, an item could execute a StatusEffect with the tag "poisoned" on some character, and the character could have an effect that makes<br/>the character do something when an effect with that tag is active.                                                                                                      |
+| conditionalComparison            | Comparison | Or              | And/Or. Do all of the Conditionals defined in the effect be true for the effect to execute, or should the effect execute when any of them is true?                                                                                                                                                                                                                                                                                                                                 |
 | Any property of the target       | Any        |                 | These are the meat of the StatusEffects. You can set, increment or decrement any value of the target, be it an item, character, limb or hull.<br/>By default, the value is added to the existing value. If you want to instead set the value, use the setValue attribute.<br/>For example, Condition="-5" would decrease the condition of the item the effect is targeting by 5 per second. If the target has no property<br/>with the specified name, the attribute does nothing. |
 
 
@@ -147,7 +148,7 @@ In other words, the values is treated as an increase per frame, as opposed to an
 | requireditems      | [RelatedItem](Misc/RelatedItem.md)| Alias of "requireditem". Functionally identical.                                                                                           |
 | requiredaffliction | -                                 | Which type of afflictions the target must receive for the StatusEffect to be applied. Only valid when the type of the effect is OnDamaged. |
 | affliction         | -                                 | An affliction to give to the character or limb the effect is targeting.                                                                    |
-| aitrigger          | -                                 | TODO                                                                                                                                       |
+| aitrigger          | -                                 | Can be used to trigger a behavior change of some kind on an AI character. Only applicable for enemy characters, not humans.                                                                                                                                       |
 | talenttrigger      | -                                 | Can be used by AbilityConditionStatusEffectIdentifier to react to a specific kind of status effect triggering.                             |
 | giveexperience     | -                                 | Can be used to give experience points to the character(s) the effect is targeting.                                                         |
 | giveskill          | GiveSkill                         | Can be used to give skill points to the character(s) the effect is targeting.                                                              |
@@ -205,7 +206,7 @@ Can be used to give experience points to the character(s) the effect is targetin
 
 
 ## ItemSpawnInfo
-The entity \(item, character, limb\) the StatusEffect is defined in.
+Defines items spawned by the effect, and where and how they're spawned.
 
 ### Attributes
 
@@ -250,7 +251,7 @@ The entity \(item, character, limb\) the StatusEffect is defined in.
 
 
 ## AbilityStatusEffectIdentifier
-The position of the StatusEffect's target.
+Can be used by  to check whether some specific StatusEffect is running.
 
 ### Attributes
 
@@ -273,7 +274,7 @@ Unlocks a talent, or multiple talents when the effect executes. Only valid if th
 
 
 ## GiveSkill
-The identifier\(s\) of the talents that should be unlocked.
+Increases a character's skills when the effect executes. Only valid if the target is a character or a limb.
 
 ### Attributes
 
@@ -286,7 +287,7 @@ The identifier\(s\) of the talents that should be unlocked.
 
 
 ## CharacterSpawnInfo
-The identifier of the skill to increase.
+Defines characters spawned by the effect, and where and how they're spawned.
 
 ### Attributes
 
@@ -305,5 +306,21 @@ The identifier of the skill to increase.
 | RemovePreviousCharacter | bool       | false         | Should the character that executes the effect be removed when the effect executes? Useful for effects that "transform" a character to something else by deleting the character and spawning a new one on its place.                          |
 | Spread                  | float      | 0             | Amount of random spread to add to the spawn position. Can be used to prevent all the characters from spawning at the exact same position if the effect spawns multiple ones.                                                                 |
 | Offset                  | Vector2    | "0,0"         | Offset added to the spawn position. Can be used to for example spawn a character a bit up from the center of an item executing the effect.                                                                                                   |
+
+
+
+## AITrigger
+Can be used to trigger a behavior change of some kind on an AI character. Only applicable for enemy characters, not humans.
+
+### Attributes
+
+| Attribute           | Type    | Default value | Description                                                                                                                                         |
+|---------------------|---------|---------------|-----------------------------------------------------------------------------------------------------------------------------------------------------|
+| State               | AIState | AIState.Idle  | The AI state the character should switch to.                                                                                                        |
+| Duration            | float   | 0             | How long should the character stay in the specified state? If 0, the effect is permanent (unless overridden by another AITrigger).                  |
+| Probability         | float   | 1             | How likely is the AI to change the state when this effect executes? 1 = always, 0.5 = 50% chance, 0 = never.                                        |
+| MinDamage           | float   | 0             | How much damage the character must receive for this AITrigger to become active? Checks the amount of damage the latest attack did to the character. |
+| AllowToOverride     | bool    | true          | Can this AITrigger override other active AITriggers?                                                                                                |
+| AllowToBeOverridden | bool    | true          | Can this AITrigger be overridden by other AITriggers?                                                                                               |
 
 
