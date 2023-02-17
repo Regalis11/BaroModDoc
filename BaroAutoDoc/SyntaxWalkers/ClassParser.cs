@@ -15,6 +15,12 @@ public enum DocAttributeType
     Type
 }
 
+public enum DocAttributeTarget
+{
+    Field,
+    SubElement
+}
+
 // TODO what other info do we want to extract? possible errors for example by parsing AddWaring/ThrowError?
 public readonly record struct SupportedSubElement(string XMLName, ImmutableArray<DeclaredField> AffectedField);
 
@@ -27,13 +33,22 @@ public readonly record struct XMLAssignedField(DeclaredField Field, string XMLId
     public string GetDefaultValue() => Field.OverriddenDefaultValue ?? DefaultValue;
 }
 
+public readonly record struct ExtraDeclarations(ImmutableArray<XMLAssignedField> ExtraFields,
+                                                ImmutableArray<SupportedSubElement> ExtraSubElements,
+                                                ImmutableArray<ExtraType> ExtraTypes)
+{
+    public static readonly ExtraDeclarations Empty = new(ImmutableArray<XMLAssignedField>.Empty,
+        ImmutableArray<SupportedSubElement>.Empty,
+        ImmutableArray<ExtraType>.Empty);
+}
+
 public readonly record struct ParsedComment(ImmutableDictionary<DocAttributeType, string> Overrides,
-                                            ImmutableArray<XMLAssignedField> ExtraFields,
-                                            ImmutableArray<SupportedSubElement> ExtraSubElements);
+                                            ImmutableDictionary<DocAttributeTarget, ImmutableArray<string>> Ignores,
+                                            ExtraDeclarations ExtraDeclarations);
 
 public record struct ClassParsingOptions(string[]? InitializerMethodNames);
 
-internal class ParsedType
+public class ParsedType
 {
     public readonly List<SupportedSubElement> SupportedSubElements = new();
 
@@ -70,6 +85,17 @@ internal class ParsedType
     }
 }
 
+public sealed class ExtraType : ParsedType
+{
+    public readonly string Identifier;
+
+    public ExtraType(string identifier, CodeComment description) : base(new ClassParsingOptions(Array.Empty<string>()))
+    {
+        Identifier = identifier;
+        Comments.Add(description);
+    }
+}
+
 internal sealed class RecordParser : ParsedType
 {
     public RecordParser(ClassParsingOptions options) : base(options) { }
@@ -98,7 +124,7 @@ internal sealed class RecordParser : ParsedType
                 if (arg.Expression is not InvocationExpressionSyntax invocation) { continue; }
 
                 // TODO validate methodOwner
-                var (identifier, methodOwner, defaultValue, wasFound) =  ClassParser.FindXMLAssignmentFromExpression(invocation);
+                var (identifier, methodOwner, defaultValue, wasFound) = ClassParser.FindXMLAssignmentFromExpression(invocation);
 
                 if (!wasFound) { continue; }
 
@@ -125,6 +151,7 @@ internal sealed class RecordParser : ParsedType
             foreach (XElement element in comment.Elements())
             {
                 if (!element.Name.ToString().Equals("param", StringComparison.OrdinalIgnoreCase)) { continue; }
+
                 if (element.Attribute("name")?.Value != name) { continue; }
 
                 description = element.Value.Trim('\n');
@@ -181,21 +208,37 @@ internal sealed class ClassParser : ParsedType
 
         var initializers = cls.FindInitializerMethodBodies(options.InitializerMethodNames ?? Array.Empty<string>());
 
-        SupportedSubElements.AddRange(initializers.SelectMany(syntax => FindSubElementsFrom(syntax)));
+        foreach (var subElement in initializers.SelectMany(syntax => FindSubElementsFrom(syntax)))
+        {
+            if (parsedComment.Ignores[DocAttributeTarget.SubElement].Any(s => s.Equals(subElement.XMLName, StringComparison.OrdinalIgnoreCase))) { continue; }
+
+            SupportedSubElements.Add(subElement);
+        }
+
 
         foreach (BlockSyntax block in initializers)
         {
-            XMLAssignedFields.AddRange(FindXMLAssignedFields(block));
+            foreach (var field in FindXMLAssignedFields(block))
+            {
+                if (parsedComment.Ignores[DocAttributeTarget.Field].Any(s => s.Equals(field.XMLIdentifier, StringComparison.OrdinalIgnoreCase))) { continue; }
+
+                XMLAssignedFields.Add(field);
+            }
         }
 
-        foreach (XMLAssignedField extraField in parsedComment.ExtraFields)
+        foreach (XMLAssignedField extraField in parsedComment.ExtraDeclarations.ExtraFields)
         {
             XMLAssignedFields.Add(extraField);
         }
 
-        foreach (SupportedSubElement extraElement in parsedComment.ExtraSubElements)
+        foreach (SupportedSubElement extraElement in parsedComment.ExtraDeclarations.ExtraSubElements)
         {
             SupportedSubElements.Add(extraElement);
+        }
+
+        foreach (ExtraType extraType in parsedComment.ExtraDeclarations.ExtraTypes)
+        {
+            SubClasses.Add(extraType.Identifier, extraType);
         }
     }
 
@@ -204,46 +247,88 @@ internal sealed class ClassParser : ParsedType
         XElement xml = comment.Element;
 
         XElement? docs = xml.ElementOfName("doc", StringComparison.OrdinalIgnoreCase);
+
+        var ignores = new Dictionary<DocAttributeTarget, List<string>>
+        {
+            [DocAttributeTarget.SubElement] = new List<string>(),
+            [DocAttributeTarget.Field] = new List<string>()
+        };
+
         if (docs is null)
         {
             return new ParsedComment(ImmutableDictionary<DocAttributeType, string>.Empty,
-                ImmutableArray<XMLAssignedField>.Empty,
-                ImmutableArray<SupportedSubElement>.Empty);
+                ToImmutableDictionary(ignores),
+                ExtraDeclarations.Empty);
+        }
+
+        static ExtraDeclarations ParseExtraDeclarations(XElement element)
+        {
+            var extraFields = ImmutableArray.CreateBuilder<XMLAssignedField>();
+            var extraSubElements = ImmutableArray.CreateBuilder<SupportedSubElement>();
+            var extraTypes = ImmutableArray.CreateBuilder<ExtraType>();
+
+            foreach (XElement subElement in element.Elements())
+            {
+                switch (subElement.Name.ToString().ToLower())
+                {
+                    case "field":
+                        string fieldType = GetAttribute(subElement, "Type"),
+                               fieldIdentifier = GetAttribute(subElement, "Identifier"),
+                               fieldDefault = GetAttribute(subElement, "DefaultValue"),
+                               fieldDesc = GetBody(subElement);
+
+                        DeclaredField declaredField = new DeclaredField(string.Empty, fieldType, fieldDesc, null);
+                        extraFields.Add(new XMLAssignedField(declaredField, fieldIdentifier, fieldDefault));
+                        break;
+                    case "subelement":
+                        string subIdentifier = GetAttribute(subElement, "Identifier"),
+                               subType = GetAttribute(subElement, "Type"),
+                               subDesc = GetBody(subElement);
+                        extraSubElements.Add(new SupportedSubElement(subIdentifier, ImmutableArray.Create(new DeclaredField(string.Empty, subType, subDesc, null))));
+                        break;
+                    case "type":
+                        ExtraDeclarations extraDeclarations = ParseExtraDeclarations(subElement);
+
+                        CodeComment comment = CodeComment.Empty(string.Empty);
+                        XElement? summary = subElement.ElementOfName("summary", StringComparison.OrdinalIgnoreCase);
+
+                        if (summary is not null)
+                        {
+                            comment = new CodeComment(GetBody(summary), summary);
+                        }
+
+
+                        ExtraType extraType = new ExtraType(GetAttribute(subElement, "identifier"), comment);
+                        extraType.XMLAssignedFields.AddRange(extraDeclarations.ExtraFields);
+                        extraType.SupportedSubElements.AddRange(extraDeclarations.ExtraSubElements);
+                        extraTypes.Add(extraType);
+                        break;
+                }
+            }
+
+            return new ExtraDeclarations(extraFields.ToImmutable(), extraSubElements.ToImmutable(), extraTypes.ToImmutable());
         }
 
         var overrides = ImmutableDictionary.CreateBuilder<DocAttributeType, string>();
-        var extraFields = ImmutableArray.CreateBuilder<XMLAssignedField>();
-        var extraSubElements = ImmutableArray.CreateBuilder<SupportedSubElement>();
 
         foreach (XElement element in docs.Elements())
         {
             switch (element.Name.ToString().ToLower())
             {
                 case "override":
-                    overrides[Enum.Parse<DocAttributeType>(GetAttribute("Type"))] = element.Value.Trim('\n');
+                    overrides[Enum.Parse<DocAttributeType>(GetAttribute(element, "type"))] = GetBody(element);
                     break;
-                case "field":
-                    string fieldType = GetAttribute("Type"),
-                           fieldIdentifier = GetAttribute("Identifier"),
-                           fieldDefault = GetAttribute("DefaultValue"),
-                           fieldDesc = GetBody().Trim('\n');
-
-                    DeclaredField declaredField = new DeclaredField(string.Empty, fieldType, fieldDesc, null);
-                    extraFields.Add(new XMLAssignedField(declaredField, fieldIdentifier, fieldDefault));
-                    break;
-                case "subelement":
-                    string subIdentifier = GetAttribute("Identifier"),
-                           subType = GetAttribute("Type"),
-                           subDesc = GetBody().Trim('\n');
-                    extraSubElements.Add(new SupportedSubElement(subIdentifier, ImmutableArray.Create(new DeclaredField(string.Empty, subType, subDesc, null))));
+                case "ignore":
+                    ignores[Enum.Parse<DocAttributeTarget>(GetAttribute(element, "type"))].Add(GetAttribute(element, "identifier"));
                     break;
             }
-
-            string GetAttribute(string name) => element.Attributes().FirstOrDefault(x => string.Equals(x.Name.ToString(), name, StringComparison.OrdinalIgnoreCase))?.Value ?? throw new Exception("Missing attribute");
-            string GetBody() => element.Value ?? throw new Exception("Missing body");
         }
 
-        return new ParsedComment(overrides.ToImmutable(), extraFields.ToImmutable(), extraSubElements.ToImmutable());
+        return new ParsedComment(overrides.ToImmutable(), ToImmutableDictionary(ignores), ParseExtraDeclarations(docs));
+
+        static string GetAttribute(XElement element, string name) => element.Attributes().FirstOrDefault(x => string.Equals(x.Name.ToString(), name, StringComparison.OrdinalIgnoreCase))?.Value ?? throw new Exception("Missing attribute");
+        static string GetBody(XElement element) => element.Value.Trim('\n') ?? throw new Exception("Missing body");
+        static ImmutableDictionary<DocAttributeTarget, ImmutableArray<string>> ToImmutableDictionary(Dictionary<DocAttributeTarget, List<string>> dictionary) => dictionary.ToImmutableDictionary(static x => x.Key, static x => x.Value.ToImmutableArray());
     }
 
     private ImmutableArray<XMLAssignedField> FindXMLAssignedFields(BlockSyntax blockSyntax)
