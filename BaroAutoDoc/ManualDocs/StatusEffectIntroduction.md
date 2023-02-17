@@ -6,12 +6,13 @@ There are a couple of terms related to the StatusEffects that are important to u
 
 - **Type** \- The type of the StatusEffect determines *when* the effect is executed. For example, when the item is being worn or used, when a character is underwater or takes damage, or always.
 
-TODO: list ActionTypes
+[TODO: list ActionTypes]
 
 - **The target of the StatusEffect** \- StatusEffects need to have a *target*. The target determines which entity the effect affects - this is often the same as the entity executing the effect, but it can be something else too: for example, a diving suit might have a StatusEffect that *targets* the oxygen tank inside it, making it deplete when the suit is worn.
 
-TODO: list TargetTypes
+[TODO: list TargetTypes]
 
+## Examples
 
 Here's an exmple of a simple StatusEffect, which makes the item deteriorate by 10 units per second when it's underwater. 
 

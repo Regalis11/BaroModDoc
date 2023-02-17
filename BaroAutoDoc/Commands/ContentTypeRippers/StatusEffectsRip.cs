@@ -60,10 +60,12 @@ sealed class StatusEffectsRip : Command
                 Title = key
             };
 
+
+
             string introductionText = File.ReadAllText("ManualDocs/StatusEffectIntroduction.md");
             if (actionTypes != null && BaseRip.ConstructEnumTable(actionTypes, out var actionTypesTable))
             {
-                introductionText = introductionText.Replace("TODO: list ActionTypes", string.Join('\n', actionTypesTable.Value.Select(s => s.ToMarkdown())));
+                introductionText = introductionText.Replace("[TODO: list ActionTypes]", string.Join('\n', actionTypesTable.Value.Select(s => s.ToMarkdown())));
             }
             if (parser.Enums.ContainsKey("TargetType"))
             {
@@ -74,24 +76,26 @@ sealed class StatusEffectsRip : Command
                 parser.Enums.Remove("TargetType");
                 if (BaseRip.ConstructEnumTable(targetTypes, out ImmutableArray<Page.Section>? enumTable))
                 {
-                    introductionText = introductionText.Replace("TODO: list TargetTypes", string.Join('\n', enumTable.Value.Select(s => s.ToMarkdown())));
+                    introductionText = introductionText.Replace("[TODO: list TargetTypes]", string.Join('\n', enumTable.Value.Select(s => s.ToMarkdown())));
                 }
             }
             var introduction = new InlineMarkdown(introductionText);
-            page.Subsections.Add(CreateSection(key, parser, includeComments: false, introduction));
+            var elementTable = new InlineMarkdown(File.ReadAllText("ManualDocs/StatusEffectElementTable.md"));
+
+            page.Subsections.Add(CreateSection(key, parser, includeComments: false, elementTable, introduction));
 
             foreach (ClassDeclarationSyntax syntax in cls.Members.OfType<ClassDeclarationSyntax>())
             {
                 ClassParser subParser = new ClassParser(new ClassParsingOptions());
                 subParser.ParseType(syntax);
 
-                page.Subsections.Add(CreateSection(syntax.Identifier.ValueText, subParser, includeComments: true, preamble: null));
+                page.Subsections.Add(CreateSection(syntax.Identifier.ValueText, subParser, includeComments: true, elementTable: null, preamble: null));
             }
 
             File.WriteAllText($"{key}.md", page.ToMarkdown());
         }
 
-        static Page.Section CreateSection(string name, ParsedType parser, bool includeComments, BodyComponent? preamble)
+        static Page.Section CreateSection(string name, ParsedType parser, bool includeComments, BodyComponent? elementTable, BodyComponent? preamble)
         {
             Page.Section mainSection = new()
             {
@@ -142,27 +146,33 @@ sealed class StatusEffectsRip : Command
                 Title = "Elements"
             };
 
-            Page.Table subElementTable = new()
+            if (elementTable == null)
             {
-                HeadRow = new Page.Table.Row("Element", "Type", "Description")
-            };
+                Page.Table subElementTable = new()
+                {
+                    HeadRow = new Page.Table.Row("Element", "Type", "Description")
+                };
+                foreach (SupportedSubElement affectedElement in parser.SupportedSubElements)
+                {
+                    if (affectedElement.AffectedField.Length is 0) { continue; }
 
-            foreach (SupportedSubElement affectedElement in parser.SupportedSubElements)
-            {
-                if (affectedElement.AffectedField.Length is 0) { continue; }
-
-                // TODO we probably need to generate a list of all these elements and then link to them
-                // for example sprite, sound, effect
-                DeclaredField field = affectedElement.AffectedField.First();
-                subElementTable.BodyRows.Add(new Page.Table.Row(
-                    affectedElement.XMLName,
-                    field.Type,
-                    field.Description));
+                    // TODO we probably need to generate a list of all these elements and then link to them
+                    // for example sprite, sound, effect
+                    DeclaredField field = affectedElement.AffectedField.First();
+                    subElementTable.BodyRows.Add(new Page.Table.Row(
+                        affectedElement.XMLName,
+                        field.Type,
+                        field.Description));
+                }
+                if (subElementTable.BodyRows.Any())
+                {
+                    subElementSection.Body.Components.Add(subElementTable);
+                    mainSection.Subsections.Add(subElementSection);
+                }
             }
-
-            if (subElementTable.BodyRows.Any())
+            else
             {
-                subElementSection.Body.Components.Add(subElementTable);
+                subElementSection.Body.Components.Add(elementTable);
                 mainSection.Subsections.Add(subElementSection);
             }
 

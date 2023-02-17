@@ -22,6 +22,9 @@
     </ItemGroup>
 
     <ItemGroup>
+      <None Update="ManualDocs\StatusEffectElementTable.md">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
       <None Update="ManualDocs\StatusEffectIntroduction.md">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>

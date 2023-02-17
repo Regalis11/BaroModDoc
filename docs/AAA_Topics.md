@@ -11,6 +11,7 @@
   - [Content packages](Intro/ContentPackages.md)
     - [Content types](Intro/ContentTypes.md)
   - [Overrides](Intro/Overrides.md)
+  - [StatusEffects](Misc/StatusEffects.md)
 
 - [Publishing to Steam Workshop](Intro/Publishing.md)
 - [Troubleshooting](Misc/Troubleshooting.md)
