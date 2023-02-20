@@ -27,7 +27,6 @@ sealed class AfflictionsRip : Command
         Directory.SetCurrentDirectory(Path.GetDirectoryName(Assembly.GetCallingAssembly().Location)!);
 
         Dictionary<string, ParsedType> parsedClasses = new();
-
         foreach (var (key, cls) in contentTypeFinder.AfflictionPrefabs)
         {
             if (parsedClasses.TryGetValue(key, out ParsedType? parser))
@@ -43,6 +42,13 @@ sealed class AfflictionsRip : Command
             parser.ParseType(cls);
             parsedClasses.Add(key, parser);
         }
+        Dictionary<string, ParsedType> parsedAfflictionTypes = new();
+        foreach (var (key, cls) in contentTypeFinder.AfflictionTypes)
+        {
+            var parser = ParsedType.CreateParser(cls, new ClassParsingOptions());
+            parser.ParseType(cls);
+            parsedAfflictionTypes.Add(key, parser);
+        }
 
         foreach (var (key, parser) in parsedClasses)
         {
@@ -52,6 +58,14 @@ sealed class AfflictionsRip : Command
             {
                 Title = key
             };
+
+            if (key == "AfflictionPrefab")
+            {
+                if (ConstructAfflictionTypeTable(parsedAfflictionTypes, out var result))
+                {
+                    page.Subsections.Add(result);
+                }
+            }
 
             finalSections.Add(key, CreateSection(key, parser));
 
@@ -139,6 +153,42 @@ sealed class AfflictionsRip : Command
                     .ToMarkdown();
 
                 table.BodyRows.Add(new Page.Table.Row(element, fmtType, description));
+            }
+
+            if (table.BodyRows.Count is 0)
+            {
+                result = null;
+                return false;
+            }
+
+            section.Body.Components.Add(table);
+
+            result = section;
+            return true;
+        }
+
+
+        static bool ConstructAfflictionTypeTable(Dictionary<string, ParsedType> parsedAfflictionTypes, [NotNullWhen(true)] out Page.Section? result)
+        {
+            if (!parsedAfflictionTypes.Any())
+            {
+                result = null;
+                return false;
+            }
+
+            Page.Section section = new()
+            {
+                Title = "Types"
+            };
+
+            Page.Table table = new()
+            {
+                HeadRow = new Page.Table.Row("Element", "Description")
+            };
+
+            foreach (var (subName, subSubParser) in parsedAfflictionTypes)
+            {
+                table.BodyRows.Add(new Page.Table.Row(subName, string.Join('\n', subSubParser.Comments.Select(c => c.Text))));
             }
 
             if (table.BodyRows.Count is 0)
