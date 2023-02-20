@@ -274,9 +274,16 @@ public static class Extensions
     public static string ElementInnerText(this XElement el)
     {
         StringBuilder str = new StringBuilder();
-        foreach (XNode element in el.DescendantNodes().Where(x => x.NodeType == XmlNodeType.Text))
+        foreach (XNode node in el.DescendantNodes())
         {
-            str.Append(element.ToString());
+            if (node.NodeType == XmlNodeType.Text)
+            {
+                str.Append(node);
+            }
+            else if (node is XElement element && element.Name.LocalName.Equals("see", StringComparison.OrdinalIgnoreCase))
+            {
+                str.Append(element.GetAttributeValue("cref"));
+            }
         }
         return str.ToString();
     }
