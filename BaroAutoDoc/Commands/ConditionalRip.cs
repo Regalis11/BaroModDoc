@@ -13,12 +13,24 @@ sealed class ConditionalRip : Command
         var page = new Page(); page.Title = "Conditionals";
         var intro = page.Body;
         intro.Components.Add(new Page.InlineMarkdown("***TODO***"));
+        intro.Components.Add(new Page.NewLine());
 
         const string srcPathFmt = "Barotrauma/Barotrauma{0}/{0}Source";
         var typeRipper = new ArbitraryTypeRipper("PropertyConditional");
         typeRipper.VisitAllInDirectory(string.Format(srcPathFmt, "Shared"));
+        intro.Components.Add(new Page.RawText("Classes that use Conditionals: "));
 
-        var declaration = typeRipper.Declarations.Single() as ClassDeclarationSyntax ?? throw new Exception("Type is not class");
+        var userFinder = new ArbitraryTypeRipper(syntax => syntax.ToString().Contains("PropertyConditional.FromXElement"));
+        userFinder.VisitAllInDirectory(string.Format(srcPathFmt, "Shared"));
+        userFinder.VisitAllInDirectory(string.Format(srcPathFmt, "Client"));
+        userFinder.VisitAllInDirectory(string.Format(srcPathFmt, "Server"));
+
+        var users = userFinder.Types
+            .DistinctBy(c => c.Identifier.Text)
+            .ToArray();
+        intro.Components.Add(new Page.RawText(string.Join(", ", users.Select(u => u.Identifier.Text))));
+
+        var declaration = typeRipper.Types.Single() as ClassDeclarationSyntax ?? throw new Exception("Type is not class");
 
         EnumDeclarationSyntax findEnum(string enumName)
             => declaration.DescendantNodes()

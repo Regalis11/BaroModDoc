@@ -141,6 +141,17 @@ public static class Extensions
     public static XElement? ElementOfName(this XElement element, string name, StringComparison comparison = StringComparison.OrdinalIgnoreCase)
         => element.Elements().FirstOrDefault(e => e.Name.LocalName.Equals(name, comparison));
 
+    public static TypeDeclarationSyntax? GetDeclaringType(this SyntaxNode node)
+    {
+        SyntaxNode? parentNode = node;
+        do
+        {
+            parentNode = parentNode?.Parent;
+        }
+        while (parentNode is not TypeDeclarationSyntax);
+        return parentNode as TypeDeclarationSyntax;
+    }
+    
     public static CodeComment FindCommentAttachedToMember(this SyntaxNode member)
     {
         char[] trimChars =

@@ -4,21 +4,22 @@ namespace BaroAutoDoc.SyntaxWalkers;
 
 sealed class ArbitraryTypeRipper : FolderSyntaxWalker
 {
-    private readonly string typeToFind;
+    private readonly Predicate<BaseTypeDeclarationSyntax> predicate;
 
-    private readonly List<BaseTypeDeclarationSyntax> declarations;
-    public IReadOnlyList<BaseTypeDeclarationSyntax> Declarations => declarations;
+    private readonly List<BaseTypeDeclarationSyntax> types = new();
+    public IReadOnlyList<BaseTypeDeclarationSyntax> Types => types;
 
-    public ArbitraryTypeRipper(string typeToFind)
+    public ArbitraryTypeRipper(Predicate<BaseTypeDeclarationSyntax> predicate)
     {
-        this.typeToFind = typeToFind;
-        this.declarations = new();
+        this.predicate = predicate;
     }
+
+    public ArbitraryTypeRipper(string typeToFind) : this(syntax => syntax.Identifier.Text == typeToFind) { }
 
     private void VisitTypeDeclaration(BaseTypeDeclarationSyntax node)
     {
-        if (!node.Identifier.Text.Equals(typeToFind)) { return; }
-        declarations.Add(node);
+        if (!predicate(node)) { return; }
+        types.Add(node);
     }
 
     public override void VisitClassDeclaration(ClassDeclarationSyntax node)
