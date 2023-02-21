@@ -31,10 +31,14 @@ sealed class ConditionalRip : Command
             foreach (var member in enumSyntax.Members)
             {
                 var comment = member.FindCommentAttachedToMember();
-                table.BodyRows.Add(new Page.Table.Row(member.Identifier.Text,
-                    comment.Element.ElementOfName("NoAutoDoc") == null
-                        ? comment.Text
-                        : "TODO: write manual comment"));
+                var autoDocEntryName = comment.Element.ElementOfName("AutoDocEntryName") is { } entryNameElem
+                    ? entryNameElem.GetAttributeValue("value")
+                    : member.Identifier.Text;
+                // TODO: fix Page.Table to be able to handle code blocks in cells
+                /*var example = comment.Element.ElementOfName("example") is { } exampleElem
+                    ? Page.CodeBlock.FromXElement(exampleElem).ToMarkdown()
+                    : "";*/
+                table.BodyRows.Add(new Page.Table.Row(autoDocEntryName, comment.Text));
             }
 
             return table;
@@ -49,7 +53,7 @@ sealed class ConditionalRip : Command
         intro.Components.Add(new Page.InlineMarkdown("***TODO***"));
 
         var typesSection = new Page.Section(); page.Subsections.Add(typesSection);
-        typesSection.Title = "Categories";
+        typesSection.Title = "Attributes";
         var typesTable = createEnumTable(conditionTypeEnum);
         typesSection.Body.Components.Add(typesTable);
 
@@ -78,7 +82,7 @@ sealed class ConditionalRip : Command
 
         var logicalOperatorSection = new Page.Section(); page.Subsections.Add(logicalOperatorSection);
         logicalOperatorSection.Title = "Logical operators";
-        logicalOperatorSection.Body.Components.Add(new Page.InlineMarkdown("Logical operators determine how multiple are combined."));
+        logicalOperatorSection.Body.Components.Add(new Page.InlineMarkdown("Logical operators determine how multiple conditionals are combined."));
         logicalOperatorSection.Body.Components.Add(createEnumTable(logicalOperatorEnum));
         
         Directory.SetCurrentDirectory(Path.GetDirectoryName(Assembly.GetCallingAssembly().Location)!);
