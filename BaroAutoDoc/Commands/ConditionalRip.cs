@@ -56,8 +56,26 @@ sealed class ConditionalRip : Command
         var comparisonOperatorSection = new Page.Section(); page.Subsections.Add(comparisonOperatorSection);
         comparisonOperatorSection.Title = "Comparison operators";
         comparisonOperatorSection.Body.Components.Add(new Page.InlineMarkdown("Comparison operators determine how the value being checked against is matched with the value given in XML."));
-        comparisonOperatorSection.Body.Components.Add(createEnumTable(comparisonOperatorEnum));
-        
+        var comparisonOperatorTable = createEnumTable(comparisonOperatorEnum);
+        comparisonOperatorTable.HeadRow!.Values[0] = "Operator";
+        comparisonOperatorSection.Body.Components.Add(comparisonOperatorTable);
+
+        var comparisonOperatorPrefixSwitch = declaration.DescendantNodes().OfType<MethodDeclarationSyntax>()
+            .First(m => m.Identifier.Text == "GetComparisonOperatorType")
+            .DescendantNodes().OfType<SwitchStatementSyntax>().First();
+        foreach (var member in comparisonOperatorEnum.Members)
+        {
+            var matchingSection = comparisonOperatorPrefixSwitch.Sections
+                .FirstOrDefault(s => s.Statements.Any(stmt => stmt.ToString().Contains(member.Identifier.Text)));
+            if (matchingSection is null) { continue; }
+            var labels = matchingSection.Labels
+                .OfType<CaseSwitchLabelSyntax>()
+                .Select(c => c.Value.ToString())
+                .ToArray();
+            comparisonOperatorTable.BodyRows.First(r => r.Values[0] == member.Identifier.Text).Values[0] = string.Join(", ", labels);
+        }
+        comparisonOperatorTable.BodyRows.RemoveAll(r => string.IsNullOrWhiteSpace(r.Values[0]));
+
         var logicalOperatorSection = new Page.Section(); page.Subsections.Add(logicalOperatorSection);
         logicalOperatorSection.Title = "Logical operators";
         logicalOperatorSection.Body.Components.Add(new Page.InlineMarkdown("Logical operators determine how multiple are combined."));
