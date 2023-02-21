@@ -3,10 +3,10 @@ using Microsoft.CodeAnalysis.CSharp;
 
 namespace BaroAutoDoc.SyntaxWalkers;
 
-class FolderSyntaxWalker : CSharpSyntaxWalker
+abstract class FolderSyntaxWalker : CSharpSyntaxWalker
 {
     public string CurrentFile = "";
-    
+
     public void VisitAllInDirectory(string dir)
     {
         if (!Directory.Exists(dir)) { return; }
