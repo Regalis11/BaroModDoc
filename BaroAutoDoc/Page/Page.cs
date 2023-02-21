@@ -72,6 +72,42 @@ class Page
 
         private IEnumerable<Row> AllRows => (HeadRow is null ? Array.Empty<Row>() : new[] { HeadRow }).Concat(BodyRows);
 
+        public void InsertColumn(Index insertAt, string header = "")
+        {
+            Row extendRow(Row row, string cellValue)
+            {
+                int intIndex = insertAt.GetOffset(row.Values.Length);
+                var newValues = new string[row.Values.Length + 1];
+                Array.Copy(sourceArray: row.Values, sourceIndex: 0, destinationArray: newValues, destinationIndex: 0, length: intIndex);
+                Array.Copy(sourceArray: row.Values, sourceIndex: intIndex, destinationArray: newValues, destinationIndex: intIndex+1, length: row.Values.Length-intIndex);
+                newValues[intIndex] = cellValue;
+                return new Row(newValues);
+            }
+
+            Row extendRowWithNoValue(Row row)
+                => extendRow(row, cellValue: "");
+
+            HeadRow = HeadRow != null ? extendRow(HeadRow, cellValue: header) : null;
+            var newBodyRows = BodyRows.Select(extendRowWithNoValue).ToArray();
+            BodyRows.Clear(); BodyRows.AddRange(newBodyRows);
+        }
+
+        public void RemoveColumn(Index removeAt)
+        {
+            Row shrinkRow(Row row)
+            {
+                int intIndex = removeAt.GetOffset(row.Values.Length);
+                var newValues = new string[row.Values.Length - 1];
+                Array.Copy(sourceArray: row.Values, sourceIndex: 0, destinationArray: newValues, destinationIndex: 0, length: intIndex-1);
+                Array.Copy(sourceArray: row.Values, sourceIndex: intIndex, destinationArray: newValues, destinationIndex: intIndex, length: (row.Values.Length-intIndex)-1);
+                return new Row(newValues);
+            }
+
+            HeadRow = HeadRow != null ? shrinkRow(HeadRow) : null;
+            var newBodyRows = BodyRows.Select(shrinkRow).ToArray();
+            BodyRows.Clear(); BodyRows.AddRange(newBodyRows);
+        }
+
         public override string ToMarkdown()
         {
             List<string> lines = new List<string>();
