@@ -64,7 +64,7 @@ public class ParsedType
 
     public readonly Dictionary<string, ImmutableArray<(string Value, string Description)>> Enums = new();
 
-    protected readonly List<DeclaredField> declaredFields = new();
+    public readonly List<DeclaredField> DeclaredFields = new();
 
     protected readonly ClassParsingOptions options;
 
@@ -108,7 +108,7 @@ internal sealed class RecordParser : ParsedType
         Comments.Add(comment);
 
         var localFields = GetDeclaredFields(record, comment.Element).ToImmutableArray();
-        declaredFields.AddRange(localFields);
+        DeclaredFields.AddRange(localFields);
 
         var initializers = type.Members.OfType<ConstructorDeclarationSyntax>();
 
@@ -169,7 +169,7 @@ internal sealed class ClassParser : ParsedType
 
     public override void ParseType(TypeDeclarationSyntax cls)
     {
-        declaredFields.AddRange(GetDeclaredFields(cls));
+        DeclaredFields.AddRange(GetDeclaredFields(cls));
 
         CodeComment comment = cls.FindCommentAttachedToMember();
         ParsedComment parsedComment = ParseComment(comment);
@@ -333,7 +333,7 @@ internal sealed class ClassParser : ParsedType
 
     private ImmutableArray<XMLAssignedField> FindXMLAssignedFields(BlockSyntax blockSyntax)
     {
-        var correlatedFields = GetAssignmentsToGlobalVariable(blockSyntax, declaredFields, GetLocalVariables(blockSyntax));
+        var correlatedFields = GetAssignmentsToGlobalVariable(blockSyntax, DeclaredFields, GetLocalVariables(blockSyntax));
 
         string elementName = "";
         if (blockSyntax.Parent is BaseMethodDeclarationSyntax methodSyntax)
@@ -386,7 +386,7 @@ internal sealed class ClassParser : ParsedType
                 continue;
             }
 
-            foreach (DeclaredField declaredField in declaredFields)
+            foreach (DeclaredField declaredField in DeclaredFields)
             {
                 DeclaredField field = declaredField;
 
@@ -670,7 +670,7 @@ internal sealed class ClassParser : ParsedType
     /// <param name="blockSyntax"></param>
     private ImmutableArray<SupportedSubElement> FindSubElementsFrom(BlockSyntax blockSyntax)
     {
-        var correlatedFields = GetAssignmentsToGlobalVariable(blockSyntax, declaredFields, GetLocalVariables(blockSyntax));
+        var correlatedFields = GetAssignmentsToGlobalVariable(blockSyntax, DeclaredFields, GetLocalVariables(blockSyntax));
 
         List<SupportedSubElement> elements = new();
         foreach (StatementSyntax statement in blockSyntax.Statements)
@@ -824,7 +824,7 @@ internal sealed class ClassParser : ParsedType
                     break;
                 }
 
-                foreach (DeclaredField declaredField in declaredFields)
+                foreach (DeclaredField declaredField in DeclaredFields)
                 {
                     if (declaredField.Name != name) { continue; }
 

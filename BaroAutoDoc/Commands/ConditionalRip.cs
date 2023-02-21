@@ -10,18 +10,26 @@ sealed class ConditionalRip : Command
     {
         Directory.SetCurrentDirectory(GlobalConfig.RepoPath);
 
+        var page = new Page(); page.Title = "Conditionals";
+        var intro = page.Body;
+        intro.Components.Add(new Page.InlineMarkdown("***TODO***"));
+
         const string srcPathFmt = "Barotrauma/Barotrauma{0}/{0}Source";
         var typeRipper = new ArbitraryTypeRipper("PropertyConditional");
         typeRipper.VisitAllInDirectory(string.Format(srcPathFmt, "Shared"));
 
-        var declaration = typeRipper.Declarations.Single();
+        var declaration = typeRipper.Declarations.Single() as ClassDeclarationSyntax ?? throw new Exception("Type is not class");
 
         EnumDeclarationSyntax findEnum(string enumName)
             => declaration.DescendantNodes()
                 .OfType<EnumDeclarationSyntax>()
                 .First(eds => eds.Identifier.Text.Equals(enumName));
 
-        Page.Table createEnumTable(EnumDeclarationSyntax enumSyntax)
+        var conditionTypeEnum = findEnum("ConditionType");
+        var comparisonOperatorEnum = findEnum("ComparisonOperatorType");
+        var logicalOperatorEnum = findEnum("LogicalOperatorType");
+
+        static Page.Table createEnumTable(EnumDeclarationSyntax enumSyntax)
         {
             Page.Table table = new()
             {
@@ -44,17 +52,29 @@ sealed class ConditionalRip : Command
             return table;
         }
 
-        var conditionTypeEnum = findEnum("ConditionType");
-        var comparisonOperatorEnum = findEnum("ComparisonOperatorType");
-        var logicalOperatorEnum = findEnum("LogicalOperatorType");
-
-        var page = new Page(); page.Title = "Conditionals";
-        var intro = page.Body;
-        intro.Components.Add(new Page.InlineMarkdown("***TODO***"));
+        var classParser = new ClassParser(new ClassParsingOptions());
+        classParser.ParseType(declaration);
+        
+        var cursedAttributes = declaration.DescendantNodes().OfType<MethodDeclarationSyntax>()
+            .First(m => m.Identifier.Text == "FromXElement")
+            .Body!.Statements.OfType<LocalDeclarationStatementSyntax>()
+            .Where(s => s.ToString().Contains("GetAttribute"))
+            .Select(s => s.Declaration.Variables.First().Initializer)
+            .OfType<EqualsValueClauseSyntax>()
+            .Select(s => s.Value)
+            .OfType<InvocationExpressionSyntax>()
+            .Select(s => s.ArgumentList.Arguments.First().ToString().EvaluateAsCSharpExpression())
+            .ToArray();
 
         var typesSection = new Page.Section(); page.Subsections.Add(typesSection);
         typesSection.Title = "Attributes";
         var typesTable = createEnumTable(conditionTypeEnum);
+        typesTable.HeadRow!.Values[0] = "Attribute name";
+        foreach (var cursedAttribute in cursedAttributes)
+        {
+            var field = classParser.DeclaredFields.First(f => f.Name == cursedAttribute);
+            typesTable.BodyRows.Add(new Page.Table.Row(field.Name, field.Description));
+        }
         typesSection.Body.Components.Add(typesTable);
 
         var comparisonOperatorSection = new Page.Section(); page.Subsections.Add(comparisonOperatorSection);
