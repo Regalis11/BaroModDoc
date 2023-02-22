@@ -169,12 +169,22 @@ public static class Extensions
 
         string triviaListToText(IEnumerable<SyntaxTrivia> triviaList, out XElement xml)
         {
-            var txt = string.Join("\n",
+            var txtUntreatedNewlines = string.Join("\n",
                 triviaList
                     .Select(t => t.ToString())
                     .SelectMany(t => t.Split("\n"))
-                    .Select(t => t.Trim(trimChars))
-                    .Where(s => !string.IsNullOrWhiteSpace(s)));
+                    .Select(t => t.Trim(trimChars)))
+                .Replace("\r", "");
+            var txt = "";
+            for (int i = 0; i < txtUntreatedNewlines.Length; i++)
+            {
+                txt += txtUntreatedNewlines[i] != '\n'
+                       || (i > 0 && txtUntreatedNewlines[i-1] == '\n')
+                       || (i < (txtUntreatedNewlines.Length-1) && txtUntreatedNewlines[i+1] == '\n')
+                       ? txtUntreatedNewlines[i]
+                       : " ";
+            }
+            txt = txt.Trim();
             
             xml = XElement.Parse($"<root>{txt}</root>");
 

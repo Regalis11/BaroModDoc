@@ -6,8 +6,7 @@ sealed class ArbitraryTypeRipper : FolderSyntaxWalker
 {
     private readonly Predicate<BaseTypeDeclarationSyntax> predicate;
 
-    private readonly List<BaseTypeDeclarationSyntax> types = new();
-    public IReadOnlyList<BaseTypeDeclarationSyntax> Types => types;
+    public readonly List<(string File, BaseTypeDeclarationSyntax Declaration)> Types = new();
 
     public ArbitraryTypeRipper(Predicate<BaseTypeDeclarationSyntax> predicate)
     {
@@ -19,7 +18,7 @@ sealed class ArbitraryTypeRipper : FolderSyntaxWalker
     private void VisitTypeDeclaration(BaseTypeDeclarationSyntax node)
     {
         if (!predicate(node)) { return; }
-        types.Add(node);
+        Types.Add((CurrentFile, node));
     }
 
     public override void VisitClassDeclaration(ClassDeclarationSyntax node)

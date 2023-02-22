@@ -12,25 +12,51 @@ sealed class ConditionalRip : Command
 
         var page = new Page(); page.Title = "Conditionals";
         var intro = page.Body;
-        intro.Components.Add(new Page.InlineMarkdown("***TODO***"));
-        intro.Components.Add(new Page.NewLine());
 
         const string srcPathFmt = "Barotrauma/Barotrauma{0}/{0}Source";
         var typeRipper = new ArbitraryTypeRipper("PropertyConditional");
         typeRipper.VisitAllInDirectory(string.Format(srcPathFmt, "Shared"));
+
+        var declaration = typeRipper.Types.Single().Declaration as ClassDeclarationSyntax ?? throw new Exception("Type is not class");
+
+        intro.Components.Add(new Page.InlineMarkdown(declaration.FindCommentAttachedToMember().Text));
+        intro.Components.Add(new Page.NewLine());
+        intro.Components.Add(new Page.NewLine());
         intro.Components.Add(new Page.RawText("Classes that use Conditionals: "));
 
-        var userFinder = new ArbitraryTypeRipper(syntax => syntax.ToString().Contains("PropertyConditional.FromXElement"));
-        userFinder.VisitAllInDirectory(string.Format(srcPathFmt, "Shared"));
-        userFinder.VisitAllInDirectory(string.Format(srcPathFmt, "Client"));
-        userFinder.VisitAllInDirectory(string.Format(srcPathFmt, "Server"));
+        ArbitraryTypeRipper userFinder = new(syntax => syntax.ToString().Contains("PropertyConditional.FromXElement"));
+        List<(string File, BaseTypeDeclarationSyntax Declaration)> users = new();
+        void findUsers(string projectDir)
+        {
+            userFinder.Types.Clear();
+            userFinder.VisitAllInDirectory(string.Format(srcPathFmt, projectDir));
+            users.AddRange(userFinder.Types);
+        }
+        findUsers("Shared");
+        findUsers("Client");
+        findUsers("Server");
+        var classNames = users.Select(c => c.Declaration.Identifier.Text).Distinct().ToArray();
+        bool first = true;
+        foreach (var className in classNames)
+        {
+            if (!first) { intro.Components.Add(new Page.RawText(", ")); }
+            first = false;
+            intro.Components.Add(new Page.RawText(className));
 
-        var users = userFinder.Types
-            .DistinctBy(c => c.Identifier.Text)
-            .ToArray();
-        intro.Components.Add(new Page.RawText(string.Join(", ", users.Select(u => u.Identifier.Text))));
-
-        var declaration = typeRipper.Types.Single() as ClassDeclarationSyntax ?? throw new Exception("Type is not class");
+            void addLink(string file)
+            {
+                var relativePath = Path.GetRelativePath(Directory.GetCurrentDirectory(), file).Replace("\\", "/");
+                string url = $"https://github.com/Regalis11/Barotrauma/blob/master/{relativePath}";
+                var sup = new Page.Superscript();
+                string[] toMatch = { "Client", "Shared", "Server" };
+                sup.Children.Add(new Page.Hyperlink(Url: url, Text: $"{toMatch.First(m => url.Contains($"{m}/{m}"))}", AltText: relativePath));
+                intro!.Components.Add(sup);
+            }
+            foreach (var pair in users.Where(u => u.Declaration.Identifier.Text == className))
+            {
+                addLink(pair.File);
+            }
+        }
 
         EnumDeclarationSyntax findEnum(string enumName)
             => declaration.DescendantNodes()
@@ -39,7 +65,7 @@ sealed class ConditionalRip : Command
 
         var conditionTypeEnum = findEnum("ConditionType");
         var comparisonOperatorEnum = findEnum("ComparisonOperatorType");
-        var logicalOperatorEnum = findEnum("LogicalOperatorType");
+        //var logicalOperatorEnum = findEnum("LogicalOperatorType");
 
         static Page.Table createEnumTable(EnumDeclarationSyntax enumSyntax)
         {
@@ -91,7 +117,7 @@ sealed class ConditionalRip : Command
 
         var comparisonOperatorSection = new Page.Section(); page.Subsections.Add(comparisonOperatorSection);
         comparisonOperatorSection.Title = "Comparison operators";
-        comparisonOperatorSection.Body.Components.Add(new Page.InlineMarkdown("Comparison operators determine how the value being checked against is matched with the value given in XML."));
+        comparisonOperatorSection.Body.Components.Add(new Page.InlineMarkdown(comparisonOperatorEnum.FindCommentAttachedToMember().Text));
         var comparisonOperatorTable = createEnumTable(comparisonOperatorEnum);
         comparisonOperatorTable.HeadRow!.Values[0] = "Operator";
         comparisonOperatorSection.Body.Components.Add(comparisonOperatorTable);
@@ -112,10 +138,10 @@ sealed class ConditionalRip : Command
         }
         comparisonOperatorTable.BodyRows.RemoveAll(r => string.IsNullOrWhiteSpace(r.Values[0]));
 
-        var logicalOperatorSection = new Page.Section(); page.Subsections.Add(logicalOperatorSection);
+        /*var logicalOperatorSection = new Page.Section(); page.Subsections.Add(logicalOperatorSection);
         logicalOperatorSection.Title = "Logical operators";
         logicalOperatorSection.Body.Components.Add(new Page.InlineMarkdown("Logical operators determine how multiple conditionals are combined."));
-        logicalOperatorSection.Body.Components.Add(createEnumTable(logicalOperatorEnum));
+        logicalOperatorSection.Body.Components.Add(createEnumTable(logicalOperatorEnum));*/
         
         Directory.SetCurrentDirectory(Path.GetDirectoryName(Assembly.GetCallingAssembly().Location)!);
 
