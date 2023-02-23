@@ -1,5 +1,8 @@
-﻿using System.Reflection;
+﻿using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 using BaroAutoDoc.SyntaxWalkers;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace BaroAutoDoc.Commands;
 
@@ -159,5 +162,56 @@ sealed class BaseRip : Command
         File.WriteAllText("markdown/ContentTypes.md",
             string.Join("\n", contentTypeFinder.ContentTypes.Select(t
                 => $"- [{t.Name}](ContentTypes/{t.Name}.md)")));
+    }
+
+    public static bool ConstructEnumTable(EnumDeclarationSyntax syntax, [NotNullWhen(true)] out ImmutableArray<Page.Section>? result)
+    {
+        Dictionary<string, ImmutableArray<(string Value, string Description)>> enums = new();
+
+        List<(string, string)> enumMembers = new();
+        foreach (var enumMember in syntax.Members)
+        {
+            enumMembers.Add((enumMember.Identifier.ValueText, enumMember.FindCommentAttachedToMember().Text));
+        }
+
+        enums.Add(syntax.Identifier.ValueText, enumMembers.ToImmutableArray());
+
+        return ConstructEnumTable(enums, out result);
+    }
+
+
+    public static bool ConstructEnumTable(Dictionary<string, ImmutableArray<(string, string)>> enums, [NotNullWhen(true)] out ImmutableArray<Page.Section>? result)
+    {
+        if (!enums.Any())
+        {
+            result = null;
+            return false;
+        }
+
+        var builder = ImmutableArray.CreateBuilder<Page.Section>();
+        foreach (var (type, values) in enums)
+        {
+            Page.Section section = new()
+            {
+                Title = type
+            };
+
+            Page.Table table = new()
+            {
+                HeadRow = new Page.Table.Row("Value", "Description")
+            };
+
+            foreach (var (value, description) in values)
+            {
+                table.BodyRows.Add(new Page.Table.Row(value, description));
+            }
+
+            section.Body.Components.Add(table);
+
+            builder.Add(section);
+        }
+
+        result = builder.ToImmutable();
+        return true;
     }
 }
