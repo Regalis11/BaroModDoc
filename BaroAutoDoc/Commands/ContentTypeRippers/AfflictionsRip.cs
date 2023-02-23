@@ -20,8 +20,9 @@ sealed class AfflictionsRip : Command
 
         Directory.SetCurrentDirectory(GlobalConfig.RepoPath);
 
+        // TODO add a way to specify class parsing options
         builder
-            .Prepare("Prefabs")
+            .Prepare("Prefabs") // TODO not required idk why I added it
             .AddDirectory("Barotrauma/Barotrauma{0}/{0}Source/Characters/Health/Afflictions/", "*.cs", fmt: new[] { "Shared", "Client", "Server" })
             .AddFile("Barotrauma/BarotraumaShared/SharedSource/Map/Explosion.cs") // for testing
             .Map
