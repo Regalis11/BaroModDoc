@@ -1,5 +1,4 @@
 ﻿using System.Collections.Immutable;
-using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Text;
 using System.Xml.Linq;
@@ -9,24 +8,65 @@ namespace BaroAutoDoc.Commands.ContentTypeSpecific;
 
 sealed class AfflictionsRip : Command
 {
-    private readonly record struct AfflictionSection(Page.Section Section, ImmutableArray<(string, string, string)> ElementTable, ParsedType Parser);
+    //private readonly record struct AfflictionSection(Page.Section Section, ImmutableArray<(string, string, string)> ElementTable, ParsedType Parser);
 
     public void Invoke()
     {
-        Directory.SetCurrentDirectory(GlobalConfig.RepoPath);
-        const string srcPathFmt = "Barotrauma/Barotrauma{0}/{0}Source/Characters/Health/Afflictions/";
-        string[] srcPathParams = { "Shared", "Client" };
+        SyntaxRipperBuilder builder = new();
 
-        var contentTypeFinder = new AfflictionRipper();
-        foreach (string p in srcPathParams)
-        {
-            string srcPath = string.Format(srcPathFmt, p);
-            contentTypeFinder.VisitAllInDirectory(srcPath);
-        }
+        /*
+        const string srcPathFmt = "Barotrauma/Barotrauma{0}/{0}Source/Characters/Health/Afflictions/";
+        string[] srcPathParams = { "Shared", "Client" };*/
+
+        Directory.SetCurrentDirectory(GlobalConfig.RepoPath);
+
+        builder
+            .Prepare("Prefabs")
+            .AddDirectory("Barotrauma/Barotrauma{0}/{0}Source/Characters/Health/Afflictions/", "*.cs", fmt: new[] { "Shared", "Client", "Server" })
+            .AddFile("Barotrauma/BarotraumaShared/SharedSource/Map/Explosion.cs") // for testing
+            .Map
+            (
+                new FileMap("AfflictionPrefab.md")
+                {
+                    "AfflictionPrefab",
+                    "AfflictionPrefabHusk",
+                    "Effect",
+                    "PeriodicEffect"
+                },
+                new FileMap("Affliction.md")
+                {
+                    "Affliction",
+                    "AfflictionHusk",
+                    "AfflictionPsychosis",
+                    "AfflictionSpaceHerpes"
+                },
+                new FileMap("Explosion.md") // for testing
+                {
+                    "Explosion"
+                }
+            )
+            .Submit();
 
         Directory.SetCurrentDirectory(Path.GetDirectoryName(Assembly.GetCallingAssembly().Location)!);
 
-        Dictionary<string, ParsedType> parsedClasses = new();
+        var files = builder.Build();
+
+        foreach (var (file, parsers) in files)
+        {
+            Page page = new()
+            {
+                Title = "...?" // TODO header
+            };
+            foreach (ParsedType parser in parsers)
+            {
+                var section = CreateSection("Test", parser); // TODO class name
+                page.Subsections.Add(section);
+            }
+
+            File.WriteAllText(file, page.ToMarkdown());
+        }
+
+        /*Dictionary<string, ParsedType> parsedClasses = new();
         foreach (var (key, cls) in contentTypeFinder.AfflictionPrefabs)
         {
             if (parsedClasses.TryGetValue(key, out ParsedType? parser))
@@ -42,6 +82,7 @@ sealed class AfflictionsRip : Command
             parser.ParseType(cls);
             parsedClasses.Add(key, parser);
         }
+
         Dictionary<string, ParsedType> parsedAfflictionTypes = new();
         foreach (var (key, cls) in contentTypeFinder.AfflictionTypes)
         {
@@ -236,9 +277,9 @@ sealed class AfflictionsRip : Command
 
             result = builder.ToImmutable();
             return true;
-        }
+        } */
 
-        static AfflictionSection CreateSection(string name, ParsedType parser)
+        static Page.Section CreateSection(string name, ParsedType parser)
         {
             Page.Section mainSection = new()
             {
@@ -248,6 +289,7 @@ sealed class AfflictionsRip : Command
             foreach (CodeComment s in parser.Comments)
             {
                 if (string.IsNullOrWhiteSpace(s.Text)) { continue; }
+
                 mainSection.Body.Components.Add(new Page.RawText(s.Text));
                 mainSection.Body.Components.Add(new Page.NewLine());
                 foreach (var element in s.Element.Elements())
@@ -310,19 +352,46 @@ sealed class AfflictionsRip : Command
                 mainSection.Subsections.Add(attributesSection);
             }
 
-            List<(string, string, string)> elementTable = new();
-
-            foreach (SupportedSubElement affectedElement in parser.SupportedSubElements)
+            Page.Section elementSection = new()
             {
-                if (affectedElement.AffectedField.Length is 0) { continue; }
+                Title = "Elements"
+            };
 
-                // TODO we probably need to generate a list of all these elements
-                // for example sprite, sound, effect
-                DeclaredField field = affectedElement.AffectedField.First();
-                elementTable.Add((affectedElement.XMLName, field.Type, field.Description));
+            Page.Table table = new()
+            {
+                HeadRow = new Page.Table.Row("Element", "Type", "Description")
+            };
+
+            foreach (SupportedSubElement element in parser.SupportedSubElements)
+            {
+                if (element.AffectedField.Length is 0) { continue; }
+                DeclaredField field = element.AffectedField.First();
+
+                if (string.IsNullOrWhiteSpace(field.Type))
+                {
+                    Console.WriteLine($"WARNING: Element {element} has no type!");
+                    continue;
+                }
+
+                /*string fmtType =
+                    new Page.Hyperlink(
+                            Url: sections.ContainsKey(field.Type)
+                                ? $"#{type.ToLower()}"
+                                : $"{type}.md",
+                            Text: type,
+                            AltText: description)
+                        .ToMarkdown();*/
+
+                table.BodyRows.Add(new Page.Table.Row(element.XMLName, field.Type, field.Description));
             }
 
-            return new AfflictionSection(mainSection, elementTable.ToImmutableArray(), parser);
+            if (table.BodyRows.Any())
+            {
+                elementSection.Body.Components.Add(table);
+                mainSection.Subsections.Add(elementSection);
+            }
+
+            return mainSection;
         }
     }
 }

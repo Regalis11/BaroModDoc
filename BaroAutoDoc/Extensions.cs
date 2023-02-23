@@ -1,5 +1,6 @@
 ﻿using System.Collections.Immutable;
 using System.Diagnostics;
+using System.IO.Enumeration;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
@@ -16,6 +17,14 @@ public readonly record struct CodeComment(string Text, XElement Element)
 
 public static class Extensions
 {
+    public static IEnumerable<T> NodesOfType<T>(this SyntaxTree node) => node.GetRoot().DescendantNodes().OfType<T>();
+
+    public static bool MatchesIgnoreCaseWithWildcards<T>(this T obj, string str) =>
+        FileSystemName.MatchesSimpleExpression(str, obj?.ToString() ?? string.Empty, ignoreCase: true);
+
+    public static bool EqualsIgnoreCase(this SyntaxToken token, string other) =>
+        token.ValueText.Equals(other, StringComparison.OrdinalIgnoreCase);
+
     public static void AddRange<T>(this ImmutableHashSet<T>.Builder builder, IEnumerable<T> items)
     {
         foreach (var item in items)
