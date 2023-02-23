@@ -27,21 +27,21 @@ sealed class AfflictionsRip : Command
             .AddFile("Barotrauma/BarotraumaShared/SharedSource/Map/Explosion.cs") // for testing
             .Map
             (
-                new FileMap("AfflictionPrefab.md")
+                new FileMap("AfflictionPrefab")
                 {
                     "AfflictionPrefab",
                     "AfflictionPrefabHusk",
                     "Effect",
                     "PeriodicEffect"
                 },
-                new FileMap("Affliction.md")
+                new FileMap("Affliction")
                 {
                     "Affliction",
                     "AfflictionHusk",
                     "AfflictionPsychosis",
                     "AfflictionSpaceHerpes"
                 },
-                new FileMap("Explosion.md") // for testing
+                new FileMap("Explosion") // for testing
                 {
                     "Explosion"
                 }
@@ -56,15 +56,15 @@ sealed class AfflictionsRip : Command
         {
             Page page = new()
             {
-                Title = "...?" // TODO header
+                Title = file
             };
             foreach (ParsedType parser in parsers)
             {
-                var section = CreateSection("Test", parser); // TODO class name
+                var section = CreateSection(parser.Name, parser);
                 page.Subsections.Add(section);
             }
 
-            File.WriteAllText(file, page.ToMarkdown());
+            File.WriteAllText($"{file}.md", page.ToMarkdown());
         }
 
         /*Dictionary<string, ParsedType> parsedClasses = new();

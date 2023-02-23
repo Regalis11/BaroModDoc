@@ -48,7 +48,7 @@ sealed class StatusEffectsRip : Command
 
         foreach (var (key, cls) in contentTypeFinder.StatusEffectTypes)
         {
-            ClassParser parser = new ClassParser(new ClassParsingOptions
+            ParsedType parser = ParsedType.CreateParser(cls, new ClassParsingOptions
             {
                 InitializerMethodNames = new[] { "InitProjSpecific" },
             });
@@ -59,8 +59,6 @@ sealed class StatusEffectsRip : Command
             {
                 Title = key
             };
-
-
 
             string introductionText = File.ReadAllText("ManualDocs/StatusEffectIntroduction.md");
             if (actionTypes != null && BaseRip.ConstructEnumTable(actionTypes, out var actionTypesTable))
@@ -86,7 +84,7 @@ sealed class StatusEffectsRip : Command
 
             foreach (ClassDeclarationSyntax syntax in cls.Members.OfType<ClassDeclarationSyntax>())
             {
-                ClassParser subParser = new ClassParser(new ClassParsingOptions());
+                ParsedType subParser = ParsedType.CreateParser(syntax, new ClassParsingOptions());
                 subParser.ParseType(syntax);
 
                 page.Subsections.Add(CreateSection(syntax.Identifier.ValueText, subParser, includeComments: true, elementTable: null, preamble: null));

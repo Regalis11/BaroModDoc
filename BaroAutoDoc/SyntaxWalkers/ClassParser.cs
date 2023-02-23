@@ -64,12 +64,15 @@ public class ParsedType
 
     public readonly Dictionary<string, ImmutableArray<(string Value, string Description)>> Enums = new();
 
+    public readonly string Name;
+
     protected readonly List<DeclaredField> declaredFields = new();
 
     protected readonly ClassParsingOptions options;
 
-    protected ParsedType(ClassParsingOptions options)
+    protected ParsedType(ClassParsingOptions options, string name)
     {
+        Name = name;
         this.options = options;
     }
 
@@ -77,28 +80,26 @@ public class ParsedType
 
     public static ParsedType CreateParser(TypeDeclarationSyntax type, ClassParsingOptions options)
     {
+        string name = type.Identifier.ValueText;
         return type switch
         {
-            RecordDeclarationSyntax => new RecordParser(options),
-            _ => new ClassParser(options)
+            RecordDeclarationSyntax => new RecordParser(options, name),
+            _ => new ClassParser(options, name)
         };
     }
 }
 
 public sealed class ExtraType : ParsedType
 {
-    public readonly string Identifier;
-
-    public ExtraType(string identifier, CodeComment description) : base(new ClassParsingOptions(Array.Empty<string>()))
+    public ExtraType(string identifier, CodeComment description) : base(new ClassParsingOptions(Array.Empty<string>()), identifier)
     {
-        Identifier = identifier;
         Comments.Add(description);
     }
 }
 
 internal sealed class RecordParser : ParsedType
 {
-    public RecordParser(ClassParsingOptions options) : base(options) { }
+    public RecordParser(ClassParsingOptions options, string name) : base(options, name) { }
 
     public override void ParseType(TypeDeclarationSyntax type)
     {
@@ -165,7 +166,7 @@ internal sealed class RecordParser : ParsedType
 
 internal sealed class ClassParser : ParsedType
 {
-    public ClassParser(ClassParsingOptions options) : base(options) { }
+    public ClassParser(ClassParsingOptions options, string name) : base(options, name) { }
 
     public override void ParseType(TypeDeclarationSyntax cls)
     {
@@ -238,7 +239,7 @@ internal sealed class ClassParser : ParsedType
 
         foreach (ExtraType extraType in parsedComment.ExtraDeclarations.ExtraTypes)
         {
-            SubClasses.Add(extraType.Identifier, extraType);
+            SubClasses.Add(extraType.Name, extraType);
         }
     }
 
