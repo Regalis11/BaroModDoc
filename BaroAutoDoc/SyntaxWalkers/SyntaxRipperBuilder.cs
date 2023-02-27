@@ -8,7 +8,9 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace BaroAutoDoc.SyntaxWalkers;
 
-internal readonly record struct TypeCollection(ImmutableArray<TypeDeclarationSyntax> Types, ImmutableArray<EnumDeclarationSyntax> Enums)
+internal readonly record struct TypeCollection(ImmutableArray<TypeDeclarationSyntax> Types,
+                                               ImmutableArray<EnumDeclarationSyntax> Enums,
+                                               ClassParsingOptions Options)
 {
     public ImmutableArray<BaseTypeDeclarationSyntax> All => Types.Cast<BaseTypeDeclarationSyntax>().Concat(Enums).ToImmutableArray();
 }
@@ -31,6 +33,38 @@ internal sealed class FileMap : IEnumerable<string>
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }
 
+internal class GenericRipper : CSharpSyntaxWalker
+{
+    private readonly SyntaxTree syntaxTree;
+    private readonly ImmutableArray<BaseTypeDeclarationSyntax>.Builder builder = ImmutableArray.CreateBuilder<BaseTypeDeclarationSyntax>();
+
+    public GenericRipper(string file) => syntaxTree = CSharpSyntaxTree.ParseText(File.ReadAllText(file));
+
+    public ImmutableArray<BaseTypeDeclarationSyntax> Run()
+    {
+        Visit(syntaxTree.GetRoot());
+        return builder.ToImmutable();
+    }
+
+    public override void VisitClassDeclaration(ClassDeclarationSyntax node)
+    {
+        builder.Add(node);
+        base.VisitClassDeclaration(node);
+    }
+
+    public override void VisitStructDeclaration(StructDeclarationSyntax node)
+    {
+        builder.Add(node);
+        base.VisitStructDeclaration(node);
+    }
+
+    public override void VisitEnumDeclaration(EnumDeclarationSyntax node)
+    {
+        builder.Add(node);
+        base.VisitEnumDeclaration(node);
+    }
+
+}
 
 internal sealed class SyntaxRipperBuilder
 {
@@ -39,6 +73,7 @@ internal sealed class SyntaxRipperBuilder
         private readonly List<TypeAndFile<TypeDeclarationSyntax>> types = new();
         private readonly List<TypeAndFile<EnumDeclarationSyntax>> enums = new();
         private readonly List<FileMap> mappings = new();
+        private ClassParsingOptions parsingOptions = new();
 
         private readonly SyntaxRipperBuilder builder;
 
@@ -74,17 +109,23 @@ internal sealed class SyntaxRipperBuilder
 
             void AddFilePath(string file)
             {
-                SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(File.ReadAllText(file));
-                foreach (TypeDeclarationSyntax t in syntaxTree.NodesOfType<TypeDeclarationSyntax>())
+                var parsedTypes = new GenericRipper(file).Run();
+                foreach (TypeDeclarationSyntax t in parsedTypes.OfType<TypeDeclarationSyntax>())
                 {
                     types.Add(new TypeAndFile<TypeDeclarationSyntax>(file, t));
                 }
 
-                foreach (EnumDeclarationSyntax e in syntaxTree.NodesOfType<EnumDeclarationSyntax>())
+                foreach (EnumDeclarationSyntax e in parsedTypes.OfType<EnumDeclarationSyntax>())
                 {
                     enums.Add(new TypeAndFile<EnumDeclarationSyntax>(file, e));
                 }
             }
+        }
+
+        public AddedFile WithOptions(ClassParsingOptions options)
+        {
+            parsingOptions = options;
+            return this;
         }
 
         public AddedFile SetDirectory(string dirPath)
@@ -168,8 +209,9 @@ internal sealed class SyntaxRipperBuilder
         public SyntaxRipperBuilder Submit()
         {
             builder.Types[key] = new TypeCollection(
-                types.Select(static file => file.Type).ToImmutableArray(),
-                enums.Select(static file => file.Type).ToImmutableArray());
+                Types: types.Select(static file => file.Type).ToImmutableArray(),
+                Enums: enums.Select(static file => file.Type).ToImmutableArray(),
+                Options: parsingOptions);
 
             foreach (FileMap map in mappings)
             {
@@ -206,7 +248,7 @@ internal sealed class SyntaxRipperBuilder
                 ParsedType? parser = null;
                 foreach (TypeDeclarationSyntax type in types)
                 {
-                    parser ??= ParsedType.CreateParser(type, new ClassParsingOptions());
+                    parser ??= ParsedType.CreateParser(type, collection.Options);
                     parser.ParseType(type);
                 }
 

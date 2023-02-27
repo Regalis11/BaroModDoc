@@ -20,11 +20,11 @@ sealed class AfflictionsRip : Command
 
         Directory.SetCurrentDirectory(GlobalConfig.RepoPath);
 
-        // TODO add a way to specify class parsing options
         builder
             .Prepare("Prefabs") // TODO not required idk why I added it
             .AddDirectory("Barotrauma/Barotrauma{0}/{0}Source/Characters/Health/Afflictions/", "*.cs", fmt: new[] { "Shared", "Client", "Server" })
             .AddFile("Barotrauma/BarotraumaShared/SharedSource/Map/Explosion.cs") // for testing
+            .WithOptions(new ClassParsingOptions(new []{ "LoadEffects" }))
             .Map
             (
                 new FileMap("AfflictionPrefab")
@@ -32,6 +32,7 @@ sealed class AfflictionsRip : Command
                     "AfflictionPrefab",
                     "AfflictionPrefabHusk",
                     "Effect",
+                    "AppliedStatValue",
                     "PeriodicEffect"
                 },
                 new FileMap("Affliction")
@@ -58,6 +59,7 @@ sealed class AfflictionsRip : Command
             {
                 Title = file
             };
+
             foreach (ParsedType parser in parsers)
             {
                 var section = CreateSection(parser.Name, parser);
@@ -390,6 +392,29 @@ sealed class AfflictionsRip : Command
             {
                 elementSection.Body.Components.Add(table);
                 mainSection.Subsections.Add(elementSection);
+            }
+
+            foreach (var (key, values) in parser.Enums)
+            {
+                Page.Section enumSection = new()
+                {
+                    Title = key
+                };
+
+                Page.Table enumTable = new()
+                {
+                    HeadRow = new Page.Table.Row("Value", "Description")
+                };
+
+                foreach (var (value, description) in values)
+                {
+                    enumTable.BodyRows.Add(new Page.Table.Row(value, description));
+                }
+
+                if (!enumTable.BodyRows.Any()) { continue; }
+
+                enumSection.Body.Components.Add(enumTable);
+                mainSection.Subsections.Add(enumSection);
             }
 
             return mainSection;
