@@ -62,19 +62,19 @@ sealed class AfflictionsRip : Command
                 Title = file
             };
 
-            var (classes, enums) = lists;
-
-            foreach (var parser in classes)
+            foreach (var either in lists)
             {
-                var section = CreateSection(parser.Name, parser);
-                page.Subsections.Add(section);
-            }
-
-            foreach (var parser in enums)
-            {
-                var section = CreateEnumSection(parser);
-                if (section is null) { continue; }
-                page.Subsections.Add(section);
+                if (either.TryGet(out ParsedType? parser))
+                {
+                    var section = CreateSection(parser.Name, parser);
+                    page.Subsections.Add(section);
+                }
+                else if (either.TryGet(out ParsedEnum enumParser))
+                {
+                    var section = CreateEnumSection(enumParser);
+                    if (section is null) { continue; }
+                    page.Subsections.Add(section);
+                }
             }
 
             File.WriteAllText($"{file}.md", page.ToMarkdown());

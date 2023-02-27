@@ -2,6 +2,7 @@
 
 using System.Collections;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -15,15 +16,48 @@ internal readonly record struct TypeCollection(ImmutableArray<TypeDeclarationSyn
     public ImmutableArray<BaseTypeDeclarationSyntax> All => Types.Cast<BaseTypeDeclarationSyntax>().Concat(Enums).ToImmutableArray();
 }
 
-internal sealed class ListPair<T, U>
+internal readonly struct Either<T, U>
 {
-    public readonly List<T> First = new();
-    public readonly List<U> Second = new();
+    private readonly T? first;
+    private readonly U? second;
 
-    public void Deconstruct(out List<T> first, out List<U> second)
+    private readonly bool hasT = false,
+                          hasU = false;
+
+    public Either(T type)
     {
-        first = First;
-        second = Second;
+        hasT = true;
+        first = type;
+        second = default;
+    }
+
+    public Either(U type)
+    {
+        hasU = true;
+        first = default;
+        second = type;
+    }
+
+    public bool TryGet([NotNullWhen(true)] out T? type)
+    {
+        if (!hasT)
+        {
+            type = default;
+            return false;
+        }
+        type = first!;
+        return true;
+    }
+
+    public bool TryGet([NotNullWhen(true)] out U? type)
+    {
+        if (!hasU)
+        {
+            type = default;
+            return false;
+        }
+        type = second!;
+        return true;
     }
 }
 
@@ -244,10 +278,10 @@ internal sealed class SyntaxRipperBuilder
 
     public AddedFile Prepare(string key) => new AddedFile(this, key);
 
-    public ImmutableDictionary<string, ListPair<ParsedType, ParsedEnum>> Build()
+    public ImmutableDictionary<string, List<Either<ParsedType, ParsedEnum>>> Build()
     {
         // TODO this is not in order
-        var typeBuilder = ImmutableDictionary.CreateBuilder<string, ListPair<ParsedType, ParsedEnum>>();
+        var typeBuilder = ImmutableDictionary.CreateBuilder<string, List<Either<ParsedType, ParsedEnum>>>();
 
         foreach (TypeCollection collection in Types.Values)
         {
@@ -285,7 +319,7 @@ internal sealed class SyntaxRipperBuilder
                 {
                     if (!identifiers.Contains(identifier)) { continue; }
                     AddIfNotExists(file);
-                    typeBuilder[file].First.Add(parser);
+                    typeBuilder[file].Add(new Either<ParsedType, ParsedEnum>(parser));
                     break;
                 }
             }
@@ -297,7 +331,7 @@ internal sealed class SyntaxRipperBuilder
             {
                 if (!identifiers.Contains(e.Name)) { continue; }
                 AddIfNotExists(file);
-                typeBuilder[file].Second.Add(e);
+                typeBuilder[file].Add(new Either<ParsedType, ParsedEnum>(e));
                 break;
             }
         }
@@ -306,17 +340,26 @@ internal sealed class SyntaxRipperBuilder
         {
             if (!typeBuilder.ContainsKey(file))
             {
-                typeBuilder.Add(file, new ListPair<ParsedType, ParsedEnum>());
+                typeBuilder.Add(file, new List<Either<ParsedType, ParsedEnum>>());
             }
         }
 
-        // sort typeBuilder based on the order they are in FilesToCreate
         foreach (var (file, pair) in typeBuilder)
         {
             var orderList = FilesToCreate[file];
-            pair.First.Sort((a, b) => orderList.IndexOf(a.Name).CompareTo(orderList.IndexOf(b.Name)));
-            // TODO enums are not sorted
-            pair.Second.Sort((a, b) => orderList.IndexOf(a.Name).CompareTo(orderList.IndexOf(b.Name)));
+            pair.Sort(Comparison);
+
+            int Comparison(Either<ParsedType, ParsedEnum> a, Either<ParsedType, ParsedEnum> b)
+            {
+                int aIndex = orderList.IndexOf(GetTypeName(a));
+                int bIndex = orderList.IndexOf(GetTypeName(b));
+
+                return aIndex.CompareTo(bIndex);
+
+                static string GetTypeName(Either<ParsedType, ParsedEnum> either) =>
+                    either.TryGet(out ParsedType? t) ? t.Name :
+                    either.TryGet(out ParsedEnum e) ? e.Name : throw new Exception();
+            }
         }
 
         return typeBuilder.ToImmutable();
