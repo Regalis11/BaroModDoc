@@ -65,18 +65,19 @@ sealed class StatusEffectsRip : Command
             {
                 introductionText = introductionText.Replace("[TODO: list ActionTypes]", string.Join('\n', actionTypesTable.Value.Select(s => s.ToMarkdown())));
             }
-            if (parser.Enums.ContainsKey("TargetType"))
+
+            foreach (ParsedEnum e in parser.Enums.ToList())
             {
-                var targetTypes = new Dictionary<string, ImmutableArray<(string, string)>>
-                {
-                    { "TargetType", parser.Enums["TargetType"] }
-                };
-                parser.Enums.Remove("TargetType");
-                if (BaseRip.ConstructEnumTable(targetTypes, out ImmutableArray<Page.Section>? enumTable))
+                if (!e.Name.EqCaseInsensitive("TargetType")) { continue; }
+
+                var targetTypes = new List<ParsedEnum> { e };
+                parser.Enums.Remove(e);
+                if (BaseRip.ConstructEnumTable(targetTypes, out ImmutableArray<Section>? enumTable))
                 {
                     introductionText = introductionText.Replace("[TODO: list TargetTypes]", string.Join('\n', enumTable.Value.Select(s => s.ToMarkdown())));
                 }
             }
+
             var introduction = new InlineMarkdown(introductionText);
             var elementTable = new InlineMarkdown(File.ReadAllText("ManualDocs/StatusEffectElementTable.md"));
 

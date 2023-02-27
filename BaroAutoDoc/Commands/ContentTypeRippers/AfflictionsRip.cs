@@ -31,6 +31,8 @@ sealed class AfflictionsRip : Command
                 {
                     "AfflictionPrefab",
                     "AfflictionPrefabHusk",
+                    "Description",
+                    "TargetType",
                     "Effect",
                     "AppliedStatValue",
                     "PeriodicEffect"
@@ -53,16 +55,25 @@ sealed class AfflictionsRip : Command
 
         var files = builder.Build();
 
-        foreach (var (file, parsers) in files)
+        foreach (var (file, lists) in files)
         {
             Page page = new()
             {
                 Title = file
             };
 
-            foreach (ParsedType parser in parsers)
+            var (classes, enums) = lists;
+
+            foreach (var parser in classes)
             {
                 var section = CreateSection(parser.Name, parser);
+                page.Subsections.Add(section);
+            }
+
+            foreach (var parser in enums)
+            {
+                var section = CreateEnumSection(parser);
+                if (section is null) { continue; }
                 page.Subsections.Add(section);
             }
 
@@ -394,30 +405,38 @@ sealed class AfflictionsRip : Command
                 mainSection.Subsections.Add(elementSection);
             }
 
-            foreach (var (key, values) in parser.Enums)
+            /*foreach (var @enum in parser.Enums)
             {
-                Page.Section enumSection = new()
-                {
-                    Title = key
-                };
+                var enumSections = CreateEnumSection(@enum);
+                if (enumSections is null) { continue; }
+                mainSection.Subsections.Add(enumSections);
+            }*/
 
-                Page.Table enumTable = new()
-                {
-                    HeadRow = new Page.Table.Row("Value", "Description")
-                };
-
-                foreach (var (value, description) in values)
-                {
-                    enumTable.BodyRows.Add(new Page.Table.Row(value, description));
-                }
-
-                if (!enumTable.BodyRows.Any()) { continue; }
-
-                enumSection.Body.Components.Add(enumTable);
-                mainSection.Subsections.Add(enumSection);
-            }
 
             return mainSection;
+        }
+
+        static Page.Section? CreateEnumSection(ParsedEnum e)
+        {
+            Page.Section enumSection = new()
+            {
+                Title = e.Name
+            };
+
+            Page.Table enumTable = new()
+            {
+                HeadRow = new Page.Table.Row("Value", "Description")
+            };
+
+            foreach (var (value, description) in e.Values)
+            {
+                enumTable.BodyRows.Add(new Page.Table.Row(value, description));
+            }
+
+            if (!enumTable.BodyRows.Any()) { return null; }
+
+            enumSection.Body.Components.Add(enumTable);
+            return enumSection;
         }
     }
 }

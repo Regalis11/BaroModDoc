@@ -15,6 +15,18 @@ internal readonly record struct TypeCollection(ImmutableArray<TypeDeclarationSyn
     public ImmutableArray<BaseTypeDeclarationSyntax> All => Types.Cast<BaseTypeDeclarationSyntax>().Concat(Enums).ToImmutableArray();
 }
 
+internal sealed class ListPair<T, U>
+{
+    public readonly List<T> First = new();
+    public readonly List<U> Second = new();
+
+    public void Deconstruct(out List<T> first, out List<U> second)
+    {
+        first = First;
+        second = Second;
+    }
+}
+
 internal readonly record struct TypeAndFile<T>(string File, T Type);
 
 internal sealed class FileMap : IEnumerable<string>
@@ -232,16 +244,25 @@ internal sealed class SyntaxRipperBuilder
 
     public AddedFile Prepare(string key) => new AddedFile(this, key);
 
-    public ImmutableDictionary<string, List<ParsedType>> Build()
+    public ImmutableDictionary<string, ListPair<ParsedType, ParsedEnum>> Build()
     {
         // TODO this is not in order
-        var builder = ImmutableDictionary.CreateBuilder<string, List<ParsedType>>();
+        var typeBuilder = ImmutableDictionary.CreateBuilder<string, ListPair<ParsedType, ParsedEnum>>();
 
         foreach (TypeCollection collection in Types.Values)
         {
             var typeDict = collection.Types
                                      .GroupBy(static t => t.Identifier.ValueText)
                                      .ToDictionary(static g => g.Key, static g => g.ToImmutableArray());
+
+            HashSet<string> alreadyDeclaredEnums = new();
+
+            foreach (EnumDeclarationSyntax e in collection.Enums)
+            {
+                ParsedEnum parsedEnum = ParsedType.ParseEnum(e);
+                alreadyDeclaredEnums.Add(parsedEnum.Name);
+                AddEnum(parsedEnum);
+            }
 
             foreach (var (identifier, types) in typeDict)
             {
@@ -254,23 +275,50 @@ internal sealed class SyntaxRipperBuilder
 
                 if (parser is null) { continue; }
 
+                foreach (ParsedEnum extraEnum in parser.Enums)
+                {
+                    if (alreadyDeclaredEnums.Contains(extraEnum.Name)) { continue; }
+                    AddEnum(extraEnum);
+                }
+
                 foreach (var (file, identifiers) in FilesToCreate)
                 {
                     if (!identifiers.Contains(identifier)) { continue; }
-
-                    if (!builder.ContainsKey(file))
-                    {
-                        builder.Add(file, new List<ParsedType>());
-                    }
-
-                    builder[file].Add(parser);
+                    AddIfNotExists(file);
+                    typeBuilder[file].First.Add(parser);
                     break;
                 }
             }
-
-            // TODO add enums
         }
 
-        return builder.ToImmutable();
+        void AddEnum(ParsedEnum e)
+        {
+            foreach (var (file, identifiers) in FilesToCreate)
+            {
+                if (!identifiers.Contains(e.Name)) { continue; }
+                AddIfNotExists(file);
+                typeBuilder[file].Second.Add(e);
+                break;
+            }
+        }
+
+        void AddIfNotExists(string file)
+        {
+            if (!typeBuilder.ContainsKey(file))
+            {
+                typeBuilder.Add(file, new ListPair<ParsedType, ParsedEnum>());
+            }
+        }
+
+        // sort typeBuilder based on the order they are in FilesToCreate
+        foreach (var (file, pair) in typeBuilder)
+        {
+            var orderList = FilesToCreate[file];
+            pair.First.Sort((a, b) => orderList.IndexOf(a.Name).CompareTo(orderList.IndexOf(b.Name)));
+            // TODO enums are not sorted
+            pair.Second.Sort((a, b) => orderList.IndexOf(a.Name).CompareTo(orderList.IndexOf(b.Name)));
+        }
+
+        return typeBuilder.ToImmutable();
     }
 }

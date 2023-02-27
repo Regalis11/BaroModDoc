@@ -48,6 +48,9 @@ public readonly record struct ParsedComment(ImmutableDictionary<DocAttributeType
 
 public record struct ClassParsingOptions(string[]? InitializerMethodNames);
 
+public readonly record struct EnumValue(string Value, string Description);
+public readonly record struct ParsedEnum(string Name, ImmutableArray<EnumValue> Values);
+
 public class ParsedType
 {
     public readonly List<SupportedSubElement> SupportedSubElements = new();
@@ -62,7 +65,7 @@ public class ParsedType
 
     public readonly Dictionary<string, ParsedType> SubClasses = new();
 
-    public readonly Dictionary<string, ImmutableArray<(string Value, string Description)>> Enums = new();
+    public readonly List<ParsedEnum> Enums = new();
 
     public readonly string Name;
 
@@ -86,6 +89,19 @@ public class ParsedType
             RecordDeclarationSyntax => new RecordParser(options, name),
             _ => new ClassParser(options, name)
         };
+    }
+
+    public static ParsedEnum ParseEnum(EnumDeclarationSyntax enumDeclaration)
+    {
+        string name = enumDeclaration.Identifier.ValueText;
+        var values = enumDeclaration.Members.Select(static member =>
+        {
+            CodeComment comment = member.FindCommentAttachedToMember();
+
+            return new EnumValue(member.Identifier.ValueText, comment.Text);
+        }).ToImmutableArray();
+
+        return new ParsedEnum(name, values);
     }
 }
 
@@ -196,13 +212,7 @@ internal sealed class ClassParser : ParsedType
 
         foreach (EnumDeclarationSyntax syntax in cls.Members.OfType<EnumDeclarationSyntax>())
         {
-            List<(string, string)> enumMembers = new();
-            foreach (var enumMember in syntax.Members)
-            {
-                enumMembers.Add((enumMember.Identifier.ValueText, enumMember.FindCommentAttachedToMember().Text));
-            }
-
-            Enums.Add(syntax.Identifier.ValueText, enumMembers.ToImmutableArray());
+            Enums.Add(ParseEnum(syntax));
         }
 
         SerializableProperties.AddRange(cls.GetSerializableProperties());

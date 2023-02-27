@@ -166,21 +166,21 @@ sealed class BaseRip : Command
 
     public static bool ConstructEnumTable(EnumDeclarationSyntax syntax, [NotNullWhen(true)] out ImmutableArray<Page.Section>? result)
     {
-        Dictionary<string, ImmutableArray<(string Value, string Description)>> enums = new();
+        List<ParsedEnum> enums = new();
 
-        List<(string, string)> enumMembers = new();
+        List<EnumValue> enumMembers = new();
         foreach (var enumMember in syntax.Members)
         {
-            enumMembers.Add((enumMember.Identifier.ValueText, enumMember.FindCommentAttachedToMember().Text));
+            enumMembers.Add(new EnumValue(enumMember.Identifier.ValueText, enumMember.FindCommentAttachedToMember().Text));
         }
 
-        enums.Add(syntax.Identifier.ValueText, enumMembers.ToImmutableArray());
+        enums.Add(new ParsedEnum(syntax.Identifier.ValueText, enumMembers.ToImmutableArray()));
 
         return ConstructEnumTable(enums, out result);
     }
 
 
-    public static bool ConstructEnumTable(Dictionary<string, ImmutableArray<(string, string)>> enums, [NotNullWhen(true)] out ImmutableArray<Page.Section>? result)
+    public static bool ConstructEnumTable(IReadOnlyCollection<ParsedEnum> enums, [NotNullWhen(true)] out ImmutableArray<Page.Section>? result)
     {
         if (!enums.Any())
         {
