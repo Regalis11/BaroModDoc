@@ -65,18 +65,19 @@ sealed class StatusEffectsRip : Command
             {
                 introductionText = introductionText.Replace("[TODO: list ActionTypes]", string.Join('\n', actionTypesTable.Value.Select(s => s.ToMarkdown())));
             }
-            if (parser.Enums.ContainsKey("TargetType"))
+
+            foreach (ParsedEnum e in parser.Enums.ToList())
             {
-                var targetTypes = new Dictionary<string, ImmutableArray<(string, string)>>
-                {
-                    { "TargetType", parser.Enums["TargetType"] }
-                };
-                parser.Enums.Remove("TargetType");
-                if (BaseRip.ConstructEnumTable(targetTypes, out ImmutableArray<Page.Section>? enumTable))
+                if (!e.Name.EqCaseInsensitive("TargetType")) { continue; }
+
+                var targetTypes = new List<ParsedEnum> { e };
+                parser.Enums.Remove(e);
+                if (BaseRip.ConstructEnumTable(targetTypes, out ImmutableArray<Section>? enumTable))
                 {
                     introductionText = introductionText.Replace("[TODO: list TargetTypes]", string.Join('\n', enumTable.Value.Select(s => s.ToMarkdown())));
                 }
             }
+
             var introduction = new InlineMarkdown(introductionText);
             var elementTable = new InlineMarkdown(File.ReadAllText("ManualDocs/StatusEffectElementTable.md"));
 
@@ -84,7 +85,7 @@ sealed class StatusEffectsRip : Command
 
             foreach (ClassDeclarationSyntax syntax in cls.Members.OfType<ClassDeclarationSyntax>())
             {
-                ParsedType subParser = ParsedType.CreateParser(syntax, new ClassParsingOptions());
+                ParsedType subParser = ParsedType.CreateParser(syntax, ClassParsingOptions.Default);
                 subParser.ParseType(syntax);
 
                 page.Subsections.Add(CreateSection(syntax.Identifier.ValueText, subParser, includeComments: true, elementTable: null, preamble: null));

@@ -8,15 +8,9 @@ namespace BaroAutoDoc.Commands.ContentTypeSpecific;
 
 sealed class AfflictionsRip : Command
 {
-    //private readonly record struct AfflictionSection(Page.Section Section, ImmutableArray<(string, string, string)> ElementTable, ParsedType Parser);
-
     public void Invoke()
     {
         SyntaxRipperBuilder builder = new();
-
-        /*
-        const string srcPathFmt = "Barotrauma/Barotrauma{0}/{0}Source/Characters/Health/Afflictions/";
-        string[] srcPathParams = { "Shared", "Client" };*/
 
         Directory.SetCurrentDirectory(GlobalConfig.RepoPath);
 
@@ -24,15 +18,21 @@ sealed class AfflictionsRip : Command
             .Prepare("Prefabs") // TODO not required idk why I added it
             .AddDirectory("Barotrauma/Barotrauma{0}/{0}Source/Characters/Health/Afflictions/", "*.cs", fmt: new[] { "Shared", "Client", "Server" })
             .AddFile("Barotrauma/BarotraumaShared/SharedSource/Map/Explosion.cs") // for testing
-            .WithOptions(new ClassParsingOptions(new []{ "LoadEffects" }))
+            .AddFile("Barotrauma/BarotraumaShared/SharedSource/Enums.cs")
+            .WithOptions(new ClassParsingOptions(new[] { "LoadEffects" }))
             .Map
             (
                 new FileMap("AfflictionPrefab")
                 {
                     "AfflictionPrefab",
                     "AfflictionPrefabHusk",
+                    "Description",
+                    "TargetType",
                     "Effect",
+                    "AppliedAbilityFlag",
+                    "AbilityFlags", // possibly remove
                     "AppliedStatValue",
+                    "StatTypes", // possibly remove
                     "PeriodicEffect"
                 },
                 new FileMap("Affliction")
@@ -53,236 +53,35 @@ sealed class AfflictionsRip : Command
 
         var files = builder.Build();
 
-        foreach (var (file, parsers) in files)
+        foreach (var (file, lists) in files)
         {
+            var typesPresentOnPage = lists.Select(static e => e.Name).ToImmutableHashSet();
+
             Page page = new()
             {
                 Title = file
             };
 
-            foreach (ParsedType parser in parsers)
+            foreach (var either in lists)
             {
-                var section = CreateSection(parser.Name, parser);
-                page.Subsections.Add(section);
+                if (either.GetType(out ParsedType? parser))
+                {
+                    var section = CreateSection(parser.Name, parser, typesPresentOnPage);
+                    page.Subsections.Add(section);
+                }
+                else if (either.GetEnum(out ParsedEnum enumParser))
+                {
+                    var section = CreateEnumSection(enumParser);
+                    if (section is null) { continue; }
+
+                    page.Subsections.Add(section);
+                }
             }
 
             File.WriteAllText($"{file}.md", page.ToMarkdown());
         }
 
-        /*Dictionary<string, ParsedType> parsedClasses = new();
-        foreach (var (key, cls) in contentTypeFinder.AfflictionPrefabs)
-        {
-            if (parsedClasses.TryGetValue(key, out ParsedType? parser))
-            {
-                parser.ParseType(cls);
-                continue;
-            }
-
-            parser = ParsedType.CreateParser(cls, new ClassParsingOptions
-            {
-                InitializerMethodNames = new[] { "LoadEffects" }
-            });
-            parser.ParseType(cls);
-            parsedClasses.Add(key, parser);
-        }
-
-        Dictionary<string, ParsedType> parsedAfflictionTypes = new();
-        foreach (var (key, cls) in contentTypeFinder.AfflictionTypes)
-        {
-            var parser = ParsedType.CreateParser(cls, new ClassParsingOptions());
-            parser.ParseType(cls);
-            parsedAfflictionTypes.Add(key, parser);
-        }
-
-        foreach (var (key, parser) in parsedClasses)
-        {
-            Dictionary<string, AfflictionSection> finalSections = new();
-
-            Page page = new()
-            {
-                Title = key
-            };
-
-            if (key == "AfflictionPrefab")
-            {
-                if (ConstructAfflictionTypeTable(parsedAfflictionTypes, out var result))
-                {
-                    page.Subsections.Add(result);
-                }
-            }
-
-            finalSections.Add(key, CreateSection(key, parser));
-
-            WriteSubClasses(parser);
-
-            void WriteSubClasses(ParsedType subParser)
-            {
-                foreach (var (subName, subSubParser) in subParser.SubClasses)
-                {
-                    finalSections.Add(subName, CreateSection(subName, subSubParser));
-                    WriteSubClasses(subSubParser);
-                }
-            }
-
-            foreach (var (identifier, section) in finalSections)
-            {
-                if (ConstructSubElementTable(finalSections, section.ElementTable, out Page.Section? table))
-                {
-                    section.Section.Subsections.Add(table);
-                }
-
-                if (key != identifier || parser.BaseClasses.Count is 0)
-                {
-                    page.Subsections.Add(section.Section);
-                    AddEnumTable();
-                    continue;
-                }
-
-                foreach (string type in parser.BaseClasses)
-                {
-                    if (!contentTypeFinder.AfflictionPrefabs.Keys.Any(k => string.Equals(k, type, StringComparison.OrdinalIgnoreCase))) { continue; }
-
-                    section.Section.Body.Components.Add(new Page.RawText("This prefab also supports the attributes defined in: "));
-                    section.Section.Body.Components.Add(new Page.Hyperlink($"{type}.md#{type.ToLower()}", type));
-                }
-
-                page.Subsections.Add(section.Section);
-                AddEnumTable();
-
-                void AddEnumTable()
-                {
-                    if (ConstructEnumTable(section.Parser.Enums, out ImmutableArray<Page.Section>? enums))
-                    {
-                        section.Section.Subsections.AddRange(enums);
-                    }
-                }
-            }
-
-            File.WriteAllText($"{key}.md", page.ToMarkdown());
-        }
-
-        static bool ConstructSubElementTable(Dictionary<string, AfflictionSection> sections, ImmutableArray<(string, string, string)> elementTable, [NotNullWhen(true)] out Page.Section? result)
-        {
-            if (!elementTable.Any())
-            {
-                result = null;
-                return false;
-            }
-
-            Page.Section section = new()
-            {
-                Title = "Elements"
-            };
-
-            Page.Table table = new()
-            {
-                HeadRow = new Page.Table.Row("Element", "Type", "Description")
-            };
-
-            foreach (var (element, type, description) in elementTable)
-            {
-                if (string.IsNullOrWhiteSpace(type))
-                {
-                    Console.WriteLine($"WARNING: Element {element} has no type!");
-                    continue;
-                }
-
-                string fmtType =
-                    new Page.Hyperlink(
-                        Url: sections.ContainsKey(type)
-                            ? $"#{type.ToLower()}"
-                            : $"{type}.md",
-                        Text: type,
-                        AltText: description)
-                    .ToMarkdown();
-
-                table.BodyRows.Add(new Page.Table.Row(element, fmtType, description));
-            }
-
-            if (table.BodyRows.Count is 0)
-            {
-                result = null;
-                return false;
-            }
-
-            section.Body.Components.Add(table);
-
-            result = section;
-            return true;
-        }
-
-
-        static bool ConstructAfflictionTypeTable(Dictionary<string, ParsedType> parsedAfflictionTypes, [NotNullWhen(true)] out Page.Section? result)
-        {
-            if (!parsedAfflictionTypes.Any())
-            {
-                result = null;
-                return false;
-            }
-
-            Page.Section section = new()
-            {
-                Title = "Types"
-            };
-
-            Page.Table table = new()
-            {
-                HeadRow = new Page.Table.Row("Element", "Description")
-            };
-
-            foreach (var (subName, subSubParser) in parsedAfflictionTypes)
-            {
-                table.BodyRows.Add(new Page.Table.Row(subName, string.Join('\n', subSubParser.Comments.Select(c => c.Text))));
-            }
-
-            if (table.BodyRows.Count is 0)
-            {
-                result = null;
-                return false;
-            }
-
-            section.Body.Components.Add(table);
-
-            result = section;
-            return true;
-        }
-
-        static bool ConstructEnumTable(Dictionary<string, ImmutableArray<(string, string)>> enums, [NotNullWhen(true)] out ImmutableArray<Page.Section>? result)
-        {
-            if (!enums.Any())
-            {
-                result = null;
-                return false;
-            }
-
-            var builder = ImmutableArray.CreateBuilder<Page.Section>();
-            foreach (var (type, values) in enums)
-            {
-                Page.Section section = new()
-                {
-                    Title = type
-                };
-
-                Page.Table table = new()
-                {
-                    HeadRow = new Page.Table.Row("Value", "Description")
-                };
-
-                foreach (var (value, description) in values)
-                {
-                    table.BodyRows.Add(new Page.Table.Row(value, description));
-                }
-
-                section.Body.Components.Add(table);
-
-                builder.Add(section);
-            }
-
-            result = builder.ToImmutable();
-            return true;
-        } */
-
-        static Page.Section CreateSection(string name, ParsedType parser)
+        static Page.Section CreateSection(string name, ParsedType parser, IReadOnlyCollection<string> typesPresentOnPage)
         {
             Page.Section mainSection = new()
             {
@@ -341,12 +140,15 @@ sealed class AfflictionsRip : Command
             {
                 string defaultValue = DefaultValue.MakeMorePresentable(property.DefaultValue, property.Type);
 
-                attributesTable.BodyRows.Add(new Page.Table.Row(property.Name, property.Type, defaultValue, property.Description));
+                string type = ProcessTypeString(property.Type, property.Description);
+
+                attributesTable.BodyRows.Add(new Page.Table.Row(property.Name, type, defaultValue, property.Description));
             }
 
             foreach (XMLAssignedField field in parser.XMLAssignedFields)
             {
-                attributesTable.BodyRows.Add(new Page.Table.Row(field.XMLIdentifier, field.Field.Type, field.GetDefaultValue(), field.Field.Description));
+                string type = ProcessTypeString(field.Field.Type, field.Field.Description);
+                attributesTable.BodyRows.Add(new Page.Table.Row(field.XMLIdentifier, type, field.GetDefaultValue(), field.Field.Description));
             }
 
             if (attributesTable.BodyRows.Any())
@@ -368,6 +170,7 @@ sealed class AfflictionsRip : Command
             foreach (SupportedSubElement element in parser.SupportedSubElements)
             {
                 if (element.AffectedField.Length is 0) { continue; }
+
                 DeclaredField field = element.AffectedField.First();
 
                 if (string.IsNullOrWhiteSpace(field.Type))
@@ -376,16 +179,16 @@ sealed class AfflictionsRip : Command
                     continue;
                 }
 
-                /*string fmtType =
+                string fmtType =
                     new Page.Hyperlink(
-                            Url: sections.ContainsKey(field.Type)
-                                ? $"#{type.ToLower()}"
-                                : $"{type}.md",
-                            Text: type,
-                            AltText: description)
-                        .ToMarkdown();*/
+                            Url: typesPresentOnPage.Contains(field.Type)
+                                ? $"#{field.Type.ToLower()}"
+                                : $"{field.Type}.md",
+                            Text: field.Type,
+                            AltText: field.Description)
+                        .ToMarkdown();
 
-                table.BodyRows.Add(new Page.Table.Row(element.XMLName, field.Type, field.Description));
+                table.BodyRows.Add(new Page.Table.Row(element.XMLName, fmtType, field.Description));
             }
 
             if (table.BodyRows.Any())
@@ -394,30 +197,44 @@ sealed class AfflictionsRip : Command
                 mainSection.Subsections.Add(elementSection);
             }
 
-            foreach (var (key, values) in parser.Enums)
+            return mainSection;
+
+            string ProcessTypeString(string type, string description)
             {
-                Page.Section enumSection = new()
-                {
-                    Title = key
-                };
+                string fmtType =
+                    typesPresentOnPage.Contains(type)
+                        ? new Page.Hyperlink(
+                                Url: $"#{type.ToLower()}",
+                                Text: type,
+                                AltText: description)
+                            .ToMarkdown()
+                        : type;
 
-                Page.Table enumTable = new()
-                {
-                    HeadRow = new Page.Table.Row("Value", "Description")
-                };
+                return fmtType;
+            }
+        }
 
-                foreach (var (value, description) in values)
-                {
-                    enumTable.BodyRows.Add(new Page.Table.Row(value, description));
-                }
+        static Page.Section? CreateEnumSection(ParsedEnum e)
+        {
+            Page.Section enumSection = new()
+            {
+                Title = e.Name
+            };
 
-                if (!enumTable.BodyRows.Any()) { continue; }
+            Page.Table enumTable = new()
+            {
+                HeadRow = new Page.Table.Row("Value", "Description")
+            };
 
-                enumSection.Body.Components.Add(enumTable);
-                mainSection.Subsections.Add(enumSection);
+            foreach (var (value, description) in e.Values)
+            {
+                enumTable.BodyRows.Add(new Page.Table.Row(value, description));
             }
 
-            return mainSection;
+            if (!enumTable.BodyRows.Any()) { return null; }
+
+            enumSection.Body.Components.Add(enumTable);
+            return enumSection;
         }
     }
 }

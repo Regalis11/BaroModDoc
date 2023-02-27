@@ -2,6 +2,7 @@
 
 using System.Collections;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -10,9 +11,55 @@ namespace BaroAutoDoc.SyntaxWalkers;
 
 internal readonly record struct TypeCollection(ImmutableArray<TypeDeclarationSyntax> Types,
                                                ImmutableArray<EnumDeclarationSyntax> Enums,
-                                               ClassParsingOptions Options)
+                                               ClassParsingOptions Options);
+
+internal readonly struct TypeOrEnum
 {
-    public ImmutableArray<BaseTypeDeclarationSyntax> All => Types.Cast<BaseTypeDeclarationSyntax>().Concat(Enums).ToImmutableArray();
+    private readonly ParsedType? parsedType;
+    private readonly ParsedEnum parsedEnum;
+
+    private readonly bool isType = false,
+                          isEnum = false;
+
+    public readonly string Name;
+
+    public TypeOrEnum(ParsedType type)
+    {
+        isType = true;
+        parsedType = type;
+        parsedEnum = default;
+        Name = type.Name;
+    }
+
+    public TypeOrEnum(ParsedEnum e)
+    {
+        isEnum = true;
+        parsedType = default;
+        parsedEnum = e;
+        Name = e.Name;
+    }
+
+    public bool GetType([NotNullWhen(true)] out ParsedType? type)
+    {
+        if (!isType)
+        {
+            type = default;
+            return false;
+        }
+        type = parsedType!;
+        return true;
+    }
+
+    public bool GetEnum(out ParsedEnum type)
+    {
+        if (!isEnum)
+        {
+            type = default;
+            return false;
+        }
+        type = parsedEnum;
+        return true;
+    }
 }
 
 internal readonly record struct TypeAndFile<T>(string File, T Type);
@@ -73,7 +120,7 @@ internal sealed class SyntaxRipperBuilder
         private readonly List<TypeAndFile<TypeDeclarationSyntax>> types = new();
         private readonly List<TypeAndFile<EnumDeclarationSyntax>> enums = new();
         private readonly List<FileMap> mappings = new();
-        private ClassParsingOptions parsingOptions = new();
+        private ClassParsingOptions parsingOptions = ClassParsingOptions.Default;
 
         private readonly SyntaxRipperBuilder builder;
 
@@ -232,16 +279,24 @@ internal sealed class SyntaxRipperBuilder
 
     public AddedFile Prepare(string key) => new AddedFile(this, key);
 
-    public ImmutableDictionary<string, List<ParsedType>> Build()
+    public ImmutableDictionary<string, List<TypeOrEnum>> Build()
     {
-        // TODO this is not in order
-        var builder = ImmutableDictionary.CreateBuilder<string, List<ParsedType>>();
+        var typeBuilder = ImmutableDictionary.CreateBuilder<string, List<TypeOrEnum>>();
 
         foreach (TypeCollection collection in Types.Values)
         {
             var typeDict = collection.Types
                                      .GroupBy(static t => t.Identifier.ValueText)
                                      .ToDictionary(static g => g.Key, static g => g.ToImmutableArray());
+
+            HashSet<string> alreadyDeclaredEnums = new();
+
+            foreach (EnumDeclarationSyntax e in collection.Enums)
+            {
+                ParsedEnum parsedEnum = ParsedType.ParseEnum(e);
+                alreadyDeclaredEnums.Add(parsedEnum.Name);
+                AddEnum(parsedEnum);
+            }
 
             foreach (var (identifier, types) in typeDict)
             {
@@ -254,23 +309,65 @@ internal sealed class SyntaxRipperBuilder
 
                 if (parser is null) { continue; }
 
-                foreach (var (file, identifiers) in FilesToCreate)
+                foreach (ParsedEnum extraEnum in parser.Enums)
                 {
-                    if (!identifiers.Contains(identifier)) { continue; }
-
-                    if (!builder.ContainsKey(file))
-                    {
-                        builder.Add(file, new List<ParsedType>());
-                    }
-
-                    builder[file].Add(parser);
-                    break;
+                    if (alreadyDeclaredEnums.Contains(extraEnum.Name)) { continue; }
+                    AddEnum(extraEnum);
                 }
-            }
 
-            // TODO add enums
+                foreach (ExtraType extraType in parser.SubClasses.Values.OfType<ExtraType>())
+                {
+                    AddType(extraType);
+                }
+
+                AddType(parser);
+            }
         }
 
-        return builder.ToImmutable();
+        void AddEnum(ParsedEnum e)
+        {
+            foreach (var (file, identifiers) in FilesToCreate)
+            {
+                if (!identifiers.Contains(e.Name)) { continue; }
+                AddIfNotExists(file);
+                typeBuilder[file].Add(new TypeOrEnum(e));
+                break;
+            }
+        }
+
+        void AddType(ParsedType type)
+        {
+            foreach (var (file, identifiers) in FilesToCreate)
+            {
+                if (!identifiers.Contains(type.Name)) { continue; }
+                AddIfNotExists(file);
+                typeBuilder[file].Add(new TypeOrEnum(type));
+                break;
+            }
+        }
+
+        void AddIfNotExists(string file)
+        {
+            if (!typeBuilder.ContainsKey(file))
+            {
+                typeBuilder.Add(file, new List<TypeOrEnum>());
+            }
+        }
+
+        foreach (var (file, pair) in typeBuilder)
+        {
+            var orderList = FilesToCreate[file];
+            pair.Sort(Comparison);
+
+            int Comparison(TypeOrEnum a, TypeOrEnum b)
+            {
+                int aIndex = orderList.IndexOf(a.Name);
+                int bIndex = orderList.IndexOf(b.Name);
+
+                return aIndex.CompareTo(bIndex);
+            }
+        }
+
+        return typeBuilder.ToImmutable();
     }
 }
