@@ -11,10 +11,7 @@ namespace BaroAutoDoc.SyntaxWalkers;
 
 internal readonly record struct TypeCollection(ImmutableArray<TypeDeclarationSyntax> Types,
                                                ImmutableArray<EnumDeclarationSyntax> Enums,
-                                               ClassParsingOptions Options)
-{
-    public ImmutableArray<BaseTypeDeclarationSyntax> All => Types.Cast<BaseTypeDeclarationSyntax>().Concat(Enums).ToImmutableArray();
-}
+                                               ClassParsingOptions Options);
 
 internal readonly struct TypeOrEnum
 {
