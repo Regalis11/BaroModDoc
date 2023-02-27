@@ -93,6 +93,34 @@ public static class Extensions
         return CSharpScript.EvaluateAsync<string>(expr).Result;
     }
 
+    public static string ExtractContainedTypeFromContainerType(this string typeAsString)
+    {
+        if (typeAsString.EndsWith("[]"))
+        {
+            return typeAsString[..^2];
+        }
+
+        bool matchSimpleGeneric(string containerType, out string innerType)
+        {
+            if (typeAsString.EndsWith(">")
+                && typeAsString.StartsWith($"{containerType}<"))
+            {
+                innerType = typeAsString[$"{containerType}<".Length..^1]
+                    .Split(",")
+                    .Last().Trim();
+                return true;
+            }
+            innerType = "";
+            return false;
+        }
+
+        if (matchSimpleGeneric("Dictionary", out var innerType)) { return innerType; }
+        if (matchSimpleGeneric("ImmutableArray", out innerType)) { return innerType; }
+        if (matchSimpleGeneric("ImmutableDictionary", out innerType)) { return innerType; }
+
+        return typeAsString;
+    }
+
     public static string GuessCaseFromMemberName(this string xmlIdentifier, string fieldName)
     {
         string guyWithAllTheCaps =

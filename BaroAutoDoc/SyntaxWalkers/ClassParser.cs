@@ -788,7 +788,9 @@ internal sealed class ClassParser : ParsedType
                         continue;
                     }
 
-                    yield return FindRelatedFieldDeclaration(assignmentName) with
+                    var relatedField = FindRelatedFieldDeclaration(assignmentName);
+                    if (string.IsNullOrWhiteSpace(assignmentType)) { assignmentType = relatedField.Type.ExtractContainedTypeFromContainerType(); }
+                    yield return relatedField with
                     {
                         Type = assignmentType
                     };
@@ -808,7 +810,9 @@ internal sealed class ClassParser : ParsedType
                 }:
                     string memberAccessName = memberAccess.Expression.ToString();
                     string memberType = GetTypeFromArguments(arguments);
-                    yield return FindRelatedFieldDeclaration(memberAccessName) with
+                    var relatedField2 = FindRelatedFieldDeclaration(memberAccessName);
+                    if (string.IsNullOrWhiteSpace(memberType)) { memberType = relatedField2.Type.ExtractContainedTypeFromContainerType(); }
+                    yield return relatedField2 with
                     {
                         Type = memberType
                     };
