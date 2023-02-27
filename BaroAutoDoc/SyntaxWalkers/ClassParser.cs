@@ -46,7 +46,10 @@ public readonly record struct ParsedComment(ImmutableDictionary<DocAttributeType
                                             ImmutableDictionary<DocAttributeTarget, ImmutableArray<string>> Ignores,
                                             ExtraDeclarations ExtraDeclarations);
 
-public record struct ClassParsingOptions(string[]? InitializerMethodNames);
+public record struct ClassParsingOptions(string[] InitializerMethodNames)
+{
+    public static readonly ClassParsingOptions Default = new(Array.Empty<string>());
+}
 
 public readonly record struct EnumValue(string Value, string Description);
 public readonly record struct ParsedEnum(string Name, ImmutableArray<EnumValue> Values);
@@ -107,7 +110,7 @@ public class ParsedType
 
 public sealed class ExtraType : ParsedType
 {
-    public ExtraType(string identifier, CodeComment description) : base(new ClassParsingOptions(Array.Empty<string>()), identifier)
+    public ExtraType(string identifier, CodeComment description) : base(ClassParsingOptions.Default, identifier)
     {
         Comments.Add(description);
     }

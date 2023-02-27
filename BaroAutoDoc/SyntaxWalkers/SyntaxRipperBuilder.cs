@@ -120,7 +120,7 @@ internal sealed class SyntaxRipperBuilder
         private readonly List<TypeAndFile<TypeDeclarationSyntax>> types = new();
         private readonly List<TypeAndFile<EnumDeclarationSyntax>> enums = new();
         private readonly List<FileMap> mappings = new();
-        private ClassParsingOptions parsingOptions = new();
+        private ClassParsingOptions parsingOptions = ClassParsingOptions.Default;
 
         private readonly SyntaxRipperBuilder builder;
 

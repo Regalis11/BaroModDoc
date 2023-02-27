@@ -85,7 +85,7 @@ sealed class StatusEffectsRip : Command
 
             foreach (ClassDeclarationSyntax syntax in cls.Members.OfType<ClassDeclarationSyntax>())
             {
-                ParsedType subParser = ParsedType.CreateParser(syntax, new ClassParsingOptions());
+                ParsedType subParser = ParsedType.CreateParser(syntax, ClassParsingOptions.Default);
                 subParser.ParseType(syntax);
 
                 page.Subsections.Add(CreateSection(syntax.Identifier.ValueText, subParser, includeComments: true, elementTable: null, preamble: null));
