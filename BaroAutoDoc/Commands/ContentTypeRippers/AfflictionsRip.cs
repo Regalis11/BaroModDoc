@@ -18,7 +18,8 @@ sealed class AfflictionsRip : Command
             .Prepare("Prefabs") // TODO not required idk why I added it
             .AddDirectory("Barotrauma/Barotrauma{0}/{0}Source/Characters/Health/Afflictions/", "*.cs", fmt: new[] { "Shared", "Client", "Server" })
             .AddFile("Barotrauma/BarotraumaShared/SharedSource/Map/Explosion.cs") // for testing
-            .WithOptions(new ClassParsingOptions(new []{ "LoadEffects" }))
+            .AddFile("Barotrauma/BarotraumaShared/SharedSource/Enums.cs")
+            .WithOptions(new ClassParsingOptions(new[] { "LoadEffects" }))
             .Map
             (
                 new FileMap("AfflictionPrefab")
@@ -28,7 +29,10 @@ sealed class AfflictionsRip : Command
                     "Description",
                     "TargetType",
                     "Effect",
+                    "AppliedAbilityFlag",
+                    "AbilityFlags", // possibly remove
                     "AppliedStatValue",
+                    "StatTypes", // possibly remove
                     "PeriodicEffect"
                 },
                 new FileMap("Affliction")
@@ -69,6 +73,7 @@ sealed class AfflictionsRip : Command
                 {
                     var section = CreateEnumSection(enumParser);
                     if (section is null) { continue; }
+
                     page.Subsections.Add(section);
                 }
             }
@@ -135,12 +140,15 @@ sealed class AfflictionsRip : Command
             {
                 string defaultValue = DefaultValue.MakeMorePresentable(property.DefaultValue, property.Type);
 
-                attributesTable.BodyRows.Add(new Page.Table.Row(property.Name, property.Type, defaultValue, property.Description));
+                string type = ProcessTypeString(property.Type, property.Description);
+
+                attributesTable.BodyRows.Add(new Page.Table.Row(property.Name, type, defaultValue, property.Description));
             }
 
             foreach (XMLAssignedField field in parser.XMLAssignedFields)
             {
-                attributesTable.BodyRows.Add(new Page.Table.Row(field.XMLIdentifier, field.Field.Type, field.GetDefaultValue(), field.Field.Description));
+                string type = ProcessTypeString(field.Field.Type, field.Field.Description);
+                attributesTable.BodyRows.Add(new Page.Table.Row(field.XMLIdentifier, type, field.GetDefaultValue(), field.Field.Description));
             }
 
             if (attributesTable.BodyRows.Any())
@@ -162,6 +170,7 @@ sealed class AfflictionsRip : Command
             foreach (SupportedSubElement element in parser.SupportedSubElements)
             {
                 if (element.AffectedField.Length is 0) { continue; }
+
                 DeclaredField field = element.AffectedField.First();
 
                 if (string.IsNullOrWhiteSpace(field.Type))
@@ -189,6 +198,20 @@ sealed class AfflictionsRip : Command
             }
 
             return mainSection;
+
+            string ProcessTypeString(string type, string description)
+            {
+                string fmtType =
+                    typesPresentOnPage.Contains(type)
+                        ? new Page.Hyperlink(
+                                Url: $"#{type.ToLower()}",
+                                Text: type,
+                                AltText: description)
+                            .ToMarkdown()
+                        : type;
+
+                return fmtType;
+            }
         }
 
         static Page.Section? CreateEnumSection(ParsedEnum e)
