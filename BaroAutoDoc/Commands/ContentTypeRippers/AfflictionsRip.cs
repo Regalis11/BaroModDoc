@@ -51,6 +51,8 @@ sealed class AfflictionsRip : Command
 
         foreach (var (file, lists) in files)
         {
+            var typesPresentOnPage = lists.Select(static e => e.Name).ToImmutableHashSet();
+
             Page page = new()
             {
                 Title = file
@@ -58,12 +60,12 @@ sealed class AfflictionsRip : Command
 
             foreach (var either in lists)
             {
-                if (either.TryGet(out ParsedType? parser))
+                if (either.GetType(out ParsedType? parser))
                 {
-                    var section = CreateSection(parser.Name, parser);
+                    var section = CreateSection(parser.Name, parser, typesPresentOnPage);
                     page.Subsections.Add(section);
                 }
-                else if (either.TryGet(out ParsedEnum enumParser))
+                else if (either.GetEnum(out ParsedEnum enumParser))
                 {
                     var section = CreateEnumSection(enumParser);
                     if (section is null) { continue; }
@@ -74,7 +76,7 @@ sealed class AfflictionsRip : Command
             File.WriteAllText($"{file}.md", page.ToMarkdown());
         }
 
-        static Page.Section CreateSection(string name, ParsedType parser)
+        static Page.Section CreateSection(string name, ParsedType parser, IReadOnlyCollection<string> typesPresentOnPage)
         {
             Page.Section mainSection = new()
             {
@@ -168,16 +170,16 @@ sealed class AfflictionsRip : Command
                     continue;
                 }
 
-                /*string fmtType =
+                string fmtType =
                     new Page.Hyperlink(
-                            Url: sections.ContainsKey(field.Type)
-                                ? $"#{type.ToLower()}"
-                                : $"{type}.md",
-                            Text: type,
-                            AltText: description)
-                        .ToMarkdown();*/
+                            Url: typesPresentOnPage.Contains(field.Type)
+                                ? $"#{field.Type.ToLower()}"
+                                : $"{field.Type}.md",
+                            Text: field.Type,
+                            AltText: field.Description)
+                        .ToMarkdown();
 
-                table.BodyRows.Add(new Page.Table.Row(element.XMLName, field.Type, field.Description));
+                table.BodyRows.Add(new Page.Table.Row(element.XMLName, fmtType, field.Description));
             }
 
             if (table.BodyRows.Any())

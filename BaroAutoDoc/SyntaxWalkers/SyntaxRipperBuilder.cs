@@ -16,47 +16,51 @@ internal readonly record struct TypeCollection(ImmutableArray<TypeDeclarationSyn
     public ImmutableArray<BaseTypeDeclarationSyntax> All => Types.Cast<BaseTypeDeclarationSyntax>().Concat(Enums).ToImmutableArray();
 }
 
-internal readonly struct Either<T, U>
+internal readonly struct TypeOrEnum
 {
-    private readonly T? first;
-    private readonly U? second;
+    private readonly ParsedType? parsedType;
+    private readonly ParsedEnum parsedEnum;
 
-    private readonly bool hasT = false,
-                          hasU = false;
+    private readonly bool isType = false,
+                          isEnum = false;
 
-    public Either(T type)
+    public readonly string Name;
+
+    public TypeOrEnum(ParsedType type)
     {
-        hasT = true;
-        first = type;
-        second = default;
+        isType = true;
+        parsedType = type;
+        parsedEnum = default;
+        Name = type.Name;
     }
 
-    public Either(U type)
+    public TypeOrEnum(ParsedEnum e)
     {
-        hasU = true;
-        first = default;
-        second = type;
+        isEnum = true;
+        parsedType = default;
+        parsedEnum = e;
+        Name = e.Name;
     }
 
-    public bool TryGet([NotNullWhen(true)] out T? type)
+    public bool GetType([NotNullWhen(true)] out ParsedType? type)
     {
-        if (!hasT)
+        if (!isType)
         {
             type = default;
             return false;
         }
-        type = first!;
+        type = parsedType!;
         return true;
     }
 
-    public bool TryGet([NotNullWhen(true)] out U? type)
+    public bool GetEnum(out ParsedEnum type)
     {
-        if (!hasU)
+        if (!isEnum)
         {
             type = default;
             return false;
         }
-        type = second!;
+        type = parsedEnum;
         return true;
     }
 }
@@ -278,10 +282,10 @@ internal sealed class SyntaxRipperBuilder
 
     public AddedFile Prepare(string key) => new AddedFile(this, key);
 
-    public ImmutableDictionary<string, List<Either<ParsedType, ParsedEnum>>> Build()
+    public ImmutableDictionary<string, List<TypeOrEnum>> Build()
     {
         // TODO this is not in order
-        var typeBuilder = ImmutableDictionary.CreateBuilder<string, List<Either<ParsedType, ParsedEnum>>>();
+        var typeBuilder = ImmutableDictionary.CreateBuilder<string, List<TypeOrEnum>>();
 
         foreach (TypeCollection collection in Types.Values)
         {
@@ -319,7 +323,7 @@ internal sealed class SyntaxRipperBuilder
                 {
                     if (!identifiers.Contains(identifier)) { continue; }
                     AddIfNotExists(file);
-                    typeBuilder[file].Add(new Either<ParsedType, ParsedEnum>(parser));
+                    typeBuilder[file].Add(new TypeOrEnum(parser));
                     break;
                 }
             }
@@ -331,7 +335,7 @@ internal sealed class SyntaxRipperBuilder
             {
                 if (!identifiers.Contains(e.Name)) { continue; }
                 AddIfNotExists(file);
-                typeBuilder[file].Add(new Either<ParsedType, ParsedEnum>(e));
+                typeBuilder[file].Add(new TypeOrEnum(e));
                 break;
             }
         }
@@ -340,7 +344,7 @@ internal sealed class SyntaxRipperBuilder
         {
             if (!typeBuilder.ContainsKey(file))
             {
-                typeBuilder.Add(file, new List<Either<ParsedType, ParsedEnum>>());
+                typeBuilder.Add(file, new List<TypeOrEnum>());
             }
         }
 
@@ -349,16 +353,12 @@ internal sealed class SyntaxRipperBuilder
             var orderList = FilesToCreate[file];
             pair.Sort(Comparison);
 
-            int Comparison(Either<ParsedType, ParsedEnum> a, Either<ParsedType, ParsedEnum> b)
+            int Comparison(TypeOrEnum a, TypeOrEnum b)
             {
-                int aIndex = orderList.IndexOf(GetTypeName(a));
-                int bIndex = orderList.IndexOf(GetTypeName(b));
+                int aIndex = orderList.IndexOf(a.Name);
+                int bIndex = orderList.IndexOf(b.Name);
 
                 return aIndex.CompareTo(bIndex);
-
-                static string GetTypeName(Either<ParsedType, ParsedEnum> either) =>
-                    either.TryGet(out ParsedType? t) ? t.Name :
-                    either.TryGet(out ParsedEnum e) ? e.Name : throw new Exception();
             }
         }
 
