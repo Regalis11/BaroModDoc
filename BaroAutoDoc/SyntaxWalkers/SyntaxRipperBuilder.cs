@@ -315,13 +315,12 @@ internal sealed class SyntaxRipperBuilder
                     AddEnum(extraEnum);
                 }
 
-                foreach (var (file, identifiers) in FilesToCreate)
+                foreach (ExtraType extraType in parser.SubClasses.Values.OfType<ExtraType>())
                 {
-                    if (!identifiers.Contains(identifier)) { continue; }
-                    AddIfNotExists(file);
-                    typeBuilder[file].Add(new TypeOrEnum(parser));
-                    break;
+                    AddType(extraType);
                 }
+
+                AddType(parser);
             }
         }
 
@@ -332,6 +331,17 @@ internal sealed class SyntaxRipperBuilder
                 if (!identifiers.Contains(e.Name)) { continue; }
                 AddIfNotExists(file);
                 typeBuilder[file].Add(new TypeOrEnum(e));
+                break;
+            }
+        }
+
+        void AddType(ParsedType type)
+        {
+            foreach (var (file, identifiers) in FilesToCreate)
+            {
+                if (!identifiers.Contains(type.Name)) { continue; }
+                AddIfNotExists(file);
+                typeBuilder[file].Add(new TypeOrEnum(type));
                 break;
             }
         }
