@@ -281,7 +281,6 @@ internal sealed class SyntaxRipperBuilder
 
     public ImmutableDictionary<string, List<TypeOrEnum>> Build()
     {
-        // TODO this is not in order
         var typeBuilder = ImmutableDictionary.CreateBuilder<string, List<TypeOrEnum>>();
 
         foreach (TypeCollection collection in Types.Values)
