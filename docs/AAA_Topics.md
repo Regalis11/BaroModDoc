@@ -12,6 +12,7 @@
     - [Content types](Intro/ContentTypes.md)
   - [Overrides](Intro/Overrides.md)
   - [StatusEffects](Misc/StatusEffect.md)
+  - [Conditionals](Misc/Conditional.md)
 
 - [Publishing to Steam Workshop](Intro/Publishing.md)
 - [Troubleshooting](Misc/Troubleshooting.md)
