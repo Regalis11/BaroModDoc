@@ -1,8 +1,5 @@
 # AfflictionPrefab
-
 <sup>Relevant files: [[Shared:AfflictionsFile.cs]](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/ContentManagement/ContentFile/AfflictionsFile.cs) [[Shared:AfflictionPrefab.cs]](https://github.com/Regalis11/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/Characters/Health/Afflictions/AfflictionPrefab.cs)</sup>
-
-*This page was generated automatically.*
 
 - **Required by core package:** Yes
 
@@ -17,7 +14,7 @@ When defining a new affliction, the type will be determined by the element name.
   <!-- Defines an AfflictionPrefabHusk affliction. -->
   <AfflictionPrefabHusk identifier="mycoolaffliction2" />
   <!-- Defines an AfflictionBleeding affliction. -->
-  <AfflictionPrefabHusk identifier="mycoolaffliction3" />
+  <AfflictionBleeding identifier="mycoolaffliction3" />
 </Afflictions>
 ```
 
@@ -183,29 +180,9 @@ Flag that will be enabled for the character as long as the effect is active.
 
 ### Attributes
 
-| Attribute | Type                                                          | Default value | Description                   |
-|-----------|---------------------------------------------------------------|---------------|-------------------------------|
-| FlagType  | [AbilityFlags](#abilityflags "Which ability flag to enable.") | None          | Which ability flag to enable. |
-
-
-
-## AbilityFlags
-
-| Value                                 | Description |
-|---------------------------------------|-------------|
-| None                                  |             |
-| MustWalk                              |             |
-| ImmuneToPressure                      |             |
-| IgnoredByEnemyAI                      |             |
-| MoveNormallyWhileDragging             |             |
-| CanTinker                             |             |
-| CanTinkerFabricatorsAndDeconstructors |             |
-| TinkeringPowersDevices                |             |
-| GainSkillPastMaximum                  |             |
-| RetainExperienceForNewCharacter       |             |
-| AllowSecondOrderedTarget              |             |
-| AlwaysStayConscious                   |             |
-| CanNotDieToAfflictions                |             |
+| Attribute | Type         | Default value | Description                   |
+|-----------|--------------|---------------|-------------------------------|
+| FlagType  | AbilityFlags | None          | Which ability flag to enable. |
 
 
 
@@ -222,94 +199,12 @@ StatType that will be applied to the affected character when the effect is activ
 
 ### Attributes
 
-| Attribute | Type                                              | Default value | Description                                                              |
-|-----------|---------------------------------------------------|---------------|--------------------------------------------------------------------------|
-| Value     | float                                             | 0             | Constant value to apply, will be ignored if MinValue or MaxValue are set |
-| StatType  | [StatTypes](#stattypes "Which StatType to apply") | None          | Which StatType to apply                                                  |
-| MinValue  | float                                             | Same as Value | Minimum value to apply                                                   |
-| MaxValue  | float                                             | Same as Value | Minimum value to apply                                                   |
-
-
-
-## StatTypes
-
-| Value                                               | Description          |
-|-----------------------------------------------------|----------------------|
-| None                                                |                      |
-| ElectricalSkillBonus                                | Skills               |
-| HelmSkillBonus                                      |                      |
-| HelmSkillOverride                                   |                      |
-| MedicalSkillOverride                                |                      |
-| WeaponsSkillOverride                                |                      |
-| ElectricalSkillOverride                             |                      |
-| MechanicalSkillOverride                             |                      |
-| MechanicalSkillBonus                                |                      |
-| MedicalSkillBonus                                   |                      |
-| WeaponsSkillBonus                                   |                      |
-| MaximumHealthMultiplier                             | Character attributes |
-| MovementSpeed                                       |                      |
-| WalkingSpeed                                        |                      |
-| SwimmingSpeed                                       |                      |
-| BuffDurationMultiplier                              |                      |
-| DebuffDurationMultiplier                            |                      |
-| MedicalItemEffectivenessMultiplier                  |                      |
-| FlowResistance                                      |                      |
-| AttackMultiplier                                    | Combat               |
-| TeamAttackMultiplier                                |                      |
-| RangedAttackSpeed                                   |                      |
-| TurretAttackSpeed                                   |                      |
-| TurretPowerCostReduction                            |                      |
-| TurretChargeSpeed                                   |                      |
-| MeleeAttackSpeed                                    |                      |
-| MeleeAttackMultiplier                               |                      |
-| RangedAttackMultiplier                              |                      |
-| RangedSpreadReduction                               |                      |
-| RepairSpeed                                         | Utility              |
-| MechanicalRepairSpeed                               |                      |
-| DeconstructorSpeedMultiplier                        |                      |
-| RepairToolStructureRepairMultiplier                 |                      |
-| RepairToolStructureDamageMultiplier                 |                      |
-| RepairToolDeattachTimeMultiplier                    |                      |
-| MaxRepairConditionMultiplierMechanical              |                      |
-| MaxRepairConditionMultiplierElectrical              |                      |
-| IncreaseFabricationQuality                          |                      |
-| GeneticMaterialRefineBonus                          |                      |
-| GeneticMaterialTaintedProbabilityReductionOnCombine |                      |
-| SkillGainSpeed                                      |                      |
-| ExtraLevelGain                                      |                      |
-| HelmSkillGainSpeed                                  |                      |
-| WeaponsSkillGainSpeed                               |                      |
-| MedicalSkillGainSpeed                               |                      |
-| ElectricalSkillGainSpeed                            |                      |
-| MechanicalSkillGainSpeed                            |                      |
-| MedicalItemApplyingMultiplier                       |                      |
-| MedicalItemDurationMultiplier                       |                      |
-| PoisonMultiplier                                    |                      |
-| TinkeringDuration                                   | Tinker               |
-| TinkeringStrength                                   |                      |
-| TinkeringDamage                                     |                      |
-| ReputationGainMultiplier                            | Misc                 |
-| ReputationLossMultiplier                            |                      |
-| MissionMoneyGainMultiplier                          |                      |
-| ExperienceGainMultiplier                            |                      |
-| MissionExperienceGainMultiplier                     |                      |
-| ExtraMissionCount                                   |                      |
-| ExtraSpecialSalesCount                              |                      |
-| StoreSellMultiplier                                 |                      |
-| StoreBuyMultiplierAffiliated                        |                      |
-| StoreBuyMultiplier                                  |                      |
-| ShipyardBuyMultiplierAffiliated                     |                      |
-| ShipyardBuyMultiplier                               |                      |
-| MaxAttachableCount                                  |                      |
-| ExplosionRadiusMultiplier                           |                      |
-| ExplosionDamageMultiplier                           |                      |
-| FabricationSpeed                                    |                      |
-| BallastFloraDamageMultiplier                        |                      |
-| HoldBreathMultiplier                                |                      |
-| Apprenticeship                                      |                      |
-| Affiliation                                         |                      |
-| CPRBoost                                            |                      |
-| LockedTalents                                       |                      |
+| Attribute | Type      | Default value | Description                                                              |
+|-----------|-----------|---------------|--------------------------------------------------------------------------|
+| Value     | float     | 0             | Constant value to apply, will be ignored if MinValue or MaxValue are set |
+| StatType  | StatTypes | None          | Which StatType to apply                                                  |
+| MinValue  | float     | Same as Value | Minimum value to apply                                                   |
+| MaxValue  | float     | Same as Value | Minimum value to apply                                                   |
 
 
 
