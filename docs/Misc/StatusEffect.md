@@ -149,10 +149,11 @@ In other words, the values is treated as an increase per frame, as opposed to an
 | requireditems      | [RelatedItem](Misc/RelatedItem.md)| Alias of "requireditem". Functionally identical.                                                                                           |
 | requiredaffliction | -                                 | Which type of afflictions the target must receive for the StatusEffect to be applied. Only valid when the type of the effect is OnDamaged. |
 | affliction         | -                                 | An affliction to give to the character or limb the effect is targeting.                                                                    |
-| aitrigger          | -                                 | Can be used to trigger a behavior change of some kind on an AI character. Only applicable for enemy characters, not humans.                                                                                                                                       |
+| aitrigger          | -                                 | Can be used to trigger a behavior change of some kind on an AI character. Only applicable for enemy characters, not humans.                |
 | talenttrigger      | -                                 | Can be used by AbilityConditionStatusEffectIdentifier to react to a specific kind of status effect triggering.                             |
 | giveexperience     | -                                 | Can be used to give experience points to the character(s) the effect is targeting.                                                         |
 | giveskill          | GiveSkill                         | Can be used to give skill points to the character(s) the effect is targeting.                                                              |
+| conditional        | [Conditional](Misc/Conditional.md)| Some type of condition that needs to be met for the effect to execute. See the [Conditional](Misc/Conditional.md) page for more info.      |
 
 
 #### Fire
