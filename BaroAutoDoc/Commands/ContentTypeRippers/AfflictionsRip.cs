@@ -18,7 +18,6 @@ sealed class AfflictionsRip : Command
             .Prepare("Prefabs") // TODO not required idk why I added it
             .AddDirectory("Barotrauma/Barotrauma{0}/{0}Source/Characters/Health/Afflictions/", "*.cs", fmt: new[] { "Shared", "Client", "Server" })
             .AddFile("Barotrauma/BarotraumaShared/SharedSource/Map/Explosion.cs") // for testing
-            .AddFile("Barotrauma/BarotraumaShared/SharedSource/Enums.cs")
             .WithOptions(new ClassParsingOptions(new[] { "LoadEffects" }))
             .Map
             (
@@ -30,9 +29,7 @@ sealed class AfflictionsRip : Command
                     "TargetType",
                     "Effect",
                     "AppliedAbilityFlag",
-                    "AbilityFlags", // possibly remove
                     "AppliedStatValue",
-                    "StatTypes", // possibly remove
                     "PeriodicEffect"
                 },
                 new FileMap("Affliction")
