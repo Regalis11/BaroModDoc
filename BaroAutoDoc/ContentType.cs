@@ -14,7 +14,7 @@ record ContentType(
     ImmutableArray<string> XmlSubElements,
     ImmutableArray<ContentType.XmlAttribute> XmlAttributes)
 {
-    public record XmlAttribute(string Type, string Name)
+    public record XmlAttribute(string Type, string Name, string DefaultValue, string Description)
     {
         public Page.InlineMarkdown ToBulletPoint()
             => new($"`{Name}` : `{Type}`");

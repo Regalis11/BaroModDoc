@@ -128,8 +128,10 @@ sealed class BaseRip : Command
             {
                 if (contentType.XmlSubElements.Any())
                 {
-                    var childElementsSection = new Page.Section();
-                    childElementsSection.Title = "Child elements";
+                    var childElementsSection = new Page.Section
+                    {
+                        Title = "Child elements"
+                    };
                     markdown.Subsections.Add(childElementsSection);
 
                     var elemList = new Page.BulletList();
@@ -141,15 +143,21 @@ sealed class BaseRip : Command
                 }
                 if (contentType.XmlAttributes.Any())
                 {
-                    var attributesSection = new Page.Section();
-                    attributesSection.Title = "Attributes";
+                    var attributesSection = new Page.Section
+                    {
+                        Title = "Attributes"
+                    };
                     markdown.Subsections.Add(attributesSection);
 
-                    var attrList = new Page.BulletList();
-                    attributesSection.Body.Components.Add(attrList);
+                    Page.Table attributesTable = new()
+                    {
+                        HeadRow = new Page.Table.Row("Attribute", "Type", "Default value", "Description")
+                    };
+
+                    attributesSection.Body.Components.Add(attributesTable);
                     foreach (var attr in contentType.XmlAttributes)
                     {
-                        attrList.Items.Add(attr.ToBulletPoint());
+                        attributesTable.BodyRows.Add(new Page.Table.Row(attr.Name, attr.Type, attr.DefaultValue, attr.Description));
                     }
 
                     attributesSection.Body.AddNewLine();

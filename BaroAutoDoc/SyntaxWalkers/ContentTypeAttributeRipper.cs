@@ -32,7 +32,7 @@ class ContentTypeAttributeRipper : FolderSyntaxWalker
         {
             XmlAttributes = ContentType.XmlAttributes.Union(
                 serializableProperties.Select(p
-                    => new ContentType.XmlAttribute(p.Type, p.Name)))
+                    => new ContentType.XmlAttribute(p.Type, p.Name, p.DefaultValue, p.Description)))
                 .ToImmutableArray(),
             XmlSubElements = ContentType.XmlSubElements.Union(
                 subElemSwitches.SelectMany(s => s.Sections.Select(
