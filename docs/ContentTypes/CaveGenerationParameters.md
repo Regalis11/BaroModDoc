@@ -14,14 +14,18 @@
 
 
 ## Attributes
-- `Commonness` : `float`
-- `MinWidth` : `int`
-- `MaxWidth` : `int`
-- `MinHeight` : `int`
-- `MaxHeight` : `int`
-- `MinBranchCount` : `int`
-- `MaxBranchCount` : `int`
-- `LevelObjectAmount` : `int`
-- `DestructibleWallRatio` : `float`
+
+| Attribute             | Type  | Default value | Description                                                                                                   |
+|-----------------------|-------|---------------|---------------------------------------------------------------------------------------------------------------|
+| Commonness            | float | 1.0           |                                                                                                               |
+| MinWidth              | int   | 8000          |                                                                                                               |
+| MaxWidth              | int   | 10000         |                                                                                                               |
+| MinHeight             | int   | 8000          |                                                                                                               |
+| MaxHeight             | int   | 10000         |                                                                                                               |
+| MinBranchCount        | int   | 2             | Minimum number of tunnel branches in the cave.                                                                |
+| MaxBranchCount        | int   | 4             | Maximum number of tunnel branches in the cave.                                                                |
+| LevelObjectAmount     | int   | 50            | Total amount of level objects in the cave.                                                                    |
+| DestructibleWallRatio | float | 0.1           | What portion of the empty cells in the cave should be turned into destructible walls? For example, 0.1 = 10%. |
+
 
 

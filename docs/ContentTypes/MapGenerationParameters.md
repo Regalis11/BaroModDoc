@@ -12,16 +12,20 @@
 
 
 ## Attributes
-- `DifficultyZones` : `int`
-- `Width` : `int`
-- `Height` : `int`
-- `SmallLevelConnectionLength` : `float`
-- `LargeLevelConnectionLength` : `float`
-- `VoronoiSiteInterval` : `Point`
-- `VoronoiSiteVariance` : `Point`
-- `MinConnectionDistance` : `float`
-- `MinLocationDistance` : `float`
-- `ConnectionIndicatorIterationMultiplier` : `float`
-- `ConnectionIndicatorDisplacementMultiplier` : `float`
+
+| Attribute                                 | Type  | Default value | Description                                                                                                                                                                                                                                                                                       |
+|-------------------------------------------|-------|---------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| DifficultyZones                           | int   | 6             |                                                                                                                                                                                                                                                                                                   |
+| Width                                     | int   | 8000          |                                                                                                                                                                                                                                                                                                   |
+| Height                                    | int   | 500           |                                                                                                                                                                                                                                                                                                   |
+| SmallLevelConnectionLength                | float | 20.0          | Connections with a length smaller or equal to this generate the smallest possible levels (using the MinWidth parameter in the level generation paramaters).                                                                                                                                       |
+| LargeLevelConnectionLength                | float | 200.0         | Connections with a length larger or equal to this generate the largest possible levels (using the MaxWidth parameter in the level generation paramaters).                                                                                                                                         |
+| VoronoiSiteInterval                       | Point | "20,20"       | How far from each other voronoi sites are placed. Sites determine shape of the voronoi graph. Locations are placed at the vertices of the voronoi cells. (Decreasing this value causes the number of sites, and the complexity of the map, to increase exponentially - be careful when adjusting) |
+| VoronoiSiteVariance                       | Point | "5,5"         |                                                                                                                                                                                                                                                                                                   |
+| MinConnectionDistance                     | float | 10.0          | Connections smaller than this are removed.                                                                                                                                                                                                                                                        |
+| MinLocationDistance                       | float | 5.0           | Locations that are closer than this to another location are removed.                                                                                                                                                                                                                              |
+| ConnectionIndicatorIterationMultiplier    | float | 0.1           | ConnectionIterationMultiplier for the UI indicator lines between locations.                                                                                                                                                                                                                       |
+| ConnectionIndicatorDisplacementMultiplier | float | 0.1           | ConnectionDisplacementMultiplier for the UI indicator lines between locations.                                                                                                                                                                                                                    |
+
 
 

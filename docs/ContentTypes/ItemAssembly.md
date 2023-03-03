@@ -8,14 +8,18 @@
 
 
 ## Attributes
-- `ResizeHorizontal` : `bool`
-- `ResizeVertical` : `bool`
-- `Description` : `LocalizedString`
-- `AllowedUpgrades` : `string`
-- `HideInMenus` : `bool`
-- `Subcategory` : `string`
-- `Linkable` : `bool`
-- `SpriteColor` : `Color`
-- `Scale` : `float`
+
+| Attribute        | Type            | Default value     | Description |
+|------------------|-----------------|-------------------|-------------|
+| ResizeHorizontal | bool            | false             |             |
+| ResizeVertical   | bool            | false             |             |
+| Description      | LocalizedString | ""                |             |
+| AllowedUpgrades  | string          | ""                |             |
+| HideInMenus      | bool            | false             |             |
+| Subcategory      | string          | ""                |             |
+| Linkable         | bool            | false             |             |
+| SpriteColor      | Color           | "1.0,1.0,1.0,1.0" |             |
+| Scale            | float           | 1                 |             |
+
 
 

@@ -8,27 +8,31 @@
 
 
 ## Attributes
-- `DefensiveAgent` : `Identifier`
-- `OffensiveAgent` : `string`
-- `Brain` : `string`
-- `Spawner` : `string`
-- `BrainRoomBackground` : `string`
-- `BrainRoomVerticalWall` : `string`
-- `BrainRoomHorizontalWall` : `string`
-- `AgentSpawnDelay` : `float`
-- `AgentSpawnDelayRandomFactor` : `float`
-- `AgentSpawnDelayDifficultyMultiplier` : `float`
-- `AgentSpawnCountDifficultyMultiplier` : `float`
-- `MinAgentsPerBrainRoom` : `int`
-- `MaxAgentsPerRoom` : `int`
-- `MinAgentsOutside` : `int`
-- `MaxAgentsOutside` : `int`
-- `MinAgentsInside` : `int`
-- `MaxAgentsInside` : `int`
-- `MaxAgentCount` : `int`
-- `MinWaterLevel` : `float`
-- `KillAgentsWhenEntityDies` : `bool`
-- `DeadEntityColorMultiplier` : `float`
-- `DeadEntityColorFadeOutTime` : `float`
+
+| Attribute                           | Type       | Default value | Description |
+|-------------------------------------|------------|---------------|-------------|
+| DefensiveAgent                      | Identifier | ""            |             |
+| OffensiveAgent                      | string     | ""            |             |
+| Brain                               | string     | ""            |             |
+| Spawner                             | string     | ""            |             |
+| BrainRoomBackground                 | string     | ""            |             |
+| BrainRoomVerticalWall               | string     | ""            |             |
+| BrainRoomHorizontalWall             | string     | ""            |             |
+| AgentSpawnDelay                     | float      | 60            |             |
+| AgentSpawnDelayRandomFactor         | float      | 0.5           |             |
+| AgentSpawnDelayDifficultyMultiplier | float      | 1             |             |
+| AgentSpawnCountDifficultyMultiplier | float      | 1             |             |
+| MinAgentsPerBrainRoom               | int        | 0             |             |
+| MaxAgentsPerRoom                    | int        | 3             |             |
+| MinAgentsOutside                    | int        | 2             |             |
+| MaxAgentsOutside                    | int        | 5             |             |
+| MinAgentsInside                     | int        | 3             |             |
+| MaxAgentsInside                     | int        | 10            |             |
+| MaxAgentCount                       | int        | 15            |             |
+| MinWaterLevel                       | float      | 100           |             |
+| KillAgentsWhenEntityDies            | bool       | true          |             |
+| DeadEntityColorMultiplier           | float      | 1             |             |
+| DeadEntityColorFadeOutTime          | float      | 1             |             |
+
 
 

@@ -8,17 +8,21 @@
 
 
 ## Attributes
-- `SingleRoundSkillGainMultiplier` : `float`
-- `SkillIncreasePerRepair` : `float`
-- `SkillIncreasePerSabotage` : `float`
-- `SkillIncreasePerCprRevive` : `float`
-- `SkillIncreasePerRepairedStructureDamage` : `float`
-- `SkillIncreasePerSecondWhenSteering` : `float`
-- `SkillIncreasePerFabricatorRequiredSkill` : `float`
-- `SkillIncreasePerHostileDamage` : `float`
-- `SkillIncreasePerSecondWhenOperatingTurret` : `float`
-- `SkillIncreasePerFriendlyHealed` : `float`
-- `AssistantSkillIncreaseMultiplier` : `float`
-- `MaximumSkillWithTalents` : `float`
+
+| Attribute                                 | Type  | Default value | Description |
+|-------------------------------------------|-------|---------------|-------------|
+| SingleRoundSkillGainMultiplier            | float | 4.0           |             |
+| SkillIncreasePerRepair                    | float | 5.0           |             |
+| SkillIncreasePerSabotage                  | float | 3.0           |             |
+| SkillIncreasePerCprRevive                 | float | 0.5           |             |
+| SkillIncreasePerRepairedStructureDamage   | float | 0.0025        |             |
+| SkillIncreasePerSecondWhenSteering        | float | 0.005         |             |
+| SkillIncreasePerFabricatorRequiredSkill   | float | 0.5           |             |
+| SkillIncreasePerHostileDamage             | float | 0.01          |             |
+| SkillIncreasePerSecondWhenOperatingTurret | float | 0.001         |             |
+| SkillIncreasePerFriendlyHealed            | float | 0.001         |             |
+| AssistantSkillIncreaseMultiplier          | float | 1.1           |             |
+| MaximumSkillWithTalents                   | float | 200.0         |             |
+
 
 
