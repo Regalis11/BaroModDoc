@@ -46,6 +46,12 @@ sealed class AfflictionsRip : Command
             )
             .Submit();
 
+        BuildPages(builder);
+    }
+
+    // FIXME shove this somewhere proper
+    public static void BuildPages(SyntaxRipperBuilder builder)
+    {
         Directory.SetCurrentDirectory(Path.GetDirectoryName(Assembly.GetCallingAssembly().Location)!);
 
         var files = builder.Build();
@@ -223,7 +229,7 @@ sealed class AfflictionsRip : Command
                 Title = e.Name
             };
 
-            foreach (Page.BodyComponent description in CreateDescription(new []{ e.Comment }))
+            foreach (Page.BodyComponent description in CreateDescription(new[] { e.Comment }))
             {
                 enumSection.Body.Components.Add(description);
             }
