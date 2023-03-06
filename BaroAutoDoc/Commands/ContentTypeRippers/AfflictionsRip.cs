@@ -85,6 +85,11 @@ sealed class AfflictionsRip : Command
                 Title = name
             };
 
+            foreach (Page.BodyComponent description in CreateDescription(parser.Comments))
+            {
+                mainSection.Body.Components.Add(description);
+            }
+
             foreach (CodeComment s in parser.Comments)
             {
                 if (string.IsNullOrWhiteSpace(s.Text)) { continue; }
@@ -218,6 +223,11 @@ sealed class AfflictionsRip : Command
                 Title = e.Name
             };
 
+            foreach (Page.BodyComponent description in CreateDescription(new []{ e.Comment }))
+            {
+                enumSection.Body.Components.Add(description);
+            }
+
             Page.Table enumTable = new()
             {
                 HeadRow = new Page.Table.Row("Value", "Description")
@@ -232,6 +242,50 @@ sealed class AfflictionsRip : Command
 
             enumSection.Body.Components.Add(enumTable);
             return enumSection;
+        }
+
+        static IReadOnlyList<Page.BodyComponent> CreateDescription(IReadOnlyList<CodeComment> comments)
+        {
+            var builder = ImmutableList.CreateBuilder<Page.BodyComponent>();
+            foreach (CodeComment s in comments)
+            {
+                if (string.IsNullOrWhiteSpace(s.Text)) { continue; }
+
+                builder.Add(new Page.RawText(s.Text));
+                builder.Add(new Page.NewLine());
+                foreach (var element in s.Element.Elements())
+                {
+                    if (element.Name != "example") { continue; }
+
+                    if (element.Element("code") is not { } codeElement) { continue; }
+
+                    builder.Add(new Page.CodeBlock(codeElement.Attribute("lang")?.Value ?? "xml", ConstructXMLString(codeElement)));
+
+                    static string ConstructXMLString(XElement element)
+                    {
+                        var nodes = element.Nodes().ToImmutableArray();
+
+                        switch (nodes.Length)
+                        {
+                            case 0:
+                                return element.Value;
+                            case 1:
+                                return nodes[0].ToString();
+                        }
+
+                        StringBuilder sb = new StringBuilder(nodes[0].ToString());
+
+                        for (int i = 1; i < nodes.Length; i++)
+                        {
+                            sb.Append('\n').Append(nodes[i]);
+                        }
+
+                        return sb.ToString();
+                    }
+                }
+            }
+
+            return builder.ToImmutable();
         }
     }
 }

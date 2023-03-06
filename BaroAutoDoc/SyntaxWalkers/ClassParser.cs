@@ -52,7 +52,8 @@ public record struct ClassParsingOptions(string[] InitializerMethodNames)
 }
 
 public readonly record struct EnumValue(string Value, string Description);
-public readonly record struct ParsedEnum(string Name, ImmutableArray<EnumValue> Values);
+
+public readonly record struct ParsedEnum(string Name, CodeComment Comment, ImmutableArray<EnumValue> Values);
 
 public class ParsedType
 {
@@ -104,7 +105,9 @@ public class ParsedType
             return new EnumValue(member.Identifier.ValueText, comment.Text);
         }).ToImmutableArray();
 
-        return new ParsedEnum(name, values);
+        CodeComment comment = enumDeclaration.FindCommentAttachedToMember();
+
+        return new ParsedEnum(name, comment, values);
     }
 }
 
