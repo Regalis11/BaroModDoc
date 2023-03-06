@@ -172,6 +172,7 @@ sealed class BaseRip : Command
                 => $"- [{t.Name}](ContentTypes/{t.Name}.md)")));
     }
 
+    // FIXME DRY
     public static bool ConstructEnumTable(EnumDeclarationSyntax syntax, [NotNullWhen(true)] out ImmutableArray<Page.Section>? result)
     {
         List<ParsedEnum> enums = new();
@@ -182,7 +183,9 @@ sealed class BaseRip : Command
             enumMembers.Add(new EnumValue(enumMember.Identifier.ValueText, enumMember.FindCommentAttachedToMember().Text));
         }
 
-        enums.Add(new ParsedEnum(syntax.Identifier.ValueText, enumMembers.ToImmutableArray()));
+        CodeComment comment = syntax.FindCommentAttachedToMember();
+
+        enums.Add(new ParsedEnum(syntax.Identifier.ValueText, comment, enumMembers.ToImmutableArray()));
 
         return ConstructEnumTable(enums, out result);
     }
@@ -197,7 +200,7 @@ sealed class BaseRip : Command
         }
 
         var builder = ImmutableArray.CreateBuilder<Page.Section>();
-        foreach (var (type, values) in enums)
+        foreach (var (type, comment, values) in enums)
         {
             Page.Section section = new()
             {
