@@ -27,6 +27,7 @@ Classes that use Conditionals: Attack<sup>[Shared](https://github.com/Regalis11/
 
 ## Comparison operators
 There are several ways to compare properties to values. The comparison operator to use can be specified by placing one of the following before the value to compare against.
+
 | Operator                                              | Description                                                                                                                                                                                           |
 |-------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | "e", "eq", "equals"                                   | Require that the property being checked equals the given value.<br/><br/>This is the default operator used if none is specified.                                                                      |
