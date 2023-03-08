@@ -3,6 +3,9 @@
 using System.Collections;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
+using System.Text;
+using System.Xml.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -46,6 +49,7 @@ internal readonly struct TypeOrEnum
             type = default;
             return false;
         }
+
         type = parsedType!;
         return true;
     }
@@ -57,6 +61,7 @@ internal readonly struct TypeOrEnum
             type = default;
             return false;
         }
+
         type = parsedEnum;
         return true;
     }
@@ -110,7 +115,6 @@ internal class GenericRipper : CSharpSyntaxWalker
         builder.Add(node);
         base.VisitEnumDeclaration(node);
     }
-
 }
 
 internal sealed class SyntaxRipperBuilder
@@ -269,6 +273,7 @@ internal sealed class SyntaxRipperBuilder
 
                 builder.FilesToCreate[map.File].AddRange(map.Types);
             }
+
             return builder;
         }
     }
@@ -279,9 +284,9 @@ internal sealed class SyntaxRipperBuilder
 
     public AddedFile Prepare(string key) => new AddedFile(this, key);
 
-    public ImmutableDictionary<string, List<TypeOrEnum>> Build()
+    public void Build(string outputPath)
     {
-        var typeBuilder = ImmutableDictionary.CreateBuilder<string, List<TypeOrEnum>>();
+        var allTypes = new Dictionary<string, List<TypeOrEnum>>();
 
         foreach (TypeCollection collection in Types.Values)
         {
@@ -312,6 +317,7 @@ internal sealed class SyntaxRipperBuilder
                 foreach (ParsedEnum extraEnum in parser.Enums)
                 {
                     if (alreadyDeclaredEnums.Contains(extraEnum.Name)) { continue; }
+
                     AddEnum(extraEnum);
                 }
 
@@ -329,8 +335,9 @@ internal sealed class SyntaxRipperBuilder
             foreach (var (file, identifiers) in FilesToCreate)
             {
                 if (!identifiers.Contains(e.Name)) { continue; }
+
                 AddIfNotExists(file);
-                typeBuilder[file].Add(new TypeOrEnum(e));
+                allTypes[file].Add(new TypeOrEnum(e));
                 break;
             }
         }
@@ -340,21 +347,22 @@ internal sealed class SyntaxRipperBuilder
             foreach (var (file, identifiers) in FilesToCreate)
             {
                 if (!identifiers.Contains(type.Name)) { continue; }
+
                 AddIfNotExists(file);
-                typeBuilder[file].Add(new TypeOrEnum(type));
+                allTypes[file].Add(new TypeOrEnum(type));
                 break;
             }
         }
 
         void AddIfNotExists(string file)
         {
-            if (!typeBuilder.ContainsKey(file))
+            if (!allTypes.ContainsKey(file))
             {
-                typeBuilder.Add(file, new List<TypeOrEnum>());
+                allTypes.Add(file, new List<TypeOrEnum>());
             }
         }
 
-        foreach (var (file, pair) in typeBuilder)
+        foreach (var (file, pair) in allTypes)
         {
             var orderList = FilesToCreate[file];
             pair.Sort(Comparison);
@@ -368,6 +376,19 @@ internal sealed class SyntaxRipperBuilder
             }
         }
 
-        return typeBuilder.ToImmutable();
+        var path = Path.Combine(Path.GetDirectoryName(Assembly.GetCallingAssembly().Location)!, outputPath);
+        Directory.SetCurrentDirectory(path);
+
+        if (!Directory.Exists(path))
+        {
+            Directory.CreateDirectory(path);
+        }
+
+        foreach (var (file, types) in allTypes)
+        {
+            PageBuilder builder = new(file, types);
+            builder.WriteToFile($"{file}.md");
+        }
     }
 }
+

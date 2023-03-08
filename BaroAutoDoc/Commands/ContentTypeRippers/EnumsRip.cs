@@ -23,6 +23,6 @@ sealed class EnumsRip : Command
             )
             .Submit();
 
-        AfflictionsRip.BuildPages(builder);
+        builder.Build(string.Empty);
     }
 }
