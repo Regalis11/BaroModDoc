@@ -140,9 +140,6 @@ internal sealed class SyntaxRipperBuilder
 
         public AddedFile AddFile(string filePath, string[]? fmt = null)
         {
-            filePath = Path.Combine(currentDirectory, filePath);
-            if (!File.Exists(filePath)) { return this; }
-
             if (fmt is not null)
             {
                 foreach (string s in fmt)
@@ -160,6 +157,10 @@ internal sealed class SyntaxRipperBuilder
 
             void AddFilePath(string file)
             {
+
+                file = Path.Combine(currentDirectory, file);
+                if (!File.Exists(file)) { return; }
+
                 var parsedTypes = new GenericRipper(file).Run();
                 foreach (TypeDeclarationSyntax t in parsedTypes.OfType<TypeDeclarationSyntax>())
                 {
