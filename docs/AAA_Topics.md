@@ -13,6 +13,7 @@
   - [Overrides](Intro/Overrides.md)
   - [StatusEffects](Misc/StatusEffect.md)
   - [Conditionals](Misc/Conditional.md)
+  - [RelatedItem](Misc/RelatedItem.md)
   - [StatTypes](Misc/StatTypes.md)
 
 - [Publishing to Steam Workshop](Intro/Publishing.md)
