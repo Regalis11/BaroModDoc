@@ -4,11 +4,11 @@ In general, large numbers of things that need to be updated very frequently tend
 
 ## ActionType
 
-The ActionType, i.e. *when* an effect executes, can make a difference. The Always type is generally the worst for performance, since (as the name implies), these execute every frame. If you can for example use an effect that uses the ActionType InWater or Contained instead, it's usually preferable.
+The ActionType, i.e. *when* an effect executes, can make a difference. The Always type is generally the worst for performance, since (as the name implies), these execute *always*, not just in some specific situations. If you can for example use an effect that uses the ActionType InWater or Contained instead, it's usually preferable.
 
 ## Interval
 
-The interval at which an effect executes can also make a significant difference. By default, the interval is 0, meaning the effect executes every frame. An effect that only runs once per second is generally 60 times more performant than one that runs every frame!
+The interval at which an effect executes can also make a significant difference. By default, the interval is 0, meaning the effect executes every frame.
 
 ```xml
 <!-- The condition of this item reduces by 0.1 per second, giving it a lifetime of 1000 seconds. But we can make this more performant! -->
@@ -20,7 +20,11 @@ The interval at which an effect executes can also make a significant difference.
 	</StatusEffect>
   </ItemComponent>
 </Item>
+```
+ 
+An effect that only runs once per second is generally 60 times more performant than one that runs every frame (since Barotrauma runs at a fixed rate of 60 updates per second).
 
+```xml
 <!-- The condition of this item reduces by 0.1 per second, but it only runs once per second, reducing the condition 0.1 each time.
 	The end result is the same, but the effect only needs to run every 60 frames! -->
 <Item identifier="someitem">
