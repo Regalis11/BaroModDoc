@@ -11,6 +11,7 @@
   - [Content packages](Intro/ContentPackages.md)
     - [Content types](Intro/ContentTypes.md)
   - [Overrides](Intro/Overrides.md)
+  - [Performance](Misc/Performance.md)
   - [StatusEffects](Misc/StatusEffect.md)
   - [Conditionals](Misc/Conditional.md)
   - [RelatedItem](Misc/RelatedItem.md)
