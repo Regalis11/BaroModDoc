@@ -14,7 +14,7 @@ sealed class AttacksRip : Command
         builder
             .Prepare("Attack")
             .AddFile("Barotrauma/Barotrauma{0}/{0}Source/Characters/Attack.cs", fmt: new []{ "Client", "Shared" })
-            .AddFile("Barotrauma/Barotrauma{0}/{0}Source/Characters/Explosion.cs", fmt: new []{ "Client", "Shared" })
+            .AddFile("Barotrauma/Barotrauma{0}/{0}Source/Map/Explosion.cs", fmt: new []{ "Client", "Shared" })
             .WithOptions(new ClassParsingOptions(new[] { "InitProjSpecific" }))
             .Map
             (
