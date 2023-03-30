@@ -145,14 +145,22 @@ internal sealed class PageBuilder
                 continue;
             }
 
-            string fmtType =
-                new Page.Hyperlink(
-                        Url: typesPresentOnPage.Contains(field.Type)
-                            ? $"#{field.Type.ToLower()}"
-                            : $"{field.Type}.md",
-                        Text: field.Type,
-                        AltText: field.Description)
-                    .ToMarkdown();
+            string fmtType = field.Type;
+
+            if (typesPresentOnPage.Contains(field.Type))
+            {
+                fmtType = new Page.Hyperlink(
+                    Url: $"#{field.Type.ToLower()}",
+                    Text: field.Type,
+                    AltText: string.Empty).ToMarkdown();
+            }
+            else if (ContentLocations.TryGetType(field.Type, out string? path))
+            {
+                fmtType = new Page.Hyperlink(
+                    Url: path,
+                    Text: field.Type,
+                    AltText: string.Empty).ToMarkdown();
+            }
 
             table.BodyRows.Add(new Page.Table.Row(element.XMLName, fmtType, field.Description));
         }
