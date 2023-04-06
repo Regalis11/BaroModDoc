@@ -16,6 +16,7 @@
   - [Conditionals](Misc/Conditional.md)
   - [RelatedItem](Misc/RelatedItem.md)
   - [StatTypes](Misc/StatTypes.md)
+  - [Attack](Misc/Attack.md)
 
 - [Publishing to Steam Workshop](Intro/Publishing.md)
 - [Troubleshooting](Misc/Troubleshooting.md)
