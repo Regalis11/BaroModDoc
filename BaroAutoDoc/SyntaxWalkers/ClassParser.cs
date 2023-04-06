@@ -490,9 +490,9 @@ internal sealed class ClassParser : ParsedType
         static string ExpressionToString(ExpressionSyntax syntax) => syntax.ToString().EvaluateAsCSharpExpression();
     }
 
-    private static string ParseDefaultValueExpression(ExpressionSyntax expressionSyntax)
+    public static string ParseDefaultValueExpression(ExpressionSyntax expressionSyntax)
     {
-        const string defaultValue = "See description";
+        const string defaultValue = "-";
 
         // FIXME link code to xml identifiers, as in "Same as X" needs to point to the XML identifier that assigns field X
         switch (expressionSyntax)

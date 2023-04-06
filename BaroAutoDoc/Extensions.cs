@@ -4,6 +4,7 @@ using System.IO.Enumeration;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
+using BaroAutoDoc.SyntaxWalkers;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -272,25 +273,26 @@ public static class Extensions
                 .FirstOrDefault(a => a.Name.ToString() == "Serialize");
             if (serializeAttr is null) { continue; }
 
-            string cleanupDefaultValue(string v)
+            static string cleanupDefaultValue(string v)
                 => v.EndsWith("f") ? v[..^1] : v;
-            
-            string cleanupDescription(string desc)
+
+            static string cleanupDescription(string desc)
                 => desc.EvaluateAsCSharpExpression();
 
             string getArgument(string argName)
             {
-                var arg = serializeAttr.ArgumentList!.Arguments.FirstOrDefault(arg
-                    => arg.NameColon?.Name.Identifier.Text == argName);
+                var arguments = serializeAttr.ArgumentList!.Arguments;
+
+                var arg = arguments.FirstOrDefault(arg => arg.NameColon?.Name.Identifier.Text == argName);
+
                 if (arg is null)
                 {
                     switch (argName)
                     {
                         case "defaultValue":
-                            arg = serializeAttr.ArgumentList!.Arguments[0];
-                            break;
+                            return ClassParser.ParseDefaultValueExpression(arguments[0].Expression);
                         case "description":
-                            arg = serializeAttr.ArgumentList!.Arguments.Count >= 3 ? serializeAttr.ArgumentList.Arguments[2] : null;
+                            arg = arguments.Count >= 3 ? arguments[2] : null;
                             break;
                     }
                 }
@@ -299,7 +301,7 @@ public static class Extensions
                     ? arg?.Expression.ToString() ?? ""
                     : "";
             }
-            
+
             yield return new SerializableProperty(
                 Name: property.Identifier.Text,
                 Type: property.Type.ToString(),
