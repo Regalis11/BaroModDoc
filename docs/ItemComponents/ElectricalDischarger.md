@@ -3,12 +3,15 @@
 
 ## Attributes
 
-| Attribute|Type|Default value|Description |
-| ---|---|---|--- |
-| Range|float|500.0|How far the discharge can travel from the item. |
-| RangeMultiplierInWalls|float|25.0|How much further can the discharge be carried when moving across walls. |
-| Duration|float|0.25|The duration of an individual discharge (in seconds). |
-| OutdoorsOnly|bool|false|If set to true, the discharge cannot travel inside the submarine nor shock anyone inside. |
+| Attribute              | Type  | Default value | Description                                                                               |
+|------------------------|-------|---------------|-------------------------------------------------------------------------------------------|
+| Range                  | float | 500           | How far the discharge can travel from the item.                                           |
+| RangeMultiplierInWalls | float | 25            | How much further can the discharge be carried when moving across walls.                   |
+| RaycastRange           | float | 0             |                                                                                           |
+| Duration               | float | 0.25          | The duration of an individual discharge (in seconds).                                     |
+| Reload                 | float | 0.25          |                                                                                           |
+| OutdoorsOnly           | bool  | false         | If set to true, the discharge cannot travel inside the submarine nor shock anyone inside. |
+| IgnoreUser             | bool  | false         |                                                                                           |
 
 This component also supports the attributes defined in: [Powered](Powered.md), [ItemComponent](ItemComponent.md)
 

@@ -3,25 +3,25 @@
 
 ## Attributes
 
-| Attribute|Type|Default value|Description |
-| ---|---|---|--- |
-| PowerOn|bool|false| |
-| LastUserWasPlayer|bool|false| |
-| MaxPowerOutput|float|10000.0|How much power (kW) the reactor generates when operating at full capacity. |
-| MeltdownDelay|float|120.0|How long the temperature has to stay critical until a meltdown occurs. |
-| FireDelay|float|30.0|How long the temperature has to stay critical until the reactor catches fire. |
-| Temperature|float|0.0|Current temperature of the reactor (0% - 100%). Indended to be used by StatusEffect conditionals. |
-| FissionRate|float|0.0|Current fission rate of the reactor (0% - 100%). Intended to be used by StatusEffect conditionals (setting the value from XML is not recommended). |
-| TurbineOutput|float|0.0|Current turbine output of the reactor (0% - 100%). Intended to be used by StatusEffect conditionals (setting the value from XML is not recommended). |
-| FuelConsumptionRate|float|0.2|How fast the condition of the contained fuel rods deteriorates per second. |
-| TemperatureCritical|bool|false|Is the temperature currently critical. Intended to be used by StatusEffect conditionals (setting the value from XML has no effect). |
-| AutoTemp|bool|false|Is the automatic temperature control currently on. Indended to be used by StatusEffect conditionals (setting the value from XML is not recommended). |
-| AvailableFuel|float|0.0| |
-| Load|float|0.0| |
-| TargetFissionRate|float|0.0| |
-| TargetTurbineOutput|float|0.0| |
-| CorrectTurbineOutput|float|0.0| |
-| ExplosionDamagesOtherSubs|bool|true| |
+| Attribute                 | Type  | Default value | Description                                                                                                                                          |
+|---------------------------|-------|---------------|------------------------------------------------------------------------------------------------------------------------------------------------------|
+| PowerOn                   | bool  | false         |                                                                                                                                                      |
+| LastUserWasPlayer         | bool  | false         |                                                                                                                                                      |
+| MaxPowerOutput            | float | 10000         | How much power (kW) the reactor generates when operating at full capacity.                                                                           |
+| MeltdownDelay             | float | 120           | How long the temperature has to stay critical until a meltdown occurs.                                                                               |
+| FireDelay                 | float | 30            | How long the temperature has to stay critical until the reactor catches fire.                                                                        |
+| Temperature               | float | 0             | Current temperature of the reactor (0% - 100%). Indended to be used by StatusEffect conditionals.                                                    |
+| FissionRate               | float | 0             | Current fission rate of the reactor (0% - 100%). Intended to be used by StatusEffect conditionals (setting the value from XML is not recommended).   |
+| TurbineOutput             | float | 0             | Current turbine output of the reactor (0% - 100%). Intended to be used by StatusEffect conditionals (setting the value from XML is not recommended). |
+| FuelConsumptionRate       | float | 0.2           | How fast the condition of the contained fuel rods deteriorates per second.                                                                           |
+| TemperatureCritical       | bool  | false         | Is the temperature currently critical. Intended to be used by StatusEffect conditionals (setting the value from XML has no effect).                  |
+| AutoTemp                  | bool  | false         | Is the automatic temperature control currently on. Indended to be used by StatusEffect conditionals (setting the value from XML is not recommended). |
+| AvailableFuel             | float | 0             |                                                                                                                                                      |
+| Load                      | float | 0             |                                                                                                                                                      |
+| TargetFissionRate         | float | 0             |                                                                                                                                                      |
+| TargetTurbineOutput       | float | 0             |                                                                                                                                                      |
+| CorrectTurbineOutput      | float | 0             |                                                                                                                                                      |
+| ExplosionDamagesOtherSubs | bool  | true          |                                                                                                                                                      |
 
 This component also supports the attributes defined in: [Powered](Powered.md), [ItemComponent](ItemComponent.md)
 
@@ -38,10 +38,10 @@ This component also supports the attributes defined in: [Powered](Powered.md), [
       <Sprite name="ReactorGraphLine" texture="Content/Items/Reactor/graphLine.png" sourcerect="0,0,32,32" />
     </GraphLine>
     <FissionRateMeter>
-      <Sprite name="FissionRateMeter" texture="Content/Items/Reactor/reactor.png" sourcerect="603,817,441,240" origin="0.5,1" />
+      <Sprite name="FissionRateMeter" texture="Content/Items/Reactor/reactor.png" sourcerect="544,770,441,240" origin="0.5,1" />
     </FissionRateMeter>
     <TurbineOutputMeter>
-      <Sprite name="TurbineOutputMeter" texture="Content/Items/Reactor/reactor.png" sourcerect="603,817,441,240" origin="0.5,1" />
+      <Sprite name="TurbineOutputMeter" texture="Content/Items/Reactor/reactor.png" sourcerect="544,770,441,240" origin="0.5,1" />
     </TurbineOutputMeter>
     <MeterPointer>
       <Sprite name="MeterPointer" texture="Content/UI/UIAtlasDevices.png" sourcerect="938,846,31,167 " origin="0.5,0.9" />
@@ -62,24 +62,28 @@ This component also supports the attributes defined in: [Powered](Powered.md), [
     <RequiredItem items="idcard" type="Picked" msg="ItemMsgUnauthorizedAccess" ignoreineditor="true" />
     <sound file="Content/Items/Reactor/Reactor.ogg" type="OnActive" range="2000.0" volumeproperty="FissionRate" volume="0.02" loop="true" />
     <StatusEffect type="OnBroken" target="This" FissionRate="0.0" disabledeltatime="true">
-      <sound file="Content/Items/Weapons/ExplosionLarge2.ogg" range="8000" selectionmode="All" />
+      <sound file="Content/Items/Weapons/ExplosionLarge2.ogg" type="OnUse" volume="10" selectionmode="Random" range="50000" dontmuffle="true" />
       <sound file="Content/Items/Weapons/ExplosionDebris5.ogg" range="8000" />
-      <Explosion range="2000" structuredamage="200" force="5.0" camerashake="200" flashrange="10000" flashduration="5.0" screencolor="255,255,255,255" screencolorrange="5000" screencolorduration="3.0">
-        <Affliction identifier="burn" strength="200" />
-        <Affliction identifier="explosiondamage" strength="80" />
-        <Affliction identifier="radiationsickness" strength="80" />
-        <Affliction identifier="stun" strength="5" />
+      <Explosion range="750" ballastfloradamage="1000" structuredamage="300" itemdamage="500" force="25.0" camerashake="0" flashrange="10000" flashduration="5.0" screencolor="255,255,255,255" screencolorrange="5000" screencolorduration="3.0" decal="explosion" decalsize="1">
+        <Affliction identifier="explosiondamage" strength="500" />
+        <Affliction identifier="burn" strength="500" />
+        <Affliction identifier="stun" strength="15" />
       </Explosion>
+      <Explosion range="2000" force="0.0" camerashake="200" camerashakerange="50000" showEffects="false" empstrength="1.25" applyfireeffects="false" ignorecover="true">
+        <Affliction identifier="radiationsickness" strength="75" />
+        <Affliction identifier="emp" strength="50" multiplybymaxvitality="true" />
+      </Explosion>
+      <ParticleEmitter particle="underwaterexplosion" anglemin="0" anglemax="360" particleamount="3" velocitymin="0" velocitymax="0" scalemin="15" scalemax="15" />
     </StatusEffect>
     <StatusEffect type="OnBroken" target="Contained" Condition="0.0" setvalue="true" />
   </Reactor>
   <ConnectionPanel selectkey="Action" canbeselected="true" msg="ItemMsgRewireScrewdriver" hudpriority="10">
     <GuiFrame relativesize="0.3,0.35" minsize="400,350" maxsize="480,460" anchor="Center" style="ConnectionPanel" />
     <RequiredSkill identifier="electrical" level="70" />
-    <StatusEffect type="OnFailure" target="Character" targetlimbs="LeftHand,RightHand">
+    <StatusEffect type="OnFailure" target="Character" targetlimbs="LeftHand,RightHand" AllowWhenBroken="true">
       <Sound file="Content/Sounds/Damage/Electrocution1.ogg" range="1000" />
-      <Explosion range="100.0" stun="0" force="5.0" flames="false" shockwave="false" sparks="true" underwaterbubble="false" />
-      <Affliction identifier="stun" strength="5" />
+      <Explosion range="100.0" force="1.0" flames="false" shockwave="false" sparks="true" underwaterbubble="false" />
+      <Affliction identifier="stun" strength="4" />
       <Affliction identifier="burn" strength="5" />
     </StatusEffect>
     <RequiredItem items="screwdriver" type="Equipped" />
@@ -102,6 +106,10 @@ This component also supports the attributes defined in: [Powered](Powered.md), [
     <output name="fuel_percentage_left" displayname="connection.fuelpercentageout" />
   </ConnectionPanel>
   <ItemContainer capacity="4" maxstacksize="1" canbeselected="true" hudpos="0.5,0.15" slotsperrow="1" uilabel="FuelRods">
+    <SlotIcon slotindex="0" texture="Content/UI/StatusMonitorUI.png" sourcerect="192,448,64,64" origin="0.5,0.5" />
+    <SlotIcon slotindex="1" texture="Content/UI/StatusMonitorUI.png" sourcerect="192,448,64,64" origin="0.5,0.5" />
+    <SlotIcon slotindex="2" texture="Content/UI/StatusMonitorUI.png" sourcerect="192,448,64,64" origin="0.5,0.5" />
+    <SlotIcon slotindex="3" texture="Content/UI/StatusMonitorUI.png" sourcerect="192,448,64,64" origin="0.5,0.5" />
     <RequiredItem items="idcard" type="Picked" msg="ItemMsgUnauthorizedAccess" ignoreineditor="true" />
     <Containable items="fuelrod">
       <StatusEffect type="OnContaining" target="This" AvailableFuel="80.0" disabledeltatime="true" />

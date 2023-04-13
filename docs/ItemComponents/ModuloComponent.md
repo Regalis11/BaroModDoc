@@ -3,9 +3,9 @@
 
 ## Attributes
 
-| Attribute|Type|Default value|Description |
-| ---|---|---|--- |
-| Modulus|float|1.0|The modulus of the operation. Must be non-zero. |
+| Attribute | Type  | Default value | Description                                     |
+|-----------|-------|---------------|-------------------------------------------------|
+| Modulus   | float | 1             | The modulus of the operation. Must be non-zero. |
 
 This component also supports the attributes defined in: [ItemComponent](ItemComponent.md)
 

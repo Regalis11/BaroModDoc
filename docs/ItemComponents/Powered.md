@@ -3,14 +3,14 @@
 
 ## Attributes
 
-| Attribute|Type|Default value|Description |
-| ---|---|---|--- |
-| MinVoltage|float|0.5|The minimum voltage required for the device to function. The voltage is calculated as power / powerconsumption, meaning that a device with a power consumption of 1000 kW would need at least 500 kW of power to work if the minimum voltage is set to 0.5. |
-| PowerConsumption|float|0.0|How much power the device draws (or attempts to draw) from the electrical grid when active. |
-| IsActive|bool|false|Is the device currently active. Inactive devices don't consume power. |
-| CurrPowerConsumption|float|0.0|The current power consumption of the device. Intended to be used by StatusEffect conditionals (setting the value from XML is not recommended). |
-| Voltage|float|0.0|The current voltage of the item (calculated as power consumption / available power). Intended to be used by StatusEffect conditionals (setting the value from XML is not recommended). |
-| VulnerableToEMP|bool|true|Can the item be damaged by electomagnetic pulses. |
+| Attribute            | Type  | Default value | Description                                                                                                                                                                                                                                                 |
+|----------------------|-------|---------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| MinVoltage           | float | 0.5           | The minimum voltage required for the device to function. The voltage is calculated as power / powerconsumption, meaning that a device with a power consumption of 1000 kW would need at least 500 kW of power to work if the minimum voltage is set to 0.5. |
+| PowerConsumption     | float | 0             | How much power the device draws (or attempts to draw) from the electrical grid when active.                                                                                                                                                                 |
+| IsActive             | bool  | false         | Is the device currently active. Inactive devices don't consume power.                                                                                                                                                                                       |
+| CurrPowerConsumption | float | 0             | The current power consumption of the device. Intended to be used by StatusEffect conditionals (setting the value from XML is not recommended).                                                                                                              |
+| Voltage              | float | 0             | The current voltage of the item (calculated as power consumption / available power). Intended to be used by StatusEffect conditionals (setting the value from XML is not recommended).                                                                      |
+| VulnerableToEMP      | bool  | true          | Can the item be damaged by electomagnetic pulses.                                                                                                                                                                                                           |
 
 This component also supports the attributes defined in: [ItemComponent](ItemComponent.md)
 
@@ -23,11 +23,11 @@ This component also supports the attributes defined in: [ItemComponent](ItemComp
   </Powered>
   <ConnectionPanel selectkey="Action" canbeselected="true" msg="ItemMsgRewireScrewdriver" hudpriority="10">
     <GuiFrame relativesize="0.2,0.32" minsize="400,350" maxsize="480,420" anchor="Center" style="ConnectionPanel" />
-    <RequiredSkill identifier="electrical" level="20" />
-    <StatusEffect type="OnFailure" target="Character" targetlimbs="LeftHand,RightHand">
-      <Sound file="Content/Items/Weapons/ElectricalDischarger.ogg" range="1000" />
-      <Explosion range="100.0" stun="0" force="5.0" flames="false" shockwave="false" sparks="true" underwaterbubble="false" />
-      <Affliction identifier="stun" strength="3" />
+    <RequiredSkill identifier="electrical" level="25" />
+    <StatusEffect type="OnFailure" target="Character" targetlimbs="LeftHand,RightHand" AllowWhenBroken="true">
+      <Sound file="Content/Sounds/Damage/Electrocution1.ogg" range="1000" />
+      <Explosion range="100.0" stun="0" force="1.0" flames="false" shockwave="false" sparks="true" underwaterbubble="false" />
+      <Affliction identifier="stun" strength="4" />
       <Affliction identifier="burn" strength="5" />
     </StatusEffect>
     <RequiredItem items="screwdriver" type="Equipped" />

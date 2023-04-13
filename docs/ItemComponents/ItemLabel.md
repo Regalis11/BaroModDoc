@@ -8,12 +8,9 @@ This component supports the attributes defined in: [ItemComponent](ItemComponent
 
 ## Example
 ```xml
-<Item identifier="textdisplay" scale="0.5" impactsoundtag="impact_metal_light" isshootable="true">
+<Item identifier="textdisplay" category="Electrical" scale="0.5" Tags="mediumitem,logic" impactsoundtag="impact_metal_light" cargocontaineridentifier="metalcrate" isshootable="true">
   <ItemLabel scrollable="true" padding="10,5,10,12" textcolor="1,1,1,1">
     <Upgrade gameversion="0.12.0.0" padding="10,5,10,12" />
-    <LightComponent range="10.0" lightcolor="1.0,1.0,1.0,0.1" IsOn="true" castshadows="false">
-      <sprite texture="Content/Items/Labels/labels.png" sourcerect="0,48,126,48" depth="0.025" origin="0.5,0.5" alpha="1.0" />
-    </LightComponent>
   </ItemLabel>
   <ConnectionPanel selectkey="Action" canbeselected="true" msg="ItemMsgRewireScrewdriver" hudpriority="10">
     <GuiFrame relativesize="0.2,0.32" minsize="400,350" maxsize="480,420" anchor="Center" style="ConnectionPanel" />

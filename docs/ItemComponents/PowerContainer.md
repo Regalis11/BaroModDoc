@@ -3,19 +3,19 @@
 
 ## Attributes
 
-| Attribute|Type|Default value|Description |
-| ---|---|---|--- |
-| IndicatorPosition|Vector2|"0,0"|The position of the progress bar indicating the charge of the item. In pixels as an offset from the upper left corner of the sprite. |
-| IndicatorSize|Vector2|"0,0"|The size of the progress bar indicating the charge of the item (in pixels). |
-| IsHorizontal|bool|false|Should the progress bar indicating the charge of the item fill up horizontally or vertically. |
-| MaxOutPut|float|10.0|Maximum output of the device when fully charged (kW). |
-| Capacity|float|10.0|The maximum capacity of the device (kW * min). For example, a value of 1000 means the device can output 100 kilowatts of power for 10 minutes, or 1000 kilowatts for 1 minute. |
-| Charge|float|0.0|The current charge of the device. |
-| MaxRechargeSpeed|float|10.0|How fast the device can be recharged. For example, a recharge speed of 100 kW and a capacity of 1000 kW*min would mean it takes 10 minutes to fully charge the device. |
-| RechargeSpeed|float|10.0|The current recharge speed of the device. |
-| ExponentialRechargeSpeed|bool|false|If true, the recharge speed (and power consumption) of the device goes up exponentially as the recharge rate is increased. |
-| RechargeAdjustSpeed|float|0.5| |
-| Efficiency|float|0.95|The amount of power you can get out of a item relative to the amount of power that's put into it. |
+| Attribute                | Type    | Default value | Description                                                                                                                                                                    |
+|--------------------------|---------|---------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| IndicatorPosition        | Vector2 | "0,0"         | The position of the progress bar indicating the charge of the item. In pixels as an offset from the upper left corner of the sprite.                                           |
+| IndicatorSize            | Vector2 | "0,0"         | The size of the progress bar indicating the charge of the item (in pixels).                                                                                                    |
+| IsHorizontal             | bool    | false         | Should the progress bar indicating the charge of the item fill up horizontally or vertically.                                                                                  |
+| MaxOutPut                | float   | 10            | Maximum output of the device when fully charged (kW).                                                                                                                          |
+| Capacity                 | float   | 10            | The maximum capacity of the device (kW * min). For example, a value of 1000 means the device can output 100 kilowatts of power for 10 minutes, or 1000 kilowatts for 1 minute. |
+| Charge                   | float   | 0             | The current charge of the device.                                                                                                                                              |
+| MaxRechargeSpeed         | float   | 10            | How fast the device can be recharged. For example, a recharge speed of 100 kW and a capacity of 1000 kW*min would mean it takes 10 minutes to fully charge the device.         |
+| RechargeSpeed            | float   | 0             | The current recharge speed of the device.                                                                                                                                      |
+| ExponentialRechargeSpeed | bool    | false         | If true, the recharge speed (and power consumption) of the device goes up exponentially as the recharge rate is increased.                                                     |
+| Efficiency               | float   | 0.95          | The amount of power you can get out of a item relative to the amount of power that's put into it.                                                                              |
+| FlipIndicator            | bool    | false         | Should the progress bar indicating the charge be flipped to fill from the other side.                                                                                          |
 
 This component also supports the attributes defined in: [Powered](Powered.md), [ItemComponent](ItemComponent.md)
 
@@ -34,11 +34,11 @@ This component also supports the attributes defined in: [Powered](Powered.md), [
   <ConnectionPanel selectkey="Action" canbeselected="true" msg="ItemMsgRewireScrewdriver" hudpriority="10">
     <GuiFrame relativesize="0.2,0.32" minsize="400,350" maxsize="480,420" anchor="Center" style="ConnectionPanel" />
     <RequiredSkill identifier="electrical" level="55" />
-    <StatusEffect type="OnFailure" target="Character" targetlimbs="LeftHand,RightHand">
+    <StatusEffect type="OnFailure" target="Character" targetlimbs="LeftHand,RightHand" AllowWhenBroken="true">
       <Sound file="Content/Sounds/Damage/Electrocution1.ogg" range="1000" />
+      <Explosion range="100.0" force="1.0" flames="false" shockwave="false" sparks="true" underwaterbubble="false" />
       <Affliction identifier="stun" strength="4" />
       <Affliction identifier="burn" strength="5" />
-      <Explosion range="100.0" stun="0" force="5.0" flames="false" shockwave="false" sparks="true" underwaterbubble="false" />
     </StatusEffect>
     <RequiredItem items="screwdriver" type="Equipped" />
     <output name="power_out" displayname="connection.powerout" />

@@ -3,12 +3,12 @@
 
 ## Attributes
 
-| Attribute|Type|Default value|Description |
-| ---|---|---|--- |
-| MaxOutputLength|int|200|The maximum length of the output strings. Warning: Large values can lead to large memory usage or networking issues. |
-| Output|string|"1"|The signal this item outputs when the received signal matches the target signal. |
-| FalseOutput|string|"0"|The signal this item outputs when the received signal does not match the target signal. |
-| TargetSignal|string|""|The value to compare the received signals against. |
+| Attribute       | Type   | Default value | Description                                                                                                          |
+|-----------------|--------|---------------|----------------------------------------------------------------------------------------------------------------------|
+| MaxOutputLength | int    | 200           | The maximum length of the output strings. Warning: Large values can lead to large memory usage or networking issues. |
+| Output          | string | "1"           | The signal this item outputs when the received signal matches the target signal.                                     |
+| FalseOutput     | string | "0"           | The signal this item outputs when the received signal does not match the target signal.                              |
+| TargetSignal    | string | ""            | The value to compare the received signals against.                                                                   |
 
 This component also supports the attributes defined in: [ItemComponent](ItemComponent.md)
 

@@ -3,10 +3,10 @@
 
 ## Attributes
 
-| Attribute|Type|Default value|Description |
-| ---|---|---|--- |
-| MaxPower|float|1000.0|The maximum amount of power that can pass through the item. |
-| IsOn|bool|true|Can the relay currently pass power and signals through it. |
+| Attribute | Type  | Default value | Description                                                 |
+|-----------|-------|---------------|-------------------------------------------------------------|
+| MaxPower  | float | 1000          | The maximum amount of power that can pass through the item. |
+| IsOn      | bool  | true          | Can the relay currently pass power and signals through it.  |
 
 This component also supports the attributes defined in: [PowerTransfer](PowerTransfer.md), [Powered](Powered.md), [ItemComponent](ItemComponent.md)
 

@@ -3,9 +3,9 @@
 
 ## Attributes
 
-| Attribute|Type|Default value|Description |
-| ---|---|---|--- |
-| UseHSV|bool|false|When enabled makes the component translate the signal from HSV into RGB where red is the hue between 0 and 360, green is the saturation between 0 and 1 and blue is the value between 0 and 1. |
+| Attribute | Type | Default value | Description                                                                                                                                                                                    |
+|-----------|------|---------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| UseHSV    | bool | false         | When enabled makes the component translate the signal from HSV into RGB where red is the hue between 0 and 360, green is the saturation between 0 and 1 and blue is the value between 0 and 1. |
 
 This component also supports the attributes defined in: [ItemComponent](ItemComponent.md)
 

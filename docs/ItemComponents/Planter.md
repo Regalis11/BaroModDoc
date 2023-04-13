@@ -3,10 +3,10 @@
 
 ## Attributes
 
-| Attribute|Type|Default value|Description |
-| ---|---|---|--- |
-| Fertilizer|float|0|How much fertilizer the planter has. |
-| FertilizerCapacity|float|100|How much fertilizer can the planter hold. |
+| Attribute          | Type  | Default value | Description                               |
+|--------------------|-------|---------------|-------------------------------------------|
+| Fertilizer         | float | 0             | How much fertilizer the planter has.      |
+| FertilizerCapacity | float | 100           | How much fertilizer can the planter hold. |
 
 This component also supports the attributes defined in: [Pickable](Pickable.md), [ItemComponent](ItemComponent.md)
 

@@ -3,18 +3,18 @@
 
 ## Attributes
 
-| Attribute|Type|Default value|Description |
-| ---|---|---|--- |
-| SnapAnimDuration|float|1.0| |
-| ProjectilePullForce|float|0.0|How much force is applied to pull the projectile the rope is attached to. |
-| TargetPullForce|float|0.0|How much force is applied to pull the target the rope is attached to. |
-| SourcePullForce|float|0.0|How much force is applied to pull the source the rope is attached to. |
-| MaxLength|float|1000.0|How far the source item can be from the projectile until the rope breaks. |
-| MaxAngle|float|360.0|The maximum angle from the source to the target until the rope breaks. |
-| SnapOnCollision|bool|true|Should the rope snap when it collides with a structure/submarine (if not, it will just go through it). |
-| SnapWhenNotAimed|bool|true|Should the rope snap when the character drops the aim? |
-| TargetMinMass|float|30.0|How much mass is required for the target to pull the source towards it. Static and kinematic targets are always treated heavy enough. |
-| LerpForces|bool|false| |
+| Attribute           | Type  | Default value | Description                                                                                                                           |
+|---------------------|-------|---------------|---------------------------------------------------------------------------------------------------------------------------------------|
+| SnapAnimDuration    | float | 1             |                                                                                                                                       |
+| ProjectilePullForce | float | 0             | How much force is applied to pull the projectile the rope is attached to.                                                             |
+| TargetPullForce     | float | 0             | How much force is applied to pull the target the rope is attached to.                                                                 |
+| SourcePullForce     | float | 0             | How much force is applied to pull the source the rope is attached to.                                                                 |
+| MaxLength           | float | 1000          | How far the source item can be from the projectile until the rope breaks.                                                             |
+| MaxAngle            | float | 360           | The maximum angle from the source to the target until the rope breaks.                                                                |
+| SnapOnCollision     | bool  | true          | Should the rope snap when it collides with a structure/submarine (if not, it will just go through it).                                |
+| SnapWhenNotAimed    | bool  | true          | Should the rope snap when the character drops the aim?                                                                                |
+| TargetMinMass       | float | 30            | How much mass is required for the target to pull the source towards it. Static and kinematic targets are always treated heavy enough. |
+| LerpForces          | bool  | false         |                                                                                                                                       |
 
 This component also supports the attributes defined in: [ItemComponent](ItemComponent.md)
 
@@ -29,11 +29,11 @@ This component also supports the attributes defined in: [ItemComponent](ItemComp
       <Conditional targetitemcomponent="Projectile" IsStuckToTarget="false" />
     </StatusEffect>
   </Rope>
-  <Projectile characterusable="false" launchimpulse="20.0" sticktocharacters="true" sticktoitems="false" sticktostructures="false">
-    <Attack structuredamage="20" itemdamage="40" targetforce="5" severlimbsprobability="0.1">
-      <Affliction identifier="bleeding" strength="30" />
-      <Affliction identifier="lacerations" strength="30" />
-      <Affliction identifier="stun" strength="0.3" />
+  <Projectile characterusable="false" launchimpulse="5" sticktocharacters="true" sticktoitems="true" sticktostructures="true" sticktodoors="false">
+    <Attack structuredamage="15" itemdamage="15" targetforce="20" severlimbsprobability="0.1">
+      <Affliction identifier="lacerations" strength="35" />
+      <Affliction identifier="bleeding" strength="35" />
+      <Affliction identifier="stun" strength="0.5" />
     </Attack>
     <StatusEffect type="OnActive" target="UseTarget,This" checkconditionalalways="true" comparison="And">
       <Conditional Snapped="false" />

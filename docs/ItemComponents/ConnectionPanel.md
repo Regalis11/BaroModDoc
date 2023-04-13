@@ -3,16 +3,16 @@
 
 ## Attributes
 
-| Attribute|Type|Default value|Description |
-| ---|---|---|--- |
-| Locked|bool|false|Locked connection panels cannot be rewired in-game. |
+| Attribute | Type | Default value | Description                                         |
+|-----------|------|---------------|-----------------------------------------------------|
+| Locked    | bool | false         | Locked connection panels cannot be rewired in-game. |
 
 This component also supports the attributes defined in: [ItemComponent](ItemComponent.md)
 
 
 ## Example
 ```xml
-<Item identifier="button" category="Electrical" tags="smallitem,button" cargocontaineridentifier="metalcrate" scale="0.5" impactsoundtag="impact_metal_light" isshootable="true" maxstacksize="8">
+<Item identifier="button" category="Electrical" tags="smallitem,button" allowedlinks="door" linkable="true" cargocontaineridentifier="metalcrate" scale="0.5" impactsoundtag="impact_metal_light" isshootable="true" maxstacksize="8">
   <ConnectionPanel selectkey="Action" canbeselected="true" msg="ItemMsgRewireScrewdriver" hudpriority="10">
     <GuiFrame relativesize="0.2,0.32" minsize="400,350" maxsize="480,420" anchor="Center" style="ConnectionPanel" />
     <RequiredItem identifier="screwdriver" type="Equipped" />
