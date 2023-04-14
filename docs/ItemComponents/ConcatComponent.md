@@ -3,11 +3,11 @@
 
 ## Attributes
 
-| Attribute|Type|Default value|Description |
-| ---|---|---|--- |
-| MaxOutputLength|int|256|The maximum length of the output string. Warning: Large values can lead to large memory usage or networking load. |
-| Separator|string|""| |
-| TimeFrame|float|0.0|The item must have received signals to both inputs within this timeframe to output the result. If set to 0, the inputs must be received at the same time. |
+| Attribute       | Type   | Default value | Description                                                                                                                                               |
+|-----------------|--------|---------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------|
+| MaxOutputLength | int    | 256           | The maximum length of the output string. Warning: Large values can lead to large memory usage or networking load.                                         |
+| Separator       | string | ""            |                                                                                                                                                           |
+| TimeFrame       | float  | 0             | The item must have received signals to both inputs within this timeframe to output the result. If set to 0, the inputs must be received at the same time. |
 
 This component also supports the attributes defined in: [ItemComponent](ItemComponent.md)
 

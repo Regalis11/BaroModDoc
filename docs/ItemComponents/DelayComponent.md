@@ -3,11 +3,11 @@
 
 ## Attributes
 
-| Attribute|Type|Default value|Description |
-| ---|---|---|--- |
-| Delay|float|1.0|How long the item delays the signals (in seconds). |
-| ResetWhenSignalReceived|bool|false|Should the component discard previously received signals when a new one is received. |
-| ResetWhenDifferentSignalReceived|bool|false|Should the component discard previously received signals when the incoming signal changes. |
+| Attribute                        | Type  | Default value | Description                                                                                |
+|----------------------------------|-------|---------------|--------------------------------------------------------------------------------------------|
+| Delay                            | float | 1             | How long the item delays the signals (in seconds).                                         |
+| ResetWhenSignalReceived          | bool  | false         | Should the component discard previously received signals when a new one is received.       |
+| ResetWhenDifferentSignalReceived | bool  | false         | Should the component discard previously received signals when the incoming signal changes. |
 
 This component also supports the attributes defined in: [ItemComponent](ItemComponent.md)
 

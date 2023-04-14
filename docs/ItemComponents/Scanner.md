@@ -3,12 +3,12 @@
 
 ## Attributes
 
-| Attribute|Type|Default value|Description |
-| ---|---|---|--- |
-| ScanDuration|float|1.0|How long it takes for the scan to be completed. |
-| ScanTimer|float|0.0|How far along the scan is. When the timer goes above ScanDuration, the scan is completed. |
-| ScanRadius|float|1.0|How far the scanner can be from the target for the scan to be successful. |
-| AlwaysDisplayProgressBar|bool|true|Should the progress bar always be displayed when the item has been attached. |
+| Attribute                | Type  | Default value | Description                                                                               |
+|--------------------------|-------|---------------|-------------------------------------------------------------------------------------------|
+| ScanDuration             | float | 1             | How long it takes for the scan to be completed.                                           |
+| ScanTimer                | float | 0             | How far along the scan is. When the timer goes above ScanDuration, the scan is completed. |
+| ScanRadius               | float | 1             | How far the scanner can be from the target for the scan to be successful.                 |
+| AlwaysDisplayProgressBar | bool  | true          | Should the progress bar always be displayed when the item has been attached.              |
 
 This component also supports the attributes defined in: [ItemComponent](ItemComponent.md)
 

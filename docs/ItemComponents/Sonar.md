@@ -3,20 +3,20 @@
 
 ## Attributes
 
-| Attribute|Type|Default value|Description |
-| ---|---|---|--- |
-| Range|float|DefaultSonarRange|The maximum range of the sonar. |
-| DetectSubmarineWalls|bool|false|Should the sonar display the walls of the submarine it is inside. |
-| UseTransducers|bool|false|Does the sonar have to be connected to external transducers to work. |
-| CenterOnTransducers|bool|false|Should the sonar view be centered on the transducers or the submarine's center of mass. Only has an effect if UseTransducers is enabled. |
-| HasMineralScanner|bool|false|Does the sonar have mineral scanning mode. Only available in-game when the Item has no Steering component. |
+| Attribute            | Type  | Default value             | Description                                                                                                                              |
+|----------------------|-------|---------------------------|------------------------------------------------------------------------------------------------------------------------------------------|
+| Range                | float | Same as DefaultSonarRange | The maximum range of the sonar.                                                                                                          |
+| DetectSubmarineWalls | bool  | false                     | Should the sonar display the walls of the submarine it is inside.                                                                        |
+| UseTransducers       | bool  | false                     | Does the sonar have to be connected to external transducers to work.                                                                     |
+| CenterOnTransducers  | bool  | false                     | Should the sonar view be centered on the transducers or the submarine's center of mass. Only has an effect if UseTransducers is enabled. |
+| HasMineralScanner    | bool  | false                     | Does the sonar have mineral scanning mode.                                                                                               |
 
 This component also supports the attributes defined in: [Powered](Powered.md), [ItemComponent](ItemComponent.md)
 
 
 ## Example
 ```xml
-<Item identifier="sonarmonitor" tags="command,sonarmonitor" linkable="true" allowedlinks="statusmonitor" scale="0.5" category="Machine" damagedbyexplosions="true" explosiondamagemultiplier="0.2">
+<Item identifier="sonarmonitor" tags="command,sonarmonitor" linkable="true" allowedlinks="statusmonitor" scale="0.5" category="Machine,Electrical" damagedbyexplosions="true" explosiondamagemultiplier="0.2">
   <Sonar canbeselected="true" powerconsumption="100" displaybordersize="-0.1" allowuioverlap="true" hudlayer="-1" rightlayout="true">
     <GuiFrame relativesize="0.55,0.59" anchor="Center" style="OuterGlow" color="0,0,0,0.8" relativeoffset="0.1,-0.05" />
     <sound file="Content/Items/Command/SonarPing.ogg" type="OnUse" range="1000.0" />
@@ -45,10 +45,10 @@ This component also supports the attributes defined in: [Powered](Powered.md), [
   </Sonar>
   <ConnectionPanel selectkey="Action" canbeselected="true" msg="ItemMsgRewireScrewdriver" hudpriority="10" allowuioverlap="true">
     <GuiFrame relativesize="0.2,0.32" minsize="400,350" maxsize="480,420" anchor="Center" style="ConnectionPanel" />
-    <RequiredSkill identifier="electrical" level="55" />
-    <StatusEffect type="OnFailure" target="Character" targetlimbs="LeftHand,RightHand">
+    <RequiredSkill identifier="electrical" level="40" />
+    <StatusEffect type="OnFailure" target="Character" targetlimbs="LeftHand,RightHand" AllowWhenBroken="true">
       <Sound file="Content/Sounds/Damage/Electrocution1.ogg" range="1000" />
-      <Explosion range="100.0" stun="0" force="5.0" flames="false" shockwave="false" sparks="true" underwaterbubble="false" />
+      <Explosion range="100.0" force="1.0" flames="false" shockwave="false" sparks="true" underwaterbubble="false" />
       <Affliction identifier="stun" strength="4" />
       <Affliction identifier="burn" strength="5" />
     </StatusEffect>

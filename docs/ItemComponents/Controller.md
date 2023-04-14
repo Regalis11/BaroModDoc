@@ -3,13 +3,16 @@
 
 ## Attributes
 
-| Attribute|Type|Default value|Description |
-| ---|---|---|--- |
-| IsToggle|bool|false|When enabled, the item will continuously send out a 0/1 signal and interacting with it will flip the signal (making the item behave like a switch). When disabled, the item will simply send out 1 when interacted with. |
-| State|bool|false|Whether the item is toggled on/off. Only valid if IsToggle is set to true. |
-| HideHUD|bool|true|Should the HUD (inventory, health bar, etc) be hidden when this item is selected. |
-| UsableIn|UseEnvironment|UseEnvironment.Both|Can the item be selected in air, underwater or both. |
-| DrawUserBehind|bool|false|Should the character using the item be drawn behind the item. |
+| Attribute                   | Type           | Default value | Description                                                                                                                                                                                                              |
+|-----------------------------|----------------|---------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| IsToggle                    | bool           | false         | When enabled, the item will continuously send out a 0/1 signal and interacting with it will flip the signal (making the item behave like a switch). When disabled, the item will simply send out 1 when interacted with. |
+| State                       | bool           | false         | Whether the item is toggled on/off. Only valid if IsToggle is set to true.                                                                                                                                               |
+| HideHUD                     | bool           | true          | Should the HUD (inventory, health bar, etc) be hidden when this item is selected.                                                                                                                                        |
+| UsableIn                    | UseEnvironment | Both          | Can the item be selected in air, underwater or both.                                                                                                                                                                     |
+| DrawUserBehind              | bool           | false         | Should the character using the item be drawn behind the item.                                                                                                                                                            |
+| NonInteractableWhenFlippedX | bool           | false         |                                                                                                                                                                                                                          |
+| NonInteractableWhenFlippedY | bool           | false         |                                                                                                                                                                                                                          |
+| IsSecondaryItem             | bool           | false         | If true, other items can be used simultaneously.                                                                                                                                                                         |
 
 This component also supports the attributes defined in: [ItemComponent](ItemComponent.md)
 

@@ -3,27 +3,27 @@
 
 ## Attributes
 
-| Attribute|Type|Default value|Description |
-| ---|---|---|--- |
-| GrowthSpeed|float|1|How fast the plant grows. |
-| MaxHealth|float|100|How long the plant can go without watering. |
-| FloodTolerance|float|1|How much damage the plant takes while in water. |
-| Hardiness|float|1|How much damage the plant takes while growing. |
-| SeedRate|float|0.01|How often a seed is produced. |
-| ProductRate|float|0.01|How often a product item is produced. |
-| MutationProbability|float|0.5|Probability of an attribute being randomly modified in a newly produced seed. |
-| FlowerTint|Color|"1.0,1.0,1.0,1.0"|Color of the flowers. |
-| FlowerQuantity|int|3|Number of flowers drawn when fully grown |
-| BaseFlowerScale|float|0.25|Size of the flower sprites. |
-| BaseLeafScale|float|0.5|Size of the leaf sprites. |
-| LeafTint|Color|"1.0,1.0,1.0,1.0"|Color of the leaves. |
-| LeafProbability|float|0.33|Chance of a leaf appearing behind a branch. |
-| VineTint|Color|"1.0,1.0,1.0,1.0"|Color of the vines. |
-| MaximumVines|int|32|Maximum number of vine tiles the plant can grow. |
-| VineScale|float|0.25|Size of the vine sprites. |
-| DeadTint|Color|"0.26,0.27,0.29,1.0"|Tint of a dead plant. |
-| GrowthWeights|Vector4|"1,1,1,1"|Probability for the plant to grow in a direction. |
-| FireVulnerability|float|0.0|How much damage is taken from fires. |
+| Attribute           | Type    | Default value        | Description                                                                   |
+|---------------------|---------|----------------------|-------------------------------------------------------------------------------|
+| GrowthSpeed         | float   | 1                    | How fast the plant grows.                                                     |
+| MaxHealth           | float   | 100                  | How long the plant can go without watering.                                   |
+| FloodTolerance      | float   | 1                    | How much damage the plant takes while in water.                               |
+| Hardiness           | float   | 1                    | How much damage the plant takes while growing.                                |
+| SeedRate            | float   | 0.01                 | How often a seed is produced.                                                 |
+| ProductRate         | float   | 0.01                 | How often a product item is produced.                                         |
+| MutationProbability | float   | 0.5                  | Probability of an attribute being randomly modified in a newly produced seed. |
+| FlowerTint          | Color   | "1.0,1.0,1.0,1.0"    | Color of the flowers.                                                         |
+| FlowerQuantity      | int     | 3                    | Number of flowers drawn when fully grown                                      |
+| BaseFlowerScale     | float   | 0.25                 | Size of the flower sprites.                                                   |
+| BaseLeafScale       | float   | 0.5                  | Size of the leaf sprites.                                                     |
+| LeafTint            | Color   | "1.0,1.0,1.0,1.0"    | Color of the leaves.                                                          |
+| LeafProbability     | float   | 0.33                 | Chance of a leaf appearing behind a branch.                                   |
+| VineTint            | Color   | "1.0,1.0,1.0,1.0"    | Color of the vines.                                                           |
+| MaximumVines        | int     | 32                   | Maximum number of vine tiles the plant can grow.                              |
+| VineScale           | float   | 0.25                 | Size of the vine sprites.                                                     |
+| DeadTint            | Color   | "0.26,0.27,0.29,1.0" | Tint of a dead plant.                                                         |
+| GrowthWeights       | Vector4 | "1,1,1,1"            | Probability for the plant to grow in a direction.                             |
+| FireVulnerability   | float   | 0                    | How much damage is taken from fires.                                          |
 
 This component also supports the attributes defined in: [ItemComponent](ItemComponent.md)
 

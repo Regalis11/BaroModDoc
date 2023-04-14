@@ -3,19 +3,19 @@
 
 ## Attributes
 
-| Attribute|Type|Default value|Description |
-| ---|---|---|--- |
-| NeutralBallastLevel|float|0.5|How full the ballast tanks should be when the submarine is not being steered upwards/downwards. Can be used to compensate if the ballast tanks are too large/small relative to the size of the submarine. |
-| DockingAssistThreshold|float|1000.0|How close the docking port has to be to another docking port for the docking mode to become active. |
+| Attribute              | Type  | Default value | Description                                                                                                                                                                                               |
+|------------------------|-------|---------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| NeutralBallastLevel    | float | 0.5           | How full the ballast tanks should be when the submarine is not being steered upwards/downwards. Can be used to compensate if the ballast tanks are too large/small relative to the size of the submarine. |
+| DockingAssistThreshold | float | 1000          | How close the docking port has to be to another docking port for the docking mode to become active.                                                                                                       |
 
 This component also supports the attributes defined in: [Powered](Powered.md), [ItemComponent](ItemComponent.md)
 
 
 ## Example
 ```xml
-<Item identifier="shuttlenavterminal" tags="command,navterminal,secondarynavterminal" linkable="true" allowedlinks="statusmonitor" category="Machine" scale="0.5" damagedbyexplosions="true" explosiondamagemultiplier="0.2">
+<Item identifier="shuttlenavterminal" tags="command,navterminal,secondarynavterminal" linkable="true" allowedlinks="statusmonitor" category="Machine,Electrical" scale="0.5" damagedbyexplosions="true" explosiondamagemultiplier="0.2">
   <Steering minvoltage="0.5" canbeselected="true" powerconsumption="10" linkuitocomponent="Sonar" msg="ItemMsgInteractSelect" allowuioverlap="true" hudlayer="-1">
-    <GuiFrame relativesize="0.55,0.59" anchor="Center" style="OuterGlow" color="0,0,0,0.8" relativeoffset="0.1,-0.05" />
+    <GuiFrame relativesize="0.55,0.59" anchor="Center" style="OuterGlow" color="0,0,0,0.8" relativeoffset="0.1,-0.05" draggable="false" />
     <StatusEffect type="InWater" target="This" condition="-0.5" />
     <MaintainPosIndicator texture="Content/Items/Command/NavUI.png" sourcerect="50,0,60,61" />
     <MaintainPosOriginIndicator texture="Content/Items/Command/NavUI.png" sourcerect="0,0,50,54" />
@@ -23,7 +23,7 @@ This component also supports the attributes defined in: [Powered](Powered.md), [
     <poweronsound file="Content/Items/PowerOnLight2.ogg" range="1000" loop="false" />
   </Steering>
   <Sonar canbeselected="true" powerconsumption="100" displaybordersize="-0.1" allowuioverlap="true" hudlayer="-2">
-    <GuiFrame relativesize="0.55,0.59" anchor="Center" relativeoffset="0.1,-0.05" />
+    <GuiFrame relativesize="0.55,0.59" anchor="Center" relativeoffset="0.1,-0.05" draggable="false" />
     <sound file="Content/Items/Command/SonarPing.ogg" type="OnUse" range="1000.0" />
     <sound file="Content/Items/Command/SonarPing2.ogg" type="OnUse" range="1000.0" />
     <StatusEffect type="OnUse">
@@ -45,14 +45,15 @@ This component also supports the attributes defined in: [Powered](Powered.md), [
     <icon identifier="shuttle" texture="Content/UI/MainIconsAtlas.png" sourcerect="336,407,8,6" origin="0.5,0.5" />
     <icon identifier="artifact" texture="Content/UI/MainIconsAtlas.png" sourcerect="336,414,8,8" origin="0.5,0.5" />
     <icon identifier="location" texture="Content/UI/MainIconsAtlas.png" sourcerect="349,435,11,11" origin="0.5,0.5" />
+    <icon identifier="mineral" texture="Content/UI/MainIconsAtlas.png" sourcerect="336,434,7,12" origin="0.5,0.5" />
     <icon identifier="" texture="Content/UI/MainIconsAtlas.png" sourcerect="346,416,4,4" origin="0.5,0.5" />
   </Sonar>
   <ConnectionPanel selectkey="Action" canbeselected="true" msg="ItemMsgRewireScrewdriver" hudpriority="10">
     <GuiFrame relativesize="0.25,0.4" minsize="400,450" maxsize="480,500" anchor="Center" style="ConnectionPanel" />
-    <RequiredSkill identifier="electrical" level="55" />
-    <StatusEffect type="OnFailure" target="Character" targetlimbs="LeftHand,RightHand">
-      <Sound file="Content/Items/Weapons/ElectricalDischarger.ogg" range="1000" />
-      <Explosion range="100.0" stun="0" force="5.0" flames="false" shockwave="false" sparks="true" underwaterbubble="false" />
+    <RequiredSkill identifier="electrical" level="40" />
+    <StatusEffect type="OnFailure" target="Character" targetlimbs="LeftHand,RightHand" AllowWhenBroken="true">
+      <Sound file="Content/Sounds/Damage/Electrocution1.ogg" range="1000" />
+      <Explosion range="100.0" force="1.0" flames="false" shockwave="false" sparks="true" underwaterbubble="false" />
       <Affliction identifier="stun" strength="4" />
       <Affliction identifier="burn" strength="5" />
     </StatusEffect>

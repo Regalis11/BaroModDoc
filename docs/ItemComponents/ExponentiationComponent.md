@@ -3,9 +3,9 @@
 
 ## Attributes
 
-| Attribute|Type|Default value|Description |
-| ---|---|---|--- |
-| Exponent|float|1.0|The exponent of the operation. |
+| Attribute | Type  | Default value | Description                    |
+|-----------|-------|---------------|--------------------------------|
+| Exponent  | float | 1             | The exponent of the operation. |
 
 This component also supports the attributes defined in: [ItemComponent](ItemComponent.md)
 

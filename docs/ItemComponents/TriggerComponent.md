@@ -3,9 +3,16 @@
 
 ## Attributes
 
-| Attribute|Type|Default value|Description |
-| ---|---|---|--- |
-| Force|float|0.0|The maximum amount of force applied to the triggering entitites. |
+| Attribute                         | Type  | Default value | Description                                                                                    |
+|-----------------------------------|-------|---------------|------------------------------------------------------------------------------------------------|
+| Force                             | float | 0             | The maximum amount of force applied to the triggering entitites.                               |
+| DistanceBasedForce                | bool  | false         | Determines if the force gets higher the closer the triggerer is to the center of the trigger.  |
+| ForceFluctuation                  | bool  | false         | Determines if the force fluctuates over time or if it stays constant.                          |
+| ForceFluctuationStrength          | float | 1             | How much the fluctuation affects the force. 1 is the maximum fluctuation, 0 is no fluctuation. |
+| ForceFluctuationFrequency         | float | 1             | How fast (cycles per second) the force fluctuates.                                             |
+| ForceFluctuationInterval          | float | 0.01          | How often (in seconds) the force fluctuation is calculated.                                    |
+| ApplyEffectsToCharactersInsideSub | bool  | false         |                                                                                                |
+| MoveOutsideSub                    | bool  | false         |                                                                                                |
 
 This component also supports the attributes defined in: [ItemComponent](ItemComponent.md)
 

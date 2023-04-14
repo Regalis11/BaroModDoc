@@ -3,11 +3,11 @@
 
 ## Attributes
 
-| Attribute|Type|Default value|Description |
-| ---|---|---|--- |
-| MaxOutputLength|int|200|The maximum length of the output strings. Warning: Large values can lead to large memory usage or networking issues. |
-| Output|string|"1"|The signal the item sends out when it's underwater. |
-| FalseOutput|string|"0"|The signal the item sends out when it's not underwater. |
+| Attribute       | Type   | Default value | Description                                                                                                          |
+|-----------------|--------|---------------|----------------------------------------------------------------------------------------------------------------------|
+| MaxOutputLength | int    | 200           | The maximum length of the output strings. Warning: Large values can lead to large memory usage or networking issues. |
+| Output          | string | "1"           | The signal the item sends out when it's underwater.                                                                  |
+| FalseOutput     | string | "0"           | The signal the item sends out when it's not underwater.                                                              |
 
 This component also supports the attributes defined in: [ItemComponent](ItemComponent.md)
 

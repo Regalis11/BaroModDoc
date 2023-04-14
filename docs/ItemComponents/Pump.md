@@ -3,11 +3,11 @@
 
 ## Attributes
 
-| Attribute|Type|Default value|Description |
-| ---|---|---|--- |
-| FlowPercentage|float|0.0|How fast the item is currently pumping water (-100 = full speed out, 100 = full speed in). Intended to be used by StatusEffect conditionals (setting this value in XML has no effect). |
-| MaxFlow|float|80.0|How fast the item pumps water in/out when operating at 100%. |
-| IsOn|bool|true| |
+| Attribute      | Type  | Default value | Description                                                                                                                                                                            |
+|----------------|-------|---------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| FlowPercentage | float | 0             | How fast the item is currently pumping water (-100 = full speed out, 100 = full speed in). Intended to be used by StatusEffect conditionals (setting this value in XML has no effect). |
+| MaxFlow        | float | 80            | How fast the item pumps water in/out when operating at 100%.                                                                                                                           |
+| IsOn           | bool  | true          |                                                                                                                                                                                        |
 
 This component also supports the attributes defined in: [Powered](Powered.md), [ItemComponent](ItemComponent.md)
 
@@ -27,9 +27,9 @@ This component also supports the attributes defined in: [Powered](Powered.md), [
   <ConnectionPanel selectkey="Action" canbeselected="true" msg="ItemMsgRewireScrewdriver" hudpriority="10">
     <GuiFrame relativesize="0.2,0.32" minsize="400,350" maxsize="480,420" anchor="Center" style="ConnectionPanel" />
     <RequiredSkill identifier="electrical" level="55" />
-    <StatusEffect type="OnFailure" target="Character" targetlimbs="LeftHand,RightHand">
+    <StatusEffect type="OnFailure" target="Character" targetlimbs="LeftHand,RightHand" AllowWhenBroken="true">
       <Sound file="Content/Sounds/Damage/Electrocution1.ogg" range="1000" />
-      <Explosion range="100.0" stun="0" force="5.0" flames="false" shockwave="false" sparks="true" underwaterbubble="false" />
+      <Explosion range="100.0" force="1.0" flames="false" shockwave="false" sparks="true" underwaterbubble="false" />
       <Affliction identifier="stun" strength="4" />
       <Affliction identifier="burn" strength="5" />
     </StatusEffect>
@@ -48,7 +48,7 @@ This component also supports the attributes defined in: [Powered](Powered.md), [
     <ParticleEmitter particle="damagebubbles" particleburstamount="2" particleburstinterval="2.0" particlespersecond="2" scalemin="0.5" scalemax="1.5" anglemin="0" anglemax="359" velocitymin="-10" velocitymax="10" mincondition="0.0" maxcondition="50.0" />
     <ParticleEmitter particle="smoke" particleburstamount="3" particleburstinterval="0.5" particlespersecond="2" scalemin="1" scalemax="2.5" anglemin="0" anglemax="359" velocitymin="-50" velocitymax="50" mincondition="15.0" maxcondition="50.0" />
     <ParticleEmitter particle="heavysmoke" particleburstinterval="0.25" particlespersecond="2" scalemin="2.5" scalemax="5.0" mincondition="0.0" maxcondition="15.0" />
-    <StatusEffect type="OnFailure" target="Character" targetlimbs="LeftHand,RightHand">
+    <StatusEffect type="OnFailure" target="Character" targetlimbs="LeftHand,RightHand" AllowWhenBroken="true">
       <Sound file="Content/Items/MechanicalRepairFail.ogg" range="1000" />
       <Affliction identifier="lacerations" strength="5" />
       <Affliction identifier="stun" strength="4" />

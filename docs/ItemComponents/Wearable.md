@@ -3,18 +3,20 @@
 
 ## Attributes
 
-This component supports the attributes defined in: [Pickable](Pickable.md), [ItemComponent](ItemComponent.md)
+| Attribute        | Type | Default value | Description                                                                              |
+|------------------|------|---------------|------------------------------------------------------------------------------------------|
+| AllowUseWhenWorn | bool | false         | Can the item be used (assuming it has components that are usable in some way) when worn. |
+
+This component also supports the attributes defined in: [Pickable](Pickable.md), [ItemComponent](ItemComponent.md)
 
 
 ## Example
 ```xml
-<Item identifier="piratebandana" category="Equipment" cargocontaineridentifier="metalcrate" tags="smallitem,clothing" scale="0.5" impactsoundtag="impact_soft">
-  <Wearable limbtype="Head" slots="Any,Head" msg="ItemMsgPickUpSelect">
-    <sprite texture="Content/Items/Jobgear/headgears.png" limb="Head" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" scale="0.8" sourcerect="313,407,100,95" origin="0.55,0.6" />
-    <damagemodifier afflictionidentifiers="blunttrauma,lacerations,gunshotwound,bitewounds" armorsector="0.0,360.0" damagemultiplier="0.8" />
-    <SkillModifier skillidentifier="mechanical" skillvalue="5" />
-    <SkillModifier skillidentifier="electrical" skillvalue="5" />
+<Item identifier="toolbelt" category="Equipment" tags="mediumitem,mobilecontainer,tool" cargocontaineridentifier="metalcrate" showcontentsintooltip="true" Scale="0.5" fireproof="true" impactsoundtag="impact_soft">
+  <Wearable slots="Bag" msg="ItemMsgEquipSelect" canbeselected="false" canbepicked="true" pickkey="Select">
+    <sprite name="ToolBelt" texture="Content/Items/Tools/tools.png" sourcerect="256,102,112,54" limb="Torso" inherittexturescale="true" origin="0.5,-0.2" />
   </Wearable>
+  <Holdable slots="RightHand+LeftHand" holdpos="0,-70" handle1="-5,0" handle2="10,-20" holdangle="0" msg="ItemMsgPickUpUse" canbeselected="false" canbepicked="true" pickkey="Use" allowswappingwhenpicked="false" />
   [...]
 </Item>
 ```

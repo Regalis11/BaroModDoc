@@ -3,25 +3,69 @@
 
 ## Attributes
 
-| Attribute|Type|Default value|Description |
-| ---|---|---|--- |
-| BarrelPos|string|"0.0,0.0"|The position of the barrel as an offset from the item's center (in pixels). Determines where the projectiles spawn. |
-| Reload|float|1.0|How long the user has to wait before they can fire the weapon again (in seconds). |
-| HoldTrigger|bool|false|Tells the AI to hold the trigger down when it uses this weapon |
-| ProjectileCount|int|1|How projectiles the weapon launches when fired once. |
-| Spread|float|0.0|Random spread applied to the firing angle of the projectiles when used by a character with sufficient skills to use the weapon (in degrees). |
-| UnskilledSpread|float|0.0|Random spread applied to the firing angle of the projectiles when used by a character with insufficient skills to use the weapon (in degrees). |
-| MaxChargeTime|float|0|The time required for a charge-type turret to charge up before able to fire. |
+| Attribute              | Type   | Default value | Description                                                                                                                                              |
+|------------------------|--------|---------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
+| BarrelPos              | string | "0.0,0.0"     | The position of the barrel as an offset from the item's center (in pixels). Determines where the projectiles spawn.                                      |
+| Reload                 | float  | 1             | How long the user has to wait before they can fire the weapon again (in seconds).                                                                        |
+| ReloadSkillRequirement | float  | 0             | Weapons skill requirement to reload at normal speed.                                                                                                     |
+| ReloadNoSkill          | float  | 1             | Reload time at 0 skill level. Reload time scales with skill level up to the Weapons skill requirement.                                                   |
+| HoldTrigger            | bool   | false         | Tells the AI to hold the trigger down when it uses this weapon                                                                                           |
+| ProjectileCount        | int    | 1             | How many projectiles the weapon launches when fired once.                                                                                                |
+| Spread                 | float  | 0             | Random spread applied to the firing angle of the projectiles when used by a character with sufficient skills to use the weapon (in degrees).             |
+| UnskilledSpread        | float  | 0             | Random spread applied to the firing angle of the projectiles when used by a character with insufficient skills to use the weapon (in degrees).           |
+| LaunchImpulse          | float  | 0             | The impulse applied to the physics body of the projectile (the higher the impulse, the faster the projectiles are launched). Sum of weapon + projectile. |
+| Penetration            | float  | 0             | Percentage of damage mitigation ignored when hitting armored body parts (deflecting limbs). Sum of weapon + projectile.                                  |
+| WeaponDamageModifier   | float  | 1             | Weapon's damage modifier                                                                                                                                 |
+| MaxChargeTime          | float  | 0             | The time required for a charge-type turret to charge up before able to fire.                                                                             |
 
 This component also supports the attributes defined in: [ItemComponent](ItemComponent.md)
 
 
 ## Example
 ```xml
-<Item identifier="bikehorn" category="Misc" tags="smallitem,hornitem" scale="0.5" cargocontaineridentifier="metalcrate">
-  <RangedWeapon reload="2">
-    <Sound file="Content/Items/Weapons/honk.ogg" type="OnUse" />
+<Item identifier="clownexosuit" category="Diving,Equipment" tags="clowngear,deepdiving,deepdivinglarge,clowns" scale="0.5" fireproof="true" isshootable="true" allowdroppingonswapwith="diving" impactsoundtag="impact_metal_heavy">
+  <RangedWeapon barrelpos="29,11" spread="5" unskilledspread="5" combatPriority="70" drawhudwhenequipped="true" crosshairscale="0.2" reload="0.1" suitableprojectiles="bananapeelprojectile">
+    <Crosshair texture="Content/Items/Weapons/Crosshairs.png" sourcerect="0,256,256,256" />
+    <CrosshairPointer texture="Content/Items/Weapons/Crosshairs.png" sourcerect="256,256,256,256" />
+    <Sound file="Content/Items/Weapons/GrenadeLauncherShot1.ogg" type="OnUse" selectionmode="All" />
+    <Sound file="Content/Items/Weapons/honk.ogg" type="OnUse" selectionmode="All" />
+    <ParticleEmitter particle="explosionsmoke" particleamount="5" velocitymin="0" velocitymax="0" />
+    <StatusEffect type="OnUse" target="This">
+      <SpawnItem identifier="bananapeelprojectile" spawnposition="ThisInventory" count="1" />
+      <Explosion range="500.0" force="2" shockwave="false" smoke="false" flames="false" flash="true" sparks="false" underwaterbubble="false" applyfireeffects="false" camerashake="6.0" />
+    </StatusEffect>
+    <StatusEffect type="OnUse" target="This" reload="5.0" setvalue="true" delay="0.5" />
+    <StatusEffect type="OnUse" target="This" reload="0.1" setvalue="true" delay="5.0" />
+    <RequiredItems items="bananapeelprojectile" type="Contained" />
   </RangedWeapon>
+  <ItemContainer capacity="0" maxstacksize="0" hideitems="true" containedstateindicatorstyle="tank" containedstateindicatorslot="0">
+    <Containable items="none" />
+    <SlotIcon slotindex="0" texture="Content/UI/StatusMonitorUI.png" sourcerect="64,448,64,64" origin="0.5,0.5" />
+    <SlotIcon slotindex="1" texture="Content/UI/StatusMonitorUI.png" sourcerect="192,448,64,64" origin="0.5,0.5" />
+    <StatusEffect type="OnWearing" target="Contained">
+      <RequiredItem items="oxygensource" type="Contained" />
+      <Conditional condition="lt 5.0" />
+      <Sound file="Content/Items/WarningBeepSlow.ogg" range="500" loop="true" />
+    </StatusEffect>
+    <StatusEffect type="OnWearing" target="Contained" playsoundonrequireditemfailure="true">
+      <RequiredItem items="oxygensource" type="Contained" matchonempty="true" />
+      <Conditional condition="lte 0.0" />
+      <Sound file="Content/Items/WarningBeep.ogg" range="500" loop="true" />
+    </StatusEffect>
+    <SubContainer capacity="1" maxstacksize="1">
+      <Containable items="oxygensource,weldingtoolfuel" />
+    </SubContainer>
+    <SubContainer capacity="1" maxstacksize="1">
+      <Containable items="reactorfuel">
+        <StatusEffect type="OnContaining" target="This,Character" Voltage="1.0" setvalue="true">
+          <Conditional IsDead="false" />
+        </StatusEffect>
+      </Containable>
+    </SubContainer>
+  </ItemContainer>
+  <ItemContainer capacity="1" maxstacksize="1" hideitems="true" spawnwithid="bananapeelprojectile">
+    <Containable items="bananapeelprojectile" />
+  </ItemContainer>
   [...]
 </Item>
 ```

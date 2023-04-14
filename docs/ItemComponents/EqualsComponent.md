@@ -3,12 +3,12 @@
 
 ## Attributes
 
-| Attribute|Type|Default value|Description |
-| ---|---|---|--- |
-| MaxOutputLength|int|200|The maximum length of the output strings. Warning: Large values can lead to large memory usage or networking issues. |
-| Output|string|"1"|The signal sent when the condition is met. |
-| FalseOutput|string|""|The signal sent when the condition is met (if empty, no signal is sent). |
-| TimeFrame|float|0.0|The maximum amount of time between the received signals. If set to 0, the signals must be received at the same time. |
+| Attribute       | Type   | Default value | Description                                                                                                          |
+|-----------------|--------|---------------|----------------------------------------------------------------------------------------------------------------------|
+| MaxOutputLength | int    | 200           | The maximum length of the output strings. Warning: Large values can lead to large memory usage or networking issues. |
+| Output          | string | "1"           | The signal sent when the condition is met.                                                                           |
+| FalseOutput     | string | ""            | The signal sent when the condition is met (if empty, no signal is sent).                                             |
+| TimeFrame       | float  | 0             | The maximum amount of time between the received signals. If set to 0, the signals must be received at the same time. |
 
 This component also supports the attributes defined in: [ItemComponent](ItemComponent.md)
 

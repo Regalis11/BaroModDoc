@@ -3,12 +3,12 @@
 
 ## Attributes
 
-| Attribute|Type|Default value|Description |
-| ---|---|---|--- |
-| CanBeOverloaded|bool|true|Can the item be damaged if too much power is supplied to the power grid. |
-| OverloadVoltage|float|2.0|How much power has to be supplied to the grid relative to the load before item starts taking damage. E.g. a value of 2 means that the grid has to be receiving twice as much power as the devices in the grid are consuming. |
-| FireProbability|float|0.15|The probability for a fire to start when the item breaks. |
-| Overload|bool|false|Is the item currently overloaded. Intended to be used by StatusEffect conditionals (setting the value from XML is not recommended). |
+| Attribute       | Type  | Default value | Description                                                                                                                                                                                                                  |
+|-----------------|-------|---------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| CanBeOverloaded | bool  | true          | Can the item be damaged if too much power is supplied to the power grid.                                                                                                                                                     |
+| OverloadVoltage | float | 2             | How much power has to be supplied to the grid relative to the load before item starts taking damage. E.g. a value of 2 means that the grid has to be receiving twice as much power as the devices in the grid are consuming. |
+| FireProbability | float | 0.15          | The probability for a fire to start when the item breaks.                                                                                                                                                                    |
+| Overload        | bool  | false         | Is the item currently overloaded. Intended to be used by StatusEffect conditionals (setting the value from XML is not recommended).                                                                                          |
 
 This component also supports the attributes defined in: [Powered](Powered.md), [ItemComponent](ItemComponent.md)
 
