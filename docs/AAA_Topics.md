@@ -17,6 +17,7 @@
   - [RelatedItem](Misc/RelatedItem.md)
   - [StatTypes](Misc/StatTypes.md)
   - [Attack](Misc/Attack.md)
+  - [Explosion](Misc/Explosion.md)
 
 - [Publishing to Steam Workshop](Intro/Publishing.md)
 - [Troubleshooting](Misc/Troubleshooting.md)
