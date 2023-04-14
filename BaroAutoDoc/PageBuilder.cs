@@ -11,9 +11,9 @@ internal sealed class PageBuilder
 {
     private readonly Page page;
 
-    public PageBuilder(string title, List<TypeOrEnum> types)
+    public PageBuilder(string title, List<(TypeOrEnum Type, SectionExtras Extras)> types)
     {
-        var typesPresentOnPage = types.Select(static e => e.Name).ToImmutableHashSet();
+        var typesPresentOnPage = types.Select(static e => e.Type.Name).ToImmutableHashSet();
 
         page = new Page
         {
@@ -22,14 +22,14 @@ internal sealed class PageBuilder
 
         foreach (var either in types)
         {
-            if (either.GetType(out ParsedType? parser))
+            if (either.Type.GetType(out ParsedType? parser))
             {
-                var section = CreateSection(parser.Name, parser, typesPresentOnPage);
+                var section = CreateSection(parser.Name, parser, typesPresentOnPage, either.Extras);
                 page.Subsections.Add(section);
             }
-            else if (either.GetEnum(out ParsedEnum enumParser))
+            else if (either.Type.GetEnum(out ParsedEnum enumParser))
             {
-                var section = CreateEnumSection(enumParser);
+                var section = CreateEnumSection(enumParser, either.Extras);
                 if (section is null) { continue; }
 
                 page.Subsections.Add(section);
@@ -42,17 +42,56 @@ internal sealed class PageBuilder
         File.WriteAllText(file, page.ToMarkdown());
     }
 
-    private static Page.Section CreateSection(string name, ParsedType parser, IReadOnlyCollection<string> typesPresentOnPage)
+    private static void AddSupportedTypes(Page.Section mainSection, SectionExtras extras)
+    {
+        if (extras.AlsoSupportedTypes is null) { return; }
+
+        List<Page.Hyperlink> links = new();
+        foreach (var (typeName, filePath) in extras.AlsoSupportedTypes)
+        {
+            links.Add(new Page.Hyperlink(
+                Url: filePath,
+                Text: typeName,
+                AltText: string.Empty));
+        }
+
+        mainSection.Body.Components.Add(new Page.NewLine());
+        mainSection.Body.Components.Add(new Page.RawText("This type also supports the attributes defined in: "));
+
+        foreach (var link in links)
+        {
+            mainSection.Body.Components.Add(link);
+        }
+    }
+
+    private static void AddBodyText(Page.Section mainSection, IReadOnlyList<CodeComment> comments, SectionExtras extras)
+    {
+        string? bodyText = extras.BodyTextOverrideFile;
+
+        if (bodyText != null)
+        {
+            var markdown = new Page.InlineMarkdown(File.ReadAllText(bodyText));
+            mainSection.Body.Components.Add(markdown);
+        }
+        else
+        {
+            foreach (Page.BodyComponent description in CreateDescription(comments))
+            {
+                mainSection.Body.Components.Add(description);
+            }
+        }
+    }
+
+    private static Page.Section CreateSection(string name, ParsedType parser, IReadOnlyCollection<string> typesPresentOnPage, SectionExtras extras)
     {
         Page.Section mainSection = new()
         {
             Title = name
         };
 
-        foreach (Page.BodyComponent description in CreateDescription(parser.Comments))
-        {
-            mainSection.Body.Components.Add(description);
-        }
+        AddBodyText(mainSection, parser.Comments, extras);
+
+        AddSupportedTypes(mainSection, extras);
 
         Page.Section attributesSection = new()
         {
@@ -150,17 +189,16 @@ internal sealed class PageBuilder
         }
     }
 
-    private static Page.Section? CreateEnumSection(ParsedEnum e)
+    private static Page.Section? CreateEnumSection(ParsedEnum e, SectionExtras extras)
     {
         Page.Section enumSection = new()
         {
             Title = e.Name
         };
 
-        foreach (Page.BodyComponent description in CreateDescription(new[] { e.Comment }))
-        {
-            enumSection.Body.Components.Add(description);
-        }
+        AddBodyText(enumSection, new[] { e.Comment }, extras);
+
+        AddSupportedTypes(enumSection, extras);
 
         Page.Table enumTable = new()
         {

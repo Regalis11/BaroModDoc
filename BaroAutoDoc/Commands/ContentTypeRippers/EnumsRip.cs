@@ -17,8 +17,8 @@ sealed class EnumsRip : Command
             (
                 new FileMap("StatTypes")
                 {
-                    "StatTypes",
-                    "AbilityFlags"
+                    new TypeSection("StatTypes"),
+                    new TypeSection("AbilityFlags")
                 }
             )
             .Submit();

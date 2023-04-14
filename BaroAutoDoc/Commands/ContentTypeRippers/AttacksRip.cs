@@ -20,11 +20,11 @@ sealed class AttacksRip : Command
             (
                 new FileMap("Attack")
                 {
-                    "Attack"
+                    new("Attack")
                 },
                 new FileMap("Explosion")
                 {
-                    "Explosion"
+                    new TypeSection("Explosion").AddInheritDisclaimer(("Attack", "/BaroModDoc/Misc/Attack.md"))
                 }
             )
             .Submit();

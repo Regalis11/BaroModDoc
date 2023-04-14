@@ -69,19 +69,48 @@ internal readonly struct TypeOrEnum
 
 internal readonly record struct TypeAndFile<T>(string File, T Type);
 
-internal sealed class FileMap : IEnumerable<string>
+internal sealed class SectionExtras
+{
+    public (string Name, string FilePath)[]? AlsoSupportedTypes;
+    public string? BodyTextOverrideFile;
+}
+
+internal sealed class TypeSection
+{
+    public readonly string TypeName;
+    public readonly SectionExtras Extras = new();
+
+    public TypeSection(string type)
+    {
+        TypeName = type;
+    }
+
+    public TypeSection AddInheritDisclaimer(params (string Name, string FilePath)[] types)
+    {
+        Extras.AlsoSupportedTypes = types;
+        return this;
+    }
+
+    public TypeSection BodyTextFrom(string file)
+    {
+        Extras.BodyTextOverrideFile = file;
+        return this;
+    }
+}
+
+internal sealed class FileMap : IEnumerable<TypeSection>
 {
     public readonly string File;
-    public readonly List<string> Types = new();
+    public readonly List<TypeSection> Types = new();
 
     public FileMap(string file)
     {
         File = file;
     }
 
-    public void Add(string type) { Types.Add(type); }
+    public void Add(TypeSection type) { Types.Add(type); }
 
-    public IEnumerator<string> GetEnumerator() => Types.GetEnumerator();
+    public IEnumerator<TypeSection> GetEnumerator() => Types.GetEnumerator();
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }
 
@@ -269,7 +298,7 @@ internal sealed class SyntaxRipperBuilder
             {
                 if (!builder.FilesToCreate.ContainsKey(map.File))
                 {
-                    builder.FilesToCreate.Add(map.File, new List<string>());
+                    builder.FilesToCreate.Add(map.File, new List<TypeSection>());
                 }
 
                 builder.FilesToCreate[map.File].AddRange(map.Types);
@@ -279,7 +308,7 @@ internal sealed class SyntaxRipperBuilder
         }
     }
 
-    public readonly Dictionary<string, List<string>> FilesToCreate = new();
+    public readonly Dictionary<string, List<TypeSection>> FilesToCreate = new();
 
     public readonly Dictionary<string, TypeCollection> Types = new();
 
@@ -287,7 +316,7 @@ internal sealed class SyntaxRipperBuilder
 
     public void Build(string outputPath)
     {
-        var allTypes = new Dictionary<string, List<TypeOrEnum>>();
+        var allTypes = new Dictionary<string, List<(TypeOrEnum, SectionExtras)>>();
 
         foreach (TypeCollection collection in Types.Values)
         {
@@ -335,11 +364,14 @@ internal sealed class SyntaxRipperBuilder
         {
             foreach (var (file, identifiers) in FilesToCreate)
             {
-                if (!identifiers.Contains(e.Name)) { continue; }
+                foreach (TypeSection section in identifiers)
+                {
+                    if (section.TypeName != e.Name) { continue; }
 
-                AddIfNotExists(file);
-                allTypes[file].Add(new TypeOrEnum(e));
-                break;
+                    AddIfNotExists(file);
+                    allTypes[file].Add((new TypeOrEnum(e), section.Extras));
+                    break;
+                }
             }
         }
 
@@ -347,11 +379,14 @@ internal sealed class SyntaxRipperBuilder
         {
             foreach (var (file, identifiers) in FilesToCreate)
             {
-                if (!identifiers.Contains(type.Name)) { continue; }
+                foreach (TypeSection section in identifiers)
+                {
+                    if (section.TypeName != type.Name) { continue; }
 
-                AddIfNotExists(file);
-                allTypes[file].Add(new TypeOrEnum(type));
-                break;
+                    AddIfNotExists(file);
+                    allTypes[file].Add((new TypeOrEnum(type), section.Extras));
+                    break;
+                }
             }
         }
 
@@ -359,7 +394,7 @@ internal sealed class SyntaxRipperBuilder
         {
             if (!allTypes.ContainsKey(file))
             {
-                allTypes.Add(file, new List<TypeOrEnum>());
+                allTypes.Add(file, new List<(TypeOrEnum, SectionExtras)>());
             }
         }
 
@@ -368,10 +403,10 @@ internal sealed class SyntaxRipperBuilder
             var orderList = FilesToCreate[file];
             pair.Sort(Comparison);
 
-            int Comparison(TypeOrEnum a, TypeOrEnum b)
+            int Comparison((TypeOrEnum, SectionExtras) a, (TypeOrEnum, SectionExtras) b)
             {
-                int aIndex = orderList.IndexOf(a.Name);
-                int bIndex = orderList.IndexOf(b.Name);
+                int aIndex = orderList.FindIndex(t => t.TypeName == a.Item1.Name);
+                int bIndex = orderList.FindIndex(t => t.TypeName == b.Item1.Name);
 
                 return aIndex.CompareTo(bIndex);
             }

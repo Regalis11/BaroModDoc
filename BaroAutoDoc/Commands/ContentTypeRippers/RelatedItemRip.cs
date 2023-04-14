@@ -19,7 +19,7 @@ sealed class RelatedItemRip : Command
             (
                 new FileMap("RelatedItem")
                 {
-                    "RelatedItem"
+                    new TypeSection("RelatedItem")
                 }
             )
             .Submit();

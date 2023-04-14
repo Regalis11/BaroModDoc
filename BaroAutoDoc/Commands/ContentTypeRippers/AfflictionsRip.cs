@@ -23,25 +23,21 @@ sealed class AfflictionsRip : Command
             (
                 new FileMap("AfflictionPrefab")
                 {
-                    "AfflictionPrefab",
-                    "AfflictionPrefabHusk",
-                    "Description",
-                    "TargetType",
-                    "Effect",
-                    "AppliedAbilityFlag",
-                    "AppliedStatValue",
-                    "PeriodicEffect"
+                    new TypeSection("AfflictionPrefab"),
+                    new TypeSection("AfflictionPrefabHusk"),
+                    new TypeSection("Description"),
+                    new TypeSection("TargetType"),
+                    new TypeSection("Effect"),
+                    new TypeSection("AppliedAbilityFlag"),
+                    new TypeSection("AppliedStatValue"),
+                    new TypeSection("PeriodicEffect")
                 },
                 new FileMap("Affliction")
                 {
-                    "Affliction",
-                    "AfflictionHusk",
-                    "AfflictionPsychosis",
-                    "AfflictionSpaceHerpes"
-                },
-                new FileMap("Explosion") // for testing
-                {
-                    "Explosion"
+                    new TypeSection("Affliction"),
+                    new TypeSection("AfflictionHusk"),
+                    new TypeSection("AfflictionPsychosis"),
+                    new TypeSection("AfflictionSpaceHerpes")
                 }
             )
             .Submit();
