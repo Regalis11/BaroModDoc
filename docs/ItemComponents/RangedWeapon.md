@@ -17,6 +17,7 @@
 | Penetration            | float  | 0             | Percentage of damage mitigation ignored when hitting armored body parts (deflecting limbs). Sum of weapon + projectile.                                  |
 | WeaponDamageModifier   | float  | 1             | Weapon's damage modifier                                                                                                                                 |
 | MaxChargeTime          | float  | 0             | The time required for a charge-type turret to charge up before able to fire.                                                                             |
+| CrossHairScale         | float  | 1             | The scale of the crosshair sprite (if there is one).                                                                                                     |
 
 This component also supports the attributes defined in: [ItemComponent](ItemComponent.md)
 
@@ -57,9 +58,7 @@ This component also supports the attributes defined in: [ItemComponent](ItemComp
     </SubContainer>
     <SubContainer capacity="1" maxstacksize="1">
       <Containable items="reactorfuel">
-        <StatusEffect type="OnContaining" target="This,Character" Voltage="1.0" setvalue="true">
-          <Conditional IsDead="false" />
-        </StatusEffect>
+        <StatusEffect type="OnContaining" target="This" Voltage="1.0" setvalue="true" />
       </Containable>
     </SubContainer>
   </ItemContainer>

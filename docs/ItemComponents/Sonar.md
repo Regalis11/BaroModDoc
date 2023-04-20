@@ -10,6 +10,7 @@
 | UseTransducers       | bool  | false                     | Does the sonar have to be connected to external transducers to work.                                                                     |
 | CenterOnTransducers  | bool  | false                     | Should the sonar view be centered on the transducers or the submarine's center of mass. Only has an effect if UseTransducers is enabled. |
 | HasMineralScanner    | bool  | false                     | Does the sonar have mineral scanning mode.                                                                                               |
+| RightLayout          | bool  | false                     |                                                                                                                                          |
 
 This component also supports the attributes defined in: [Powered](Powered.md), [ItemComponent](ItemComponent.md)
 

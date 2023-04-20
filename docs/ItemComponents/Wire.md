@@ -9,6 +9,7 @@
 | HiddenInGame   | bool  | false         | If enabled, the wire will not be visible in connection panels outside the submarine editor. |
 | NoAutoLock     | bool  | false         | If enabled, this wire will be ignored by the "Lock all default wires" setting.              |
 | UseSpriteDepth | bool  | false         | If enabled, this wire will use the sprite depth instead of a constant depth.                |
+| Width          | float | 0.3           |                                                                                             |
 
 This component also supports the attributes defined in: [ItemComponent](ItemComponent.md)
 

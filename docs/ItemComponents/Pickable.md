@@ -8,8 +8,8 @@ This component supports the attributes defined in: [ItemComponent](ItemComponent
 
 ## Example
 ```xml
-<Item identifier="petnametag" category="Equipment" Tags="smallitem" cargocontaineridentifier="metalcrate">
-  <Pickable slots="Card,Any" msg="ItemMsgPickUpSelect" />
+<Item identifier="stungundartfulgurium" category="Weapon" maxstacksize="8" interactthroughwalls="true" allowasextracargo="true" cargocontaineridentifier="metalcrate" tags="smallitem,stungunammo" Scale="0.5" impactsoundtag="impact_metal_light">
+  <Pickable slots="Any" msg="ItemMsgPickUpSelect" />
   [...]
 </Item>
 ```

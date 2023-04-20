@@ -3,10 +3,14 @@
 
 ## Attributes
 
-| Attribute                      | Type  | Default value | Description |
-|--------------------------------|-------|---------------|-------------|
-| DeconstructItemsSimultaneously | bool  | false         |             |
-| DeconstructionSpeed            | float | 1             |             |
+| Attribute                      | Type   | Default value              | Description |
+|--------------------------------|--------|----------------------------|-------------|
+| DeconstructItemsSimultaneously | bool   | false                      |             |
+| DeconstructionSpeed            | float  | 1                          |             |
+| ActivateButtonText             | string | "DeconstructorDeconstruct" |             |
+| InfoText                       | string | ""                         |             |
+| InfoAreaWidth                  | float  | 0                          |             |
+| ShowOutput                     | bool   | true                       |             |
 
 This component also supports the attributes defined in: [Powered](Powered.md), [ItemComponent](ItemComponent.md)
 

@@ -3,11 +3,13 @@
 
 ## Attributes
 
-| Attribute                  | Type  | Default value | Description |
-|----------------------------|-------|---------------|-------------|
-| FabricationSpeed           | float | 1             |             |
-| SkillRequirementMultiplier | float | 1             |             |
-| AmountToFabricate          | int   | 1             |             |
+| Attribute                   | Type   | Default value               | Description |
+|-----------------------------|--------|-----------------------------|-------------|
+| FabricationSpeed            | float  | 1                           |             |
+| SkillRequirementMultiplier  | float  | 1                           |             |
+| AmountToFabricate           | int    | 1                           |             |
+| CreateButtonText            | string | "FabricatorCreate"          |             |
+| FabricationLimitReachedText | string | "vendingmachine.outofstock" |             |
 
 This component also supports the attributes defined in: [Powered](Powered.md), [ItemComponent](ItemComponent.md)
 

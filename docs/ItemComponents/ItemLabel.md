@@ -3,7 +3,17 @@
 
 ## Attributes
 
-This component supports the attributes defined in: [ItemComponent](ItemComponent.md)
+| Attribute          | Type    | Default value | Description                                                                                       |
+|--------------------|---------|---------------|---------------------------------------------------------------------------------------------------|
+| Padding            | Vector4 | "0,0,0,0"     | The amount of padding around the text in pixels (left,top,right,bottom).                          |
+| Text               | string  | ""            | The text displayed in the label.                                                                  |
+| IgnoreLocalization | bool    | false         | Whether or not to skip localization and always display the raw value.                             |
+| TextColor          | Color   | "0,0,0,255"   | The color of the text displayed on the label (R,G,B,A).                                           |
+| TextScale          | float   | 1             | The scale of the text displayed on the label.                                                     |
+| Scrollable         | bool    | false         | Should the text scroll horizontally across the item if it's too long to be displayed all at once. |
+| ScrollSpeed        | float   | 20            | How fast the text scrolls across the item (only valid if Scrollable is set to true).              |
+
+This component also supports the attributes defined in: [ItemComponent](ItemComponent.md)
 
 
 ## Example

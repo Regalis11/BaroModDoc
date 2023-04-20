@@ -11,6 +11,8 @@
 | SelectedTaintedEffect         | Identifier | ""                      |             |
 | ConditionIncreaseOnCombineMin | float      | 3                       |             |
 | ConditionIncreaseOnCombineMax | float      | 8                       |             |
+| TooltipValueMin               | float      | 0                       |             |
+| TooltipValueMax               | float      | 0                       |             |
 
 This component also supports the attributes defined in: [ItemComponent](ItemComponent.md)
 
