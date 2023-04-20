@@ -11,17 +11,17 @@ namespace BaroAutoDoc.Commands;
 
 sealed class ItemRip : Command
 {
-    private record TreeNode(ClassDeclarationSyntax Class)
+    private record TreeNode(List<ClassDeclarationSyntax> Classes)
     {
         public readonly List<TreeNode> Children = new();
         public readonly HashSet<TreeNode> InteractsWith = new();
-        public string Name => Class.Identifier.Text;
-        public string ParentName => Class.BaseList!.Types.First().ToString();
+        public string Name => Classes.First().Identifier.Text;
+        public string ParentName => Classes.First().BaseList!.Types.First().ToString();
 
         public IEnumerable<SerializableProperty> Attributes
-            => Class.GetSerializableProperties();
+            => Classes.SelectMany(c => c.GetSerializableProperties());
         
-        public bool IsAbstract => Class.Modifiers.Any(m => m.IsKind(SyntaxKind.AbstractKeyword));
+        public bool IsAbstract => Classes.First().Modifiers.Any(m => m.IsKind(SyntaxKind.AbstractKeyword));
         
         public TreeNode? Parent = null;
     }
@@ -31,7 +31,7 @@ sealed class ItemRip : Command
         Directory.SetCurrentDirectory(GlobalConfig.RepoPath);
 
         const string srcPathFmt = "Barotrauma/Barotrauma{0}/{0}Source/Items";
-        string[] srcPathParams = {"Shared"};
+        string[] srcPathParams = { "Shared", "Client", "Server" };
         
         var itemComponentRipper = new ItemComponentRipper();
         int prevTypeCount;
@@ -47,11 +47,12 @@ sealed class ItemRip : Command
 
         //Construct a tree out of the found classes
         Dictionary<string, TreeNode> nodes = new();
-        foreach (var type in itemComponentRipper.Types.Values)
+        foreach (var typeList in itemComponentRipper.Types.Values)
         {
+            ClassDeclarationSyntax type = typeList.First();
             var baseList = type.BaseList;
             string parentName = baseList!.Types.First().ToString();
-            TreeNode newNode = new TreeNode(type);
+            TreeNode newNode = new TreeNode(typeList.ToList());
             if (nodes.TryGetValue(parentName, out var parentNode))
             {
                 newNode.Parent = parentNode;
@@ -72,7 +73,7 @@ sealed class ItemRip : Command
             = new Regex(@"item\.GetQualityModifier\((.+?)\)", RegexOptions.CultureInvariant | RegexOptions.Compiled);
         foreach (var node in nodes.Values)
         {
-            var code = node.Class.ToString();
+            var code = node.Classes.First().ToString();
             var matches = referenceFinder.Matches(code);
             foreach (Match match in matches)
             {
