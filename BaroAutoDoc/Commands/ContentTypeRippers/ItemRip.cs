@@ -32,27 +32,32 @@ sealed class ItemRip : Command
 
         const string srcPathFmt = "Barotrauma/Barotrauma{0}/{0}Source/Items";
         string[] srcPathParams = { "Shared", "Client", "Server" };
-        
-        var itemComponentRipper = new ItemComponentRipper();
-        int prevTypeCount;
-        do
+        ItemComponentRipper[] itemComponentRippers = new ItemComponentRipper[srcPathParams.Length];
+        for (int i = 0; i<srcPathParams.Length;i++)
         {
-            prevTypeCount = itemComponentRipper.Types.Count;
-            foreach (string p in srcPathParams)
+            var itemComponentRipper = itemComponentRippers[i] = new ItemComponentRipper();
+            int prevTypeCount;
+            do
             {
-                string srcPath = string.Format(srcPathFmt, p);
+                prevTypeCount = itemComponentRipper.Types.Count;
+                string srcPath = string.Format(srcPathFmt, srcPathParams[i]);
                 itemComponentRipper.VisitAllInDirectory(srcPath);
-            }
-        } while (prevTypeCount != itemComponentRipper.Types.Count);
+            } while (prevTypeCount != itemComponentRipper.Types.Count);
+        }
 
         //Construct a tree out of the found classes
         Dictionary<string, TreeNode> nodes = new();
-        foreach (var typeList in itemComponentRipper.Types.Values)
+        foreach (var kvp in itemComponentRippers[0].Types)
         {
-            ClassDeclarationSyntax type = typeList.First();
+            string typeName = kvp.Key;
+            ClassDeclarationSyntax type = kvp.Value;
             var baseList = type.BaseList;
             string parentName = baseList!.Types.First().ToString();
-            TreeNode newNode = new TreeNode(typeList.ToList());
+
+            List<ClassDeclarationSyntax> typeList = new() { type };
+            typeList.AddRange(itemComponentRippers.SelectMany(i => i.Types.Where(t => t.Key == typeName).Select(t => t.Value)));
+
+            TreeNode newNode = new(typeList);
             if (nodes.TryGetValue(parentName, out var parentNode))
             {
                 newNode.Parent = parentNode;
