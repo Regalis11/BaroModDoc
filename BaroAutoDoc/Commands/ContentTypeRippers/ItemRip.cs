@@ -1,11 +1,10 @@
-﻿using System.Reflection;
-using System.Text.RegularExpressions;
-using System.Xml.Linq;
-using BaroAutoDoc.SyntaxWalkers;
+﻿using BaroAutoDoc.SyntaxWalkers;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Reflection;
+using System.Text.RegularExpressions;
+using System.Xml.Linq;
 
 namespace BaroAutoDoc.Commands;
 
@@ -19,7 +18,7 @@ sealed class ItemRip : Command
         public string ParentName => Classes.First().BaseList!.Types.First().ToString();
 
         public IEnumerable<SerializableProperty> Attributes
-            => Classes.SelectMany(c => c.GetSerializableProperties());
+            => Classes.SelectMany(c => c.GetSerializableProperties()).DistinctBy(p => p.Name);
         
         public bool IsAbstract => Classes.First().Modifiers.Any(m => m.IsKind(SyntaxKind.AbstractKeyword));
         
@@ -33,14 +32,14 @@ sealed class ItemRip : Command
         const string srcPathFmt = "Barotrauma/Barotrauma{0}/{0}Source/Items";
         string[] srcPathParams = { "Shared", "Client", "Server" };
         ItemComponentRipper[] itemComponentRippers = new ItemComponentRipper[srcPathParams.Length];
-        for (int i = 0; i<srcPathParams.Length;i++)
+        for (int i = 0; i < srcPathParams.Length; i++)
         {
             var itemComponentRipper = itemComponentRippers[i] = new ItemComponentRipper();
+            string srcPath = string.Format(srcPathFmt, srcPathParams[i]);
             int prevTypeCount;
             do
             {
                 prevTypeCount = itemComponentRipper.Types.Count;
-                string srcPath = string.Format(srcPathFmt, srcPathParams[i]);
                 itemComponentRipper.VisitAllInDirectory(srcPath);
             } while (prevTypeCount != itemComponentRipper.Types.Count);
         }
