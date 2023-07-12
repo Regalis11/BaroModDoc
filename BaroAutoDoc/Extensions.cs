@@ -202,12 +202,23 @@ public static class Extensions
                     .SelectMany(t => t.Split("\n"))
                     .Select(t => t.Trim(trimChars))
                     .Where(s => !string.IsNullOrWhiteSpace(s)));
-            
-            xml = XElement.Parse($"<root>{txt}</root>");
 
-            txt = xml.ElementOfName("summary") is { } summary
-                ? summary.ElementInnerText().Trim(trimChars)
-                : txt;
+            string xmlTxt = $"<root>{txt}</root>";
+
+            try
+            {
+                xml = XElement.Parse(xmlTxt);
+
+                txt = xml.ElementOfName("summary") is { } summary
+                    ? summary.ElementInnerText().Trim(trimChars)
+                    : txt;
+            }
+            catch (Exception)
+            {
+                System.Diagnostics.Debug.WriteLine($"Failed to parse \"{txt}\", skipping...");
+                xml = new XElement("Invalid");
+                return string.Empty;
+            }
 
             return txt;
         }
