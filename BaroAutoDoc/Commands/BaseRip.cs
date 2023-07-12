@@ -1,18 +1,16 @@
-﻿using System.Reflection;
-using System.Text;
-using System.Xml;
-using System.Xml.Linq;
+﻿using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 using BaroAutoDoc.SyntaxWalkers;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace BaroAutoDoc.Commands;
 
-public class BaseRip : Command
+sealed class BaseRip : Command
 {
-    public void Invoke(string repoPath = "C:/Users/juanj/Desktop/Repos/Barotrauma-development")
+    public void Invoke()
     {
-        Directory.SetCurrentDirectory(repoPath);
+        Directory.SetCurrentDirectory(GlobalConfig.RepoPath);
 
         const string srcPathFmt = "Barotrauma/Barotrauma{0}/{0}Source";
         const string contentFilePathFmt = $"{srcPathFmt}/ContentManagement/ContentFile";
@@ -32,8 +30,31 @@ public class BaseRip : Command
             string srcPath = string.Format(srcPathFmt, p);
             for (int i = 0; i < contentTypes.Length; i++)
             {
-                var attrRipper = new AttributeRipper(contentTypes[i]);
-                string typeToLookFor;
+                var contentType = contentTypes[i];
+                
+                int numSharedStart(string a, string b)
+                {
+                    for (int i=0;i<Math.Min(a.Length, b.Length);i++)
+                    {
+                        if (a[i] == b[i]) { continue; }
+                        return i;
+                    }
+                    return Math.Min(a.Length, b.Length);
+                }
+        
+                var typeToLookFor = contentType.ConstructedTypes
+                    .OrderByDescending(t => numSharedStart(t, contentType.Name))
+                    .ThenBy(t => t).FirstOrDefault() ?? "";
+                if (string.IsNullOrEmpty(typeToLookFor))
+                {
+                    Console.WriteLine($"No constructed types from {contentType.Name}");
+                }
+                else
+                {
+                    Console.WriteLine($"Extracting attributes for {contentType.Name}: Starting with {typeToLookFor}");
+                }
+                
+                var attrRipper = new ContentTypeAttributeRipper(contentType, typeToLookFor);
                 do
                 {
                     typeToLookFor = attrRipper.TypeToLookFor;
@@ -107,8 +128,10 @@ public class BaseRip : Command
             {
                 if (contentType.XmlSubElements.Any())
                 {
-                    var childElementsSection = new Page.Section();
-                    childElementsSection.Title = "Child elements";
+                    var childElementsSection = new Page.Section
+                    {
+                        Title = "Child elements"
+                    };
                     markdown.Subsections.Add(childElementsSection);
 
                     var elemList = new Page.BulletList();
@@ -120,15 +143,21 @@ public class BaseRip : Command
                 }
                 if (contentType.XmlAttributes.Any())
                 {
-                    var attributesSection = new Page.Section();
-                    attributesSection.Title = "Attributes";
+                    var attributesSection = new Page.Section
+                    {
+                        Title = "Attributes"
+                    };
                     markdown.Subsections.Add(attributesSection);
 
-                    var attrList = new Page.BulletList();
-                    attributesSection.Body.Components.Add(attrList);
+                    Page.Table attributesTable = new()
+                    {
+                        HeadRow = new Page.Table.Row("Attribute", "Type", "Default value", "Description")
+                    };
+
+                    attributesSection.Body.Components.Add(attributesTable);
                     foreach (var attr in contentType.XmlAttributes)
                     {
-                        attrList.Items.Add(attr.ToBulletPoint());
+                        attributesTable.BodyRows.Add(new Page.Table.Row(attr.Name, attr.Type, attr.DefaultValue, attr.Description));
                     }
 
                     attributesSection.Body.AddNewLine();
@@ -141,5 +170,59 @@ public class BaseRip : Command
         File.WriteAllText("markdown/ContentTypes.md",
             string.Join("\n", contentTypeFinder.ContentTypes.Select(t
                 => $"- [{t.Name}](ContentTypes/{t.Name}.md)")));
+    }
+
+    // FIXME DRY
+    public static bool ConstructEnumTable(EnumDeclarationSyntax syntax, [NotNullWhen(true)] out ImmutableArray<Page.Section>? result)
+    {
+        List<ParsedEnum> enums = new();
+
+        List<EnumValue> enumMembers = new();
+        foreach (var enumMember in syntax.Members)
+        {
+            enumMembers.Add(new EnumValue(enumMember.Identifier.ValueText, enumMember.FindCommentAttachedToMember().Text));
+        }
+
+        CodeComment comment = syntax.FindCommentAttachedToMember();
+
+        enums.Add(new ParsedEnum(syntax.Identifier.ValueText, comment, enumMembers.ToImmutableArray()));
+
+        return ConstructEnumTable(enums, out result);
+    }
+
+
+    public static bool ConstructEnumTable(IReadOnlyCollection<ParsedEnum> enums, [NotNullWhen(true)] out ImmutableArray<Page.Section>? result)
+    {
+        if (!enums.Any())
+        {
+            result = null;
+            return false;
+        }
+
+        var builder = ImmutableArray.CreateBuilder<Page.Section>();
+        foreach (var (type, comment, values) in enums)
+        {
+            Page.Section section = new()
+            {
+                Title = type
+            };
+
+            Page.Table table = new()
+            {
+                HeadRow = new Page.Table.Row("Value", "Description")
+            };
+
+            foreach (var (value, description) in values)
+            {
+                table.BodyRows.Add(new Page.Table.Row(value, description));
+            }
+
+            section.Body.Components.Add(table);
+
+            builder.Add(section);
+        }
+
+        result = builder.ToImmutable();
+        return true;
     }
 }

@@ -1,10 +1,8 @@
-﻿using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
+﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace BaroAutoDoc.SyntaxWalkers;
 
-public class ItemComponentRipper : FolderSyntaxWalker
+class ItemComponentRipper : FolderSyntaxWalker
 {
     public readonly Dictionary<string, ClassDeclarationSyntax> Types = new();
 

@@ -1,106 +1,62 @@
-﻿using System.Reflection;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Xml.Linq;
-using BaroAutoDoc.SyntaxWalkers;
+﻿using BaroAutoDoc.SyntaxWalkers;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Reflection;
+using System.Text.RegularExpressions;
+using System.Xml.Linq;
 
 namespace BaroAutoDoc.Commands;
 
-public class ItemRip : Command
+sealed class ItemRip : Command
 {
-    private record TreeNode(ClassDeclarationSyntax Class)
+    private record TreeNode(List<ClassDeclarationSyntax> Classes)
     {
-        public record Attribute(string Name, string Type, string DefaultValue, string Description);
-        
         public readonly List<TreeNode> Children = new();
         public readonly HashSet<TreeNode> InteractsWith = new();
-        public string Name => Class.Identifier.Text;
-        public string ParentName => Class.BaseList!.Types.First().ToString();
+        public string Name => Classes.First().Identifier.Text;
+        public string ParentName => Classes.First().BaseList!.Types.First().ToString();
 
-        public IEnumerable<Attribute> Attributes
-        {
-            get
-            {
-                foreach (var member in Class.Members)
-                {
-                    if (member is not PropertyDeclarationSyntax property) { continue; }
-                    var serializeAttr = property.AttributeLists
-                        .SelectMany(l => l.Attributes)
-                        .FirstOrDefault(a => a.Name.ToString() == "Serialize");
-                    if (serializeAttr is null) { continue; }
-
-                    string cleanupDefaultValue(string v)
-                        => v.EndsWith("f") ? v[..^1] : v;
-                    
-                    string cleanupDescription(string desc)
-                        => CSharpScript.EvaluateAsync<string>(desc).Result;
-
-                    string getArgument(string argName)
-                    {
-                        var arg = serializeAttr.ArgumentList!.Arguments.FirstOrDefault(arg
-                            => arg.NameColon?.Name.Identifier.Text == argName);
-                        if (arg is null)
-                        {
-                            switch (argName)
-                            {
-                                case "defaultValue":
-                                    arg = serializeAttr.ArgumentList!.Arguments[0];
-                                    break;
-                                case "description":
-                                    arg = serializeAttr.ArgumentList!.Arguments.Count >= 3 ? serializeAttr.ArgumentList.Arguments[2] : null;
-                                    break;
-                            }
-                        }
-
-                        return arg?.NameColon is not { Name.Identifier.Text: { } name } || name == argName
-                            ? arg?.Expression.ToString() ?? ""
-                            : "";
-                    }
-                    
-                    yield return new Attribute(
-                        Name: property.Identifier.Text,
-                        Type: property.Type.ToString(),
-                        DefaultValue: cleanupDefaultValue(getArgument("defaultValue")),
-                        Description: cleanupDescription(getArgument("description")));
-                }
-            }
-        }
+        public IEnumerable<SerializableProperty> Attributes
+            => Classes.SelectMany(c => c.GetSerializableProperties()).DistinctBy(p => p.Name);
         
-        public bool IsAbstract => Class.Modifiers.Any(m => m.IsKind(SyntaxKind.AbstractKeyword));
+        public bool IsAbstract => Classes.First().Modifiers.Any(m => m.IsKind(SyntaxKind.AbstractKeyword));
         
         public TreeNode? Parent = null;
     }
     
-    public void Invoke(string repoPath = "C:/Users/juanj/Desktop/Repos/Barotrauma-development")
+    public void Invoke()
     {
-        Directory.SetCurrentDirectory(repoPath);
+        Directory.SetCurrentDirectory(GlobalConfig.RepoPath);
 
         const string srcPathFmt = "Barotrauma/Barotrauma{0}/{0}Source/Items";
-        string[] srcPathParams = {"Shared"};
-        
-        var itemComponentRipper = new ItemComponentRipper();
-        int prevTypeCount;
-        do
+        string[] srcPathParams = { "Shared", "Client", "Server" };
+        ItemComponentRipper[] itemComponentRippers = new ItemComponentRipper[srcPathParams.Length];
+        for (int i = 0; i < srcPathParams.Length; i++)
         {
-            prevTypeCount = itemComponentRipper.Types.Count;
-            foreach (string p in srcPathParams)
+            var itemComponentRipper = itemComponentRippers[i] = new ItemComponentRipper();
+            string srcPath = string.Format(srcPathFmt, srcPathParams[i]);
+            int prevTypeCount;
+            do
             {
-                string srcPath = string.Format(srcPathFmt, p);
+                prevTypeCount = itemComponentRipper.Types.Count;
                 itemComponentRipper.VisitAllInDirectory(srcPath);
-            }
-        } while (prevTypeCount != itemComponentRipper.Types.Count);
+            } while (prevTypeCount != itemComponentRipper.Types.Count);
+        }
 
         //Construct a tree out of the found classes
         Dictionary<string, TreeNode> nodes = new();
-        foreach (var type in itemComponentRipper.Types.Values)
+        foreach (var kvp in itemComponentRippers[0].Types)
         {
+            string typeName = kvp.Key;
+            ClassDeclarationSyntax type = kvp.Value;
             var baseList = type.BaseList;
             string parentName = baseList!.Types.First().ToString();
-            TreeNode newNode = new TreeNode(type);
+
+            List<ClassDeclarationSyntax> typeList = new() { type };
+            typeList.AddRange(itemComponentRippers.SelectMany(i => i.Types.Where(t => t.Key == typeName).Select(t => t.Value)));
+
+            TreeNode newNode = new(typeList);
             if (nodes.TryGetValue(parentName, out var parentNode))
             {
                 newNode.Parent = parentNode;
@@ -121,7 +77,7 @@ public class ItemRip : Command
             = new Regex(@"item\.GetQualityModifier\((.+?)\)", RegexOptions.CultureInvariant | RegexOptions.Compiled);
         foreach (var node in nodes.Values)
         {
-            var code = node.Class.ToString();
+            var code = node.Classes.First().ToString();
             var matches = referenceFinder.Matches(code);
             foreach (Match match in matches)
             {
@@ -244,10 +200,10 @@ public class ItemRip : Command
                 HeadRow = new Page.Table.Row("Attribute", "Type", "Default value", "Description")
             };
 
-            IEnumerable<TreeNode.Attribute> getAttributes(TreeNode n)
+            IEnumerable<SerializableProperty> getAttributes(TreeNode n)
                 => n.Attributes.Concat(n.Parent is { IsAbstract: true }
                     ? getAttributes(n.Parent)
-                    : Enumerable.Empty<TreeNode.Attribute>());
+                    : Enumerable.Empty<SerializableProperty>());
             
             foreach (var attr in getAttributes(node))
             {

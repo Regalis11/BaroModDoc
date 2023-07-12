@@ -5,7 +5,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace BaroAutoDoc.SyntaxWalkers;
 
-public class ContentTypeFinder : FolderSyntaxWalker
+class ContentTypeFinder : FolderSyntaxWalker
 {
     private readonly List<ContentType> contentTypes = new();
     public IReadOnlyList<ContentType> ContentTypes => contentTypes;

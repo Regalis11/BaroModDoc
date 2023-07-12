@@ -1,7 +1,27 @@
-﻿using BaroAutoDoc.Commands;
+﻿using System.Runtime.CompilerServices;
+using BaroAutoDoc;
+using BaroAutoDoc.Commands;
+
+try
+{
+    // invoke the global config constructor to initialize the config
+    RuntimeHelpers.RunClassConstructor(typeof(GlobalConfig).TypeHandle);
+}
+catch (TypeInitializationException exception)
+{
+    if (exception.InnerException is not { } e) { throw; }
+
+    // print any errors that GlobalConfig constructor threw
+    Console.WriteLine($"{e.GetType().Name}: {e.Message}");
+    return;
+}
 
 if (!args.Any())
 {
+    Console.WriteLine("Available commands:");
+    Console.WriteLine(string.Join(", ", Command.CommandTypes.Select(c => c.Name)));
+    Console.WriteLine("");
+
     Console.WriteLine("Command to invoke:");
     string cmd = Console.ReadLine() ?? "";
     args = cmd.Split(' ');

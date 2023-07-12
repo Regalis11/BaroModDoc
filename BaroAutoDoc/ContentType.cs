@@ -1,9 +1,8 @@
 ﻿using System.Collections.Immutable;
-using System.Xml.Linq;
 
 namespace BaroAutoDoc;
 
-public record ContentType(
+record ContentType(
     string Name,
     ImmutableArray<string> AltNames,
     bool RequiredByCorePackage,
@@ -15,7 +14,7 @@ public record ContentType(
     ImmutableArray<string> XmlSubElements,
     ImmutableArray<ContentType.XmlAttribute> XmlAttributes)
 {
-    public record XmlAttribute(string Type, string Name)
+    public record XmlAttribute(string Type, string Name, string DefaultValue, string Description)
     {
         public Page.InlineMarkdown ToBulletPoint()
             => new($"`{Name}` : `{Type}`");

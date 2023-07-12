@@ -1,14 +1,28 @@
 ﻿using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.Reflection;
 
 namespace BaroAutoDoc.Commands;
 
-public abstract class Command
+abstract class Command
 {
-    public static ImmutableHashSet<Type> CommandTypes
-        = typeof(Command).Assembly.GetTypes().Where(t => t.IsSubclassOf(typeof(Command)))
-            .ToImmutableHashSet();
+    public static readonly ImmutableHashSet<Type> CommandTypes;
+
+    static Command()
+    {
+        CommandTypes =
+            typeof(Command).Assembly.GetTypes()
+                .Where(t => t.IsSubclassOf(typeof(Command)) && !t.IsAbstract)
+                .ToImmutableHashSet();
+        static bool notSealed(Type t)
+            => !t.IsSealed;
+        if (CommandTypes.Any(notSealed))
+        {
+            throw new Exception(
+                "Found commands that aren't sealed nor abstract: " +
+                $"{string.Join(", ", CommandTypes.Where(notSealed).Select(t => t.Name))}");
+        }
+    }
 
     public void Invoke(string[] args)
     {
@@ -31,4 +45,5 @@ public abstract class Command
             .ToArray();
         method.Invoke(this, parameterValues);
     }
+
 }

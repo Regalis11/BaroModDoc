@@ -4,7 +4,7 @@ using System.Xml.Linq;
 
 namespace BaroAutoDoc.Commands;
 
-public class SteamToMd : Command
+sealed class SteamToMd : Command
 {
     public void Invoke(string url, string fileName)
     {
@@ -66,11 +66,11 @@ public class SteamToMd : Command
                             var nestedImg = elem.Element("img");
                             if (nestedImg != null)
                             {
-                                components.Add(new Page.Image(Url: nestedImg.Attribute("src").Value));
+                                components.Add(new Page.Image(Url: nestedImg.Attribute("src")?.Value ?? ""));
                             }
                             else
                             {
-                                components.Add(new Page.Hyperlink(Url: elem.Attribute("href").Value, Text: elem.ElementInnerText()));
+                                components.Add(new Page.Hyperlink(Url: elem.Attribute("href")?.Value ?? "", Text: elem.ElementInnerText()));
                             }
                             break;
                         case "ul":
