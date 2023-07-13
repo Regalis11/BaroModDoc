@@ -15,6 +15,7 @@ sealed class EventsRip : Command
             .Prepare("RandomEvents")
             .AddFile("Barotrauma/Barotrauma{0}/{0}Source/Events/EventSet.cs", fmt: new [] { "Shared" })
             .AddFile("Barotrauma/Barotrauma{0}/{0}Source/Events/EventPrefab.cs", fmt: new [] { "Client", "Shared" })
+            .AddFile("Barotrauma/Barotrauma{0}/{0}Source/Events/MonsterEvent.cs", fmt: new[] { "Shared" })
             .WithOptions(new ClassParsingOptions(new[] { "InitProjSpecific" }))
             .Map
             (
@@ -25,6 +26,10 @@ sealed class EventsRip : Command
                 new FileMap("RandomEvents")
                 {
                     new ("EventPrefab")
+                },
+                new FileMap("RandomEvents")
+                {
+                    new ("MonsterEvent")
                 }
             )
             .Submit();
