@@ -64,3 +64,23 @@ Event sets are sets of random events that occur within a level (most commonly, m
 | UnlockPathReputation         | int    | 0                   | Only valid if UnlockPathEvent is set to true. The reputation requirement displayed on the pathway this event is blocking.                                                                                                                                        |
 
 
+
+## MonsterEvent
+
+
+### Attributes
+
+| Attribute          | Type               | Default value         | Description                                                                                                                                                                                                                            |
+|--------------------|--------------------|-----------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| MinAmount          | int                | Same as defaultAmount | Minimum amount of monsters to spawn. You can also use "Amount" if you want to spawn a fixed number of monsters.                                                                                                                        |
+| MaxAmount          | int                | 1                     | Maximum amount of monsters to spawn. You can also use "Amount" if you want to spawn a fixed number of monsters.                                                                                                                        |
+| MaxAmountPerLevel  | int                | MaxValue              | Maximum number of the specific type of monster in the entire level. Can be used to prevent the event from spawning more monsters if there's<br/>already enough of that type of monster, e.g. spawned by another event or by a mission. |
+| SpawnType          | Level.PositionType | MainPath              | Where should the monster spawn?                                                                                                                                                                                                        |
+| spawnPointTag      | string             | Empty                 | If set, the monsters will spawn at a spawnpoint that has this tag. Only relevant for events that spawn monsters in a submarine, beacon station, wreck, outpost or ruin.                                                                |
+| SpawnDistance      | float              | 0                     | The monsters are spawned at least this distance away from the players and submarines.                                                                                                                                                  |
+| offset             | float              | 0                     | The minimum amount of variance applied to the spawn position.                                                                                                                                                                          |
+| scatter            | float              | 500                   | Amount of random variance in the spawn position, in pixels. Can be used to prevent all the monsters from spawning at the exact same position.                                                                                          |
+| delayBetweenSpawns | float              | 0.1                   | Delay between spawning the monsters. Only relevant if the event spawns more than one monster.                                                                                                                                          |
+| resetTime          | float              | 0                     | Number seconds before the event resets after all the monsters are dead. Can be used to make the event spawn monsters multiple times.                                                                                                   |
+
+
