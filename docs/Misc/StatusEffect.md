@@ -78,7 +78,7 @@ Here's an exmple of a simple StatusEffect, which makes the item deteriorate by 1
 
 Notice the target "This": here it refers to the item itself. 
 
-Another thing to note is how the condition decrease is defined. Status effects can modify any *property* of the target entity (see the [content type documentation](Intro/ContentTypes.md) for a full list of properties of different kinds of entities). In this case we are modifying the "Condition" property of the item. By default, the value is treated as "how much the value changes per second", in this case reducing the condition by 1 per second. If we wanted to instead make the item break down immediately when it's submerged, we would use the attribute 'setvalue' as follows:
+Another thing to note is how the condition decrease is defined. Status effects can modify any *property* of the target entity (see the [content type documentation](../Intro/ContentTypes.html) for a full list of properties of different kinds of entities). In this case we are modifying the "Condition" property of the item. By default, the value is treated as "how much the value changes per second", in this case reducing the condition by 1 per second. If we wanted to instead make the item break down immediately when it's submerged, we would use the attribute 'setvalue' as follows:
 
 ```xml
 <Item identifier="watersensitiveitem" name="Water-sensitive Item">
@@ -100,7 +100,7 @@ But what if we wanted to create a gun whose condition decreases by 10 whenever i
 
 The difference here is the *disabledeltatime* attribute. Delta time refers to the amount of elapsed time, which we want to ignore altogether in this case, treating "-10" as an instantaneous decrease.
 
-In other words, the values is treated as an increase per frame, as opposed to an increase per second. Note that you most likely would only want to use this attribute in "one-shot", instant effects that don't run over a period of time. For example, adding this attribute to the previous water-sensitive item would lead to odd results: the item would constantly deteriorate at a rate of 1 units per frame when submerged.
+In other words, the values is treated as an increase per frame, as opposed to an increase per second. Note that you most likely would only want to use this attribute in "one-shot", instant effects that don't run over a period of time. For example, adding this attribute to the previous water-sensitive item would lead to odd results: the item would constantly deteriorate at a rate of 10 units per frame when submerged.
 
 ### Attributes
 
@@ -137,7 +137,7 @@ In other words, the values is treated as an increase per frame, as opposed to an
 
 | Element            | Type                              | Description                                                                                                                                |
 |--------------------|-----------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
-| explosion          | [Explosion](Misc/Explosion.md)    | Creates an explosion when the effect triggers.                                                                                             |
+| explosion          | [Explosion](Explosion.html)       | Creates an explosion when the effect triggers.                                                                                             |
 | fire               | -                                 | Starts a fire of the specified size when the effect triggers.                                                                              |
 | removeitem         | -                                 | Removes all of the items the effect is targeting.                                                                                          |
 | dropcontaineditems | -                                 | Drops all the items from the inventories of the items or characters the effect is targeting.                                               |
@@ -145,15 +145,15 @@ In other words, the values is treated as an increase per frame, as opposed to an
 | removecharacter    | -                                 | Removes all of the characters the effect is targeting, or if the effect is targeting limbs, the characters those limbs belong to.          |
 | breaklimb          | -                                 | Severs all the limbs the effect is targeting.                                                                                              |
 | hidelimb           | -                                 | Hides all the limbs the effect is targeting.                                                                                               |
-| requireditem       | [RelatedItem](Misc/RelatedItem.md)| Defines item(s) the entity executing the effect must have. Can be used in a variety of ways: e.g. to check if a character has something in their inventory or hands, if an item is inside a specific kind of container, or if there's a specific kind of item inside the item.                                                                                                                                    |
-| requireditems      | [RelatedItem](Misc/RelatedItem.md)| Alias of "requireditem". Functionally identical.                                                                                           |
+| requireditem       | [RelatedItem](RelatedItem.html)   | Defines item(s) the entity executing the effect must have. Can be used in a variety of ways: e.g. to check if a character has something in their inventory or hands, if an item is inside a specific kind of container, or if there's a specific kind of item inside the item.                                                                                                                                    |
+| requireditems      | [RelatedItem](RelatedItem.html)   | Alias of "requireditem". Functionally identical.                                                                                           |
 | requiredaffliction | -                                 | Which type of afflictions the target must receive for the StatusEffect to be applied. Only valid when the type of the effect is OnDamaged. |
 | affliction         | -                                 | An affliction to give to the character or limb the effect is targeting.                                                                    |
 | aitrigger          | -                                 | Can be used to trigger a behavior change of some kind on an AI character. Only applicable for enemy characters, not humans.                |
 | talenttrigger      | -                                 | Can be used by AbilityConditionStatusEffectIdentifier to react to a specific kind of status effect triggering.                             |
 | giveexperience     | -                                 | Can be used to give experience points to the character(s) the effect is targeting.                                                         |
 | giveskill          | GiveSkill                         | Can be used to give skill points to the character(s) the effect is targeting.                                                              |
-| conditional        | [Conditional](Misc/Conditional.md)| Some type of condition that needs to be met for the effect to execute. See the [Conditional](Misc/Conditional.md) page for more info.      |
+| conditional        | [Conditional](Conditional.html)   | Some type of condition that needs to be met for the effect to execute. See the [Conditional](Conditional.html) page for more info.         |
 
 
 #### Fire
