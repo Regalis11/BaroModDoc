@@ -62,54 +62,63 @@ Here we have *Label* at the start of the event. This is used to mark a certain p
 
 ## Triggering events
 
-After you've made a scripted event, you need to make it trigger at some point in the game.
+After you've made a scripted event, you need to make it trigger at some point in the game. There are several ways to do this:
 
-----
+### Event sets
 
-- **The entity executing the StatusEffect** \- Every effect is always *executed* by some *entity*, for example an item or a character. For example, if you use a gun, it might execute some effect that emits particles.
+The game can choose the events that occur during a round from pre-configured sets of events. This is how the vast majority of the scripted events and events such as monster spawns are configured in the vanilla game.
 
-- **Type** \- The type of the StatusEffect determines *when* the effect is executed. For example, when the item is being worn or used, when a character is underwater or takes damage, or always.
-
-[TODO: list ActionTypes]
-
-- **The target of the StatusEffect** \- StatusEffects need to have a *target*. The target determines which entity the effect affects - this is often the same as the entity executing the effect, but it can be something else too: for example, a diving suit might have a StatusEffect that *targets* the oxygen tank inside it, making it deplete when the suit is worn.
-
-[TODO: list TargetTypes]
-
-## Examples
-
-Here's an exmple of a simple StatusEffect, which makes the item deteriorate by 10 units per second when it's underwater. 
+Here's an example of a simple event set. This set would randomly choose 2 of the four events, with the earlier events in the set being more likely to get chosen than the later ones. The events can only occur in outpost levels, in research and military outposts, past 15% difficulty.
 
 ```xml
-<Item identifier="watersensitiveitem" name="Water-sensitive Item">
-  <ItemComponent>
-	<StatusEffect type="InWater" target="This" Condition="-10.0" />
-  </ItemComponent>
-</Item>
+<EventSet identifier="outpostevents.custom" leveltype="outpost" locationtype="research,military" minleveldifficulty="15" maxleveldifficulty="100" allowatstart="true" chooserandom="true" eventcount="2">
+    <ScriptedEvent identifier="customevent1" commonness="100" />
+    <ScriptedEvent identifier="customevent2" commonness="75" />
+    <ScriptedEvent identifier="customevent3" commonness="50" />
+    <ScriptedEvent identifier="customevent4" commonness="25" />
+</EventSet>
 ```
 
-Notice the target "This": here it refers to the item itself. 
-
-Another thing to note is how the condition decrease is defined. Status effects can modify any *property* of the target entity (see the [content type documentation](../Intro/ContentTypes.html) for a full list of properties of different kinds of entities). In this case we are modifying the "Condition" property of the item. By default, the value is treated as "how much the value changes per second", in this case reducing the condition by 1 per second. If we wanted to instead make the item break down immediately when it's submerged, we would use the attribute 'setvalue' as follows:
+You can also nest event sets. In this example, one event (a or b) is chosen from the first child set, and another (1, 2 or 3) from the second child set.
 
 ```xml
-<Item identifier="watersensitiveitem" name="Water-sensitive Item">
-  <ItemComponent>
-	<StatusEffect type="InWater" target="This" Condition="0.0" setvalue="true" />
-  </ItemComponent>
-</Item>
+<EventSet identifier="outpostevents.custom" leveltype="outpost" locationtype="research,military" minleveldifficulty="15" maxleveldifficulty="100" allowatstart="true">
+    <EventSet chooserandom="true">
+        <ScriptedEvent identifier="customevent_a" commonness="100" />
+        <ScriptedEvent identifier="customevent_b" commonness="75" />
+    </EventSet>
+    <EventSet chooserandom="true"">
+        <ScriptedEvent identifier="customevent_1" commonness="100" />
+        <ScriptedEvent identifier="customevent_2" commonness="75" />
+        <ScriptedEvent identifier="super_rare_customevent_3" commonness="1" />
+    </EventSet>
+</EventSet>
 ```
 
-But what if we wanted to create a gun whose condition decreases by 10 whenever it's fired? We can't use setvalue, nor can we make the value decrease by 10 per second: we want an instant decrease of 10. Here's how we could implement it:
+So, where are you supposed to put the event set? The vanilla scripted events are configured in a file called OutpostEvents.xml, with includes a big multi-level event set that configures the events for all different kinds of outposts. Overriding and modifying this whole vanilla event set, and keeping it up-to-date with the vanilla game would be cumbersome (not to mention keeping it up-to-date and compatible with other mods). That's where additive event sets come in.
+
+Additive event sets simply add more events on top of the existing events, which is often how mods should configure events (unless you're prepared to override all the events in the vanilla game).
+
+Making an event set additive is simply just a matter of setting the attribute "additive" to true. The following set would create one of the custom events on top of the other events:
 
 ```xml
-<Item identifier="fragilegun" name="A Rather Poor Gun">
-  <ItemComponent>
-	<StatusEffect type="OnUse" target="This" Condition="-10.0" disabledeltatime="true" />
-  </ItemComponent>
-</Item>
+<EventSet identifier="outpostevents.custom" additive="true" leveltype="outpost" chooserandom="true" eventcount="1">
+    <ScriptedEvent identifier="customevent1" commonness="100" />
+    <ScriptedEvent identifier="customevent2" commonness="75" />
+</EventSet>
 ```
 
-The difference here is the *disabledeltatime* attribute. Delta time refers to the amount of elapsed time, which we want to ignore altogether in this case, treating "-10" as an instantaneous decrease.
+### Status effects
 
-In other words, the values is treated as an increase per frame, as opposed to an increase per second. Note that you most likely would only want to use this attribute in "one-shot", instant effects that don't run over a period of time. For example, adding this attribute to the previous water-sensitive item would lead to odd results: the item would constantly deteriorate at a rate of 10 units per frame when submerged.
+Events can also be triggered by any status effect, for example when some item is used, some monster spawned or killed, or when a player touches a trigger on a level object. See the [status effect documentation](../StatusEffectIntroduction.html) for more details.
+
+
+### Missions
+
+Missions can also trigger events, as soon as the mission starts or when it reaches a certain state. Scripted events are a good way to add some extra flavor and functionality to missions: the vanilla jailbreak missions for example use events to make the outpost security react to the player's actions.
+
+The following, when placed in a mission config, would trigger the event "somecustommissionevent" 10 seconds after the mission has started (the initial state of the mission being 0).
+
+```xml
+<TriggerEvent state="0" delay="10" eventidentifier="somecustommissionevent" campaignonly="true"/>
+```
