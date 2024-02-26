@@ -13,7 +13,7 @@
   - [Overrides](Intro/Overrides.md)
   - [Performance](Misc/Performance.md)
   - [Status effects](Misc/StatusEffect.md)
-  - [Scripted events](Misc/Scripted events.md)
+  - [Scripted events](Misc/ScriptedEvents.md)
   - [Conditionals](Misc/Conditional.md)
   - [Stat types](Misc/StatTypes.md)
   - [RelatedItem](Misc/RelatedItem.md)
