@@ -142,7 +142,7 @@ sealed class ScriptedEventRip : Command
         {
             if (!node.IsAbstract)
             {
-                list.Items.Add(new Page.Hyperlink($"EventActions/{node.Name}.md", node.Name));
+                list.Items.Add(new Page.Hyperlink($"../EventActions/{node.Name}.md", node.Name));
             }
 
             foreach (var child in node.Children.OrderBy(c => c.Name))
