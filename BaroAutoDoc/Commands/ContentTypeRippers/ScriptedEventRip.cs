@@ -154,6 +154,6 @@ sealed class ScriptedEventRip : Command
         File.WriteAllText("EventActionList.md", listPage.ToMarkdown());
 
         introductionText = introductionText.Replace("[TODO: list EventActions]", listPage.ToMarkdown());
-        File.WriteAllText($"ScripedEvents.md", introductionText);
+        File.WriteAllText($"ScriptedEvents.md", introductionText);
     }
 }
