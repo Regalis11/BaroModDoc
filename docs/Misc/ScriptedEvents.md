@@ -38,7 +38,7 @@ After the tagging, we find a [TriggerAction](../EventActions/TriggerAction.html)
 
 Then we get to a [ConversationAction](../EventActions/ConversationAction.html). Until now, the event has executed actions in order from top to bottom, but here we introduce branching to the event in the form of making the player choose what to do with the smoking trash can they run into. There are two Option elements inside the ConversationAction, "Investigate." and "Not my problem.". 
 
-Let's look at the latter option ("Not my problem.") first: under that, we have a [WaitAction](../EventActions/WaitAction.html), which simply makes the event wait for 30 seconds before continuing to the next event. And finally, after that 30 seconds has passed a [FireAction](../EventActions/FireAction.html) starts a fire at the position of the trash can.
+Let's look at the latter option ("Not my problem.") first: under that, we have a [WaitAction](../EventActions/WaitAction.html), which simply makes the event wait for 30 seconds before continuing to the next action. And finally, after that 30 seconds has passed, a [FireAction](../EventActions/FireAction.html) starts a fire at the position of the trash can.
 
 The first option ("Investigate.") is a little more complex: here we have another ConversationAction which introduces another branch into the event. The player can choose to "Put it out", which gives them a minor burn affliction using [AfflictionAction](../EventActions/AfflictionAction.html). The second branch is identical to the "Not my problem." one: the event waits for 30 seconds, and then starts a fire.
 
@@ -68,7 +68,7 @@ After you've made a scripted event, you need to make it trigger at some point in
 
 The game can choose the events that occur during a round from pre-configured sets of events. This is how the vast majority of the scripted events and events such as monster spawns are configured in the vanilla game.
 
-Here's an example of a simple event set. This set would randomly choose 2 of the four events, with the earlier events in the set being more likely to get chosen than the later ones. The events can only occur in outpost levels, in research and military outposts, past 15% difficulty.
+Here's an example of a simple event set. This set would randomly choose 2 of the four events, with the earlier events in the set having higher commonness values, meaning they'll being more likely to get chosen than the later ones. The events can only occur in outpost levels, in research and military outposts, past 15% difficulty.
 
 ```xml
 <EventSet identifier="outpostevents.custom" leveltype="outpost" locationtype="research,military" minleveldifficulty="15" maxleveldifficulty="100" allowatstart="true" chooserandom="true" eventcount="2">
@@ -115,7 +115,7 @@ Events can also be triggered by any status effect, for example when some item is
 
 ### Missions
 
-Missions can also trigger events, as soon as the mission starts or when it reaches a certain state. Scripted events are a good way to add some extra flavor and functionality to missions: the vanilla jailbreak missions for example use events to make the outpost security react to the player's actions.
+Missions can also trigger events, as soon as the mission starts or when it reaches a certain state. Scripted events are a good way to add some extra flavor and functionality to missions: the vanilla "jailbreak" missions for example use events to make the outpost security react to the player's actions.
 
 The following, when placed in a mission config, would trigger the event "somecustommissionevent" 10 seconds after the mission has started (the initial state of the mission being 0).
 
@@ -123,7 +123,7 @@ The following, when placed in a mission config, would trigger the event "somecus
 <TriggerEvent state="0" delay="10" eventidentifier="somecustommissionevent" campaignonly="true"/>
 ```
 
-### Event editor
+## Event editor
 
 Barotrauma also includes a built-in editor for creating and editing scripted events. You can access the editor using the console command "editevents".
 
