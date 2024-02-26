@@ -12,10 +12,11 @@
     - [Content types](Intro/ContentTypes.md)
   - [Overrides](Intro/Overrides.md)
   - [Performance](Misc/Performance.md)
-  - [StatusEffects](Misc/StatusEffect.md)
+  - [Status effects](Misc/StatusEffect.md)
+  - [Scripted events](Misc/Scripted events.md)
   - [Conditionals](Misc/Conditional.md)
+  - [Stat types](Misc/StatTypes.md)
   - [RelatedItem](Misc/RelatedItem.md)
-  - [StatTypes](Misc/StatTypes.md)
   - [Attack](Misc/Attack.md)
   - [Explosion](Misc/Explosion.md)
 
