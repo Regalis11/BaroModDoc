@@ -122,3 +122,13 @@ The following, when placed in a mission config, would trigger the event "somecus
 ```xml
 <TriggerEvent state="0" delay="10" eventidentifier="somecustommissionevent" campaignonly="true"/>
 ```
+
+### Event editor
+
+Barotrauma also includes a built-in editor for creating and editing scripted events. You can access the editor using the console command "editevents".
+
+### Event actions
+
+Here's a full list of all the available event actions:
+
+[TODO: list EventActions]

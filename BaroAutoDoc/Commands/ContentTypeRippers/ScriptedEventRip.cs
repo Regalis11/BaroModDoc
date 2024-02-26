@@ -68,10 +68,11 @@ sealed class ScriptedEventRip : Command
             nodes.Add(newNode.Name, newNode);
         }
 
-        
-        
         //Convert the trimmed examples to Markdown and write the pages
         Directory.SetCurrentDirectory(Path.GetDirectoryName(Assembly.GetCallingAssembly().Location)!);
+
+        string introductionText = File.ReadAllText("ManualDocs/ScriptedEventIntroduction.md");
+
         Directory.CreateDirectory("EventActions");
         foreach (var node in nodes.Values)
         {
@@ -81,6 +82,13 @@ sealed class ScriptedEventRip : Command
             {
                 Title = node.Name
             };
+
+            var comment = node.Classes.First().FindCommentAttachedToMember();
+            if (!string.IsNullOrEmpty(comment.Text))
+            {
+                page.Body.Components.Add(new Page.NewLine());
+                page.Body.Components.Add(new Page.RawText(comment.Text));
+            }
 
             Page.Section attributesSection = new(); page.Subsections.Add(attributesSection);
             attributesSection.Title = "Attributes";
@@ -110,7 +118,7 @@ sealed class ScriptedEventRip : Command
             }
 
             attributesSection.Body.Components.Add(new Page.NewLine());
-            if (node.Parent != null)
+            if (node.Parent != null && !node.Parent.IsAbstract)
             {
                 attributesSection.Body.Components.Add(new Page.RawText($"This action {(attributesTable.BodyRows.Any() ? "also " : "")}supports the attributes defined in: "));
                 var p = node.Parent;
@@ -144,5 +152,8 @@ sealed class ScriptedEventRip : Command
         }
         addToList(list, nodes["EventAction"]);
         File.WriteAllText("EventActionList.md", listPage.ToMarkdown());
+
+        introductionText = introductionText.Replace("[TODO: list EventActions]", listPage.ToMarkdown());
+        File.WriteAllText($"ScripedEvents.md", introductionText);
     }
 }
