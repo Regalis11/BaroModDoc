@@ -15,6 +15,7 @@
 | requiredaffliction | -                                 | Which type of afflictions the target must receive for the StatusEffect to be applied. Only valid when the type of the effect is OnDamaged. |
 | affliction         | -                                 | An affliction to give to the character or limb the effect is targeting.                                                                    |
 | aitrigger          | -                                 | Can be used to trigger a behavior change of some kind on an AI character. Only applicable for enemy characters, not humans.                |
+| triggeranimation   | -                                 | Used for temporarily triggering custom animations.                                                                            			 |
 | talenttrigger      | -                                 | Can be used by AbilityConditionStatusEffectIdentifier to react to a specific kind of status effect triggering.                             |
 | giveexperience     | -                                 | Can be used to give experience points to the character(s) the effect is targeting.                                                         |
 | giveskill          | GiveSkill                         | Can be used to give skill points to the character(s) the effect is targeting.                                                              |
