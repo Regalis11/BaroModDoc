@@ -192,19 +192,30 @@ hr {
   border-top: solid 1px #ddd;
 }
 
-table {
-  width: 100%;
-  border: 1px solid #ebebeb;
+table { 
+  width: 100%; 
+  border: 1px solid; 
+  border-color: darkslategrey; 
 }
 
 th {
   font-weight: 500;
+  border-bottom: 1px solid; 
+  border-color: inherit; 
+  padding: 1rem;
 }
 
 td {
   font-weight: 300;
   text-align: center;
   border: 1px solid #ebebeb;
+  border-bottom: 1px solid; 
+  border-color: inherit; 
+  padding: 1rem;
+}
+
+td:last-child { 
+  text-align: left; 
 }
 
 form {
