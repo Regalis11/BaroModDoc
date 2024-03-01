@@ -34,7 +34,7 @@ internal static class GlobalConfig
         if (!File.Exists(ConfigPath))
         {
             CreateConfigFile(ConfigPath);
-            throw new FileNotFoundException("No config file found, generating a new one. Fill in the required information.", ConfigPath);
+            Console.WriteLine($"No config file found, creating a new one in {ConfigPath}");
         }
 
         XElement config = XElement.Load(ConfigPath);
