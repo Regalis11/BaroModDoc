@@ -26,6 +26,11 @@ internal static class GlobalConfig
 
     static GlobalConfig()
     {
+        if (string.IsNullOrEmpty(RepoPath))
+        {
+            throw new Exception("Constants.DefaultRepoPath not defined! Please define the path to your local repository of Barotrauma here!");
+        }
+        
         if (!File.Exists(ConfigPath))
         {
             CreateConfigFile(ConfigPath);
