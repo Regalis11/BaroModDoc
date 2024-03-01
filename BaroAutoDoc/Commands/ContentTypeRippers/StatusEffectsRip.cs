@@ -46,7 +46,7 @@ sealed class StatusEffectsRip : Command
 
         Directory.SetCurrentDirectory(Path.GetDirectoryName(Assembly.GetCallingAssembly().Location)!);
 
-        foreach (var (key, cls) in contentTypeFinder.StatusEffectTypes)
+        foreach ((string key, ClassDeclarationSyntax cls) in contentTypeFinder.StatusEffectTypes)
         {
             ParsedType parser = ParsedType.CreateParser(cls, new ClassParsingOptions
             {
