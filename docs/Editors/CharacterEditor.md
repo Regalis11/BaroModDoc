@@ -203,11 +203,7 @@ If you don't want to use the default paths, you can change the paths in the char
   ...
 ```
 
-**IMPORTANT**: Don't rename the animation or ragdoll files or the game won’t be able to use them. This will hopefully be changed at some point, but for now, just use the default filenames.
-
-**IMPORTANT**: To avoid issues with the file structure, please capitalize the first letter in the character name and nothing else. The character name should match the folder name and the species name \(found in the character config file\).
-
-**TIP**: You can have multiple ragdolls and animations for a single character, but currently only the defaults are used in\-game.
+**TIP**: You can have multiple ragdolls and animations for a single character. There can be only one ragdoll active at a time. However, different animations can be temporarily enabled with the trigger animation elements used in [status effects](../Misc/StatusEffect.md).
 
 **TIP**: Everything you edit in the editor has a representation in the .xml files. If you edit the animations, the animation files will change. And if you edit the ragdoll, the ragdoll file will change.
 
