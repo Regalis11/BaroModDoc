@@ -202,12 +202,13 @@ Can be used for example on items or afflictions.
 
 #### Attributes
 
-| Attribute | Type          | Default value | Description                                                                                                                      |
-|-----------|---------------|---------------|----------------------------------------------------------------------------------------------------------------------------------|
-| type      | AnimationType |               | Has to be defined. Available options: Walk, Run, SwimSlow, SwimFast, Crouch.                                                     |
-| filename  | string        |               | File name of the animation file without the extension (.xml). The file has to be in the character's Animations folder.           |
-| path      | ContentPath   |               | Path to the file E.g. "%ModDir%/CustomRun.xml". Can be in any folder and also in a different content package than the character. |
-| priority  | float         | 0.0f          | Use for dodging cases where multiple status effects would "fight" equally over triggering the animations.                        |
+| Attribute       | Type          | Default value | Description                                                                                                                      |
+|-----------------|---------------|---------------|----------------------------------------------------------------------------------------------------------------------------------|
+| type            | AnimationType |               | Has to be defined. Available options: Walk, Run, SwimSlow, SwimFast, Crouch.                                                     |
+| filename        | string        |               | File name of the animation file without the extension (.xml). The file has to be in the character's Animations folder.           |
+| path            | ContentPath   |               | Path to the file E.g. "%ModDir%/CustomRun.xml". Can be in any folder and also in a different content package than the character. |
+| priority        | float         | 0.0f          | Use for dodging cases where multiple status effects would "fight" equally over triggering the animations.                        |
+| expectedspecies | Identifier    |               | Use for defining the species name(s) that should have the animations. Throws errors when the animations aren't found.            |
 
 
 ### GiveExperience
