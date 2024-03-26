@@ -31,7 +31,7 @@ This page describes the XML attributes and child elements for characters, which 
 - `BleedParticleMultiplier`: A multiplier to increase or decrease the number of bleeding particles to create.
 - `CanEat`: If set to `true`, this character is able to eat bodies. This only works for non-humanoids.
 - `EatingSpeed`: A multiplier for the amount of time it takes to eat a body. Defaults to 10.
-- `UsePathFinding`: If set to `true`, the AI for this character will use the waypoints defined in the level to find a path to its targets.
+- `UsePathFinding`: If set to `true`, the AI for this character will use the waypoints defined in the level to find a path to its targets. Defaults to `true`.
 - `PathFinderPriority`: A lower value decreases the intensive path finding call frequency. Set to a lower value for insignificant creatures to improve performance.
 - `HideInSonar`: If set to `true`, this character doesn't appear in the sonar.
 - `HideInThermalGoggles`: If set to `true`, this character isn't visible when using thermal goggles.
