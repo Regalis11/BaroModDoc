@@ -88,11 +88,17 @@ When you get both joint ends in place, select one of the rectangular widgets. Th
 
 **IMPORTANT**: By default, the rotations start from the bottom \(\-180\) and also end at the bottom \(180\) meaning that 0 degrees is at the middle point, i.e. pointing up. 'Spritesheet Orientation' is the setting that adds an offset to this. Enable 'Spritesheet' on the 'Show' panel to see the orientation controls.
 
-**The line should point to the local up (or forward depending on how you think about it) of the texture sheet.** For example for the vanilla human, the up is 0 and for the Crawler it's 90 degrees.
+**The line should point to the local forward direction of the texture sheet.** For example for the vanilla human, the up is 0 and for the Crawler it's 90 degrees (right).
 
-Note that if you have a limb selected, the text will be 'Sprite Orientation'. And if you now change the orientation, the text and the controls turn yellow. This means that you have edited the offset for the selected limb only. To undo this, press the 'Reset' button next to the controls.
+If you have a limb selected, the text will be 'Sprite Orientation'. And if you now change the orientation, the text and the controls turn yellow. This means that you have edited the offset for the selected limb only. To undo this, press the 'Reset' button next to the controls.
 
-It's possible, for example, to define some of the limbs from left to right and others from top to bottom. In this case be sure to set the orientations right for each of your limbs or the angle controls will be pointing at a wrong direction!
+![](img_CharacterEditor/sprite-orientations.png)
+Characters that have their head as the main limb, e.g. worms and fishes, might not require adjusting the orientations per limb-basis. But for the limbs that are not pointing at the same direction on the sheet, we need to define the direction separately.
+
+For the main limb, it might not be clear what the right orientation should be (and in most cases it might not even matter) but for the rest: **it's the direction when they point directly outwards from the main limb.**
+
+**IMPORTANT**:
+Having incorrect sprite orientations may cause issues in flipping (turning around 180 degrees), in targeting (arms), and in the widgets used for adjusting the joint angles and animations. Therefore, it's important to ensure that all the limbs have correct sprite orientations: outwards from the main limb.
 
 
 ## Ragdoll
@@ -123,7 +129,7 @@ Doing this kind of physical animations is a bit different from ordinary keyframe
 
 ![](img_CharacterEditor/AnimationSettings.png)
 
-There are currently four **animation types** for the characters that you can edit: 'Walk', 'Run', 'SwimSlow', and 'SwimFast'. Each of the animations is defined in a separate file and they have distinct parameters. Some of the parameters are common to all, some specific to the animation type. Most of these you don't have to worry about, because you can easily experiment with the widgets that are drawn over the characters.
+There are currently four main **animation types** for the characters that you can edit: 'Walk', 'Run', 'SwimSlow', and 'SwimFast' (Humanoids also have 'Crouch'). Each of the animations is defined in a separate file and they have distinct parameters. Some of the parameters are common to all, some specific to the animation type. Most of these you don't have to worry about, because you can easily experiment with the widgets that are drawn over the characters.
 
 **TIP**: Press \[e\] to switch between walking and swimming animations. Press \[Left shift\] to switch between slow and fast movement animations. There's also a drop down for selecting the animations.
 
@@ -140,7 +146,7 @@ Enable 'Character' on the 'Edit' panel to see the character config parameters.
 
 ![](img_CharacterEditor/CharacterConfig.png)
 
-The AI section is an important one and might require a bit of explaining. Note that these settings *only apply to non-humans*. The human AI is a separate beast altogether.
+The AI section is an important one and might require a bit of explaining. Note that these settings *only apply to characters using the 'enemy AI'*, which in the vanilla game means all the non-humans. The human AI is a separate beast altogether (It's not very moddable, but can be somewhat adjusted with [jobs](../ContentTypes/Jobs.md), [orders](../ContentTypes/Orders.md), and [npc sets](../ContentTypes/npcsets.md))
 
 In the AI section, you can add targets with priorities and states. These are used by the AI to make decisions about which things the character should target, which state it should use while targeting, and what \(base\) priority should be given to this target. The actual priority is determined by dynamic factors like distance from the target.
 
