@@ -21,12 +21,13 @@ This page describes the XML attributes and child elements for characters, which 
 - `NeedsAir`: If set to `true`, this character needs oxygen to survive. This also makes the character vulnerable to high pressure when swimming outside of the submarine.
 - `NeedsWater`: If set to `true`, the character slowly suffocates when it's not in water, like a fish.
 - `CanSpeak`: If set to `true`, this character is able to send messages in the chat.
+- `ShowHealthBar`: If set to `true`, there's a health bar shown above the character when it takes damage. Defaults to true.
 - `UseBossHealthBar`: If set to `true`, this character's health is shown at the top of the player's screen when they are in an active encounter.
 - `Noise`: Determines the amount of sound this character makes when it moves, affecting how far the other monsters can detect the character. Also the character's size affects this. Defaults to 100.
 - `Visibility`: Defines how visible the character is to the other monsters. Also the character size and the movement speed affects the actual range in which the monsters can detect the character. Defaults to 100.
-- `BloodDecal`: The identifier of the [decal](Decals.md) to use when this character bleeds.
-- `BleedParticleAir`: The identifier of the [particle](Particles.md) to use when bleeding in dry places.
-- `BleedParticleWater`: The identifier of the [particle](Particles.md) to use when bleeding in water.
+- `BloodDecal`: The identifier of the [decal](Decals.md) to use when this character bleeds. Defaults to `blood`.
+- `BleedParticleAir`: The identifier of the [particle](Particles.md) to use when bleeding in dry places. Defaults to `blooddrop`.
+- `BleedParticleWater`: The identifier of the [particle](Particles.md) to use when bleeding in water. Defaults to `waterblood`.
 - `BleedParticleMultiplier`: A multiplier to increase or decrease the number of bleeding particles to create.
 - `CanEat`: If set to `true`, this character is able to eat bodies. This only works for non-humanoids.
 - `EatingSpeed`: A multiplier for the amount of time it takes to eat a body. Defaults to 10.
@@ -36,15 +37,18 @@ This page describes the XML attributes and child elements for characters, which 
 - `HideInThermalGoggles`: If set to `true`, this character isn't visible when using thermal goggles.
 - `SonarDisruption`: If set to a value greater than zero, this character creates disrupting noise on the sonar when within range.
 - `DistantSonarRange`: Range at which "long distance" blips for this character will appear on the sonar (used on some of the Abyss monsters).
-- `DisableDistance`: The maximum distance (in pixels) from the closest player at which the character will stay active in the level.
+- `DisableDistance`: If the character is farther than this (in pixels) from the sub and the players, it will be disabled. The halved value is used for triggering simple physics where the ragdoll is disabled and only the main collider is updated.
 - `SoundInterval`: The time the game waits between each time it plays this character's sounds.
 - `DrawLast`: If set to `true`, this character will be drawn on top of characters that do not have this set. This currently has no effect if the character has no deformable sprites.
+- `AITurretPriority`: Tells the bots how much they should prefer targeting this character with submarine weapons. Defaults to `1`. Set `0` to tell the bots not to target this character at all. Distance to the target affects the decision making.
+- `AISlowTurretPriority`: Tells the bots how much they should prefer targeting this character with submarine weapons tagged as \"slowturret\", like railguns. The tag is arbitrary and can be added to any turrets, just like the priority. Defaults to `1`. Not used if AITurretPriority is 0. Distance to the target affects the decision making.
+- `DespawnContainer`: Identifier or tag of the item the character's items are placed inside when the character despawns.
 
 ## Child elements
 
-- `ragdolls` & `animations`: These elements are used to determine the folders the game should look to find the ragdoll and animation parameters for this character. The [character editor](../Editors/CharacterEditor.md#file-structure) generates these and it's typically not necessary to edit them directly.
+- `ragdolls` & `animations`: These elements are used to determine the folders the game should look to find the ragdoll and animation parameters for this character. The [character editor](../Editors/CharacterEditor.md#file-structure) generates these and it's typically not necessary to edit them directly. There can be multiple files in the folders but only one animation and ragdoll parameters an be active per character simultaneously.
 
-- `damageemitter`, `bloodemitter` & `gibemitter`: These elements define the particles to use when this character is damaged, bleeds, and is gibbed respectively.
+- `damageemitter`, `bloodemitter` & `gibemitter`: These elements define the particles to use when this character is damaged, bleeds, and is gibbed (e.g. severed) respectively.
   - Example:
 
 ```xml
@@ -106,7 +110,6 @@ This page describes the XML attributes and child elements for characters, which 
 </ai>
 ```
 
-[TODO: status effects require a dedicated page]
 - `StatusEffect`: Defines actions to perform given one of the following supported statuses the character can be in: `Always`, `OnSpawn`, `OnActive`, `OnEating`, `OnImpact`, `InWater`, `NotInWater`, `OnDamaged`, `OnSevered`, `OnFire`, `OnDeath`.
 
   - Example:
@@ -117,8 +120,10 @@ This page describes the XML attributes and child elements for characters, which 
 </StatusEffect>
 ```
 
-- `sound`: Defines a sound to play given the character's state. If specifier tags are defined, sounds can be constrained to only play if the character has a given tag.
-  - Example:
+See [Status effects](../Misc/StatusEffect.md) for further information.
+
+- `sound`: Defines a sound to play given the character's state. If specifier tags are defined, sounds can be constrained to only play if the character has a given tag. 
+- Example:
 
 ```xml
 <sound File="Content/Characters/Human/female_damage1.ogg" State="Damage" Range="500" Volume="1" Tags="Female" />
@@ -131,7 +136,7 @@ This page describes the XML attributes and child elements for characters, which 
 <sound File="Content/Characters/Human/male_damage4.ogg" State="Damage" Range="500" Volume="1" Tags="Male" />
 ```
 
-- `huskappendage`: Defines a husk appendage to attach to the character. The appendage can be marked to only be active when the character has a certain affliction.
+- `huskappendage`: Defines a husk appendage to attach to the character. The appendage can be marked to only be active when the character has a certain affliction. 
   - Example:
 
 ```xml
@@ -160,7 +165,7 @@ These child elements can only be used in characters that set `HasInfo` and `Spec
 
 - `Heads`: Defines the heads that can be selected when creating the character. Each head must have a unique set of tags associated to it.
 
-The sprites use the same `sourcerect` as the head limb defined in the ragdoll file. For the vanilla human that would be 128x128 pixels. `sheetindex` is then used to offset the position of the sprite in the texture sheet, i.e. the first two components in the `sourcerect` definition (x and y). As a result, you don't need to define the source rect for each head variant separately, just mark where they are in the imaginary grid.
+The sprites use the same `sourcerect` as the head limb defined in the ragdoll file. For the vanilla human that would be 128x128 pixels. `sheetindex` is then used to offset the position of the sprite in the texture sheet, i.e. the first two components in the `sourcerect` definition (x and y). As a result, you don't need to define the source rect for each head variant separately, just mark where they are in the imaginary grid. 
   - Example:
 
 ```xml
@@ -216,13 +221,23 @@ The sprites use the same `sourcerect` as the head limb defined in the ragdoll fi
 
 ### Variants
 
-The following child elements can only be used in characters that define the `VariantOf` attribute. They allow certain modifiers to be applied to the attributes inherited from their base species.
-
-- `ragdoll`: Allows a scale multiplier and impact tolerance to be defined.
-- `attack`: Allows damage, range and impact multipliers to be defined.
+- Character variants inherit by default all the definitions of the base character. Parameters can be overridden by re-defining them in the variant definition file. 
   - Example:
 
 ```xml
-<ragdoll scalemultiplier="1.375" impacttolerance="60" />
-<attack damagemultiplier="2" rangemultiplier="1.375" impactmultiplier="2" />
-```
+<Charactervariant inherit="Tigerthresher" speciesname="Tigerthresher_hatchling" speciestranslationoverride="Tigerthresher" texture="Content/Characters/Variants/Tigerthresher_hatchling/Tigerthresherhatchling.png" eatingspeed="10">
+  <health vitality="75" poisonvulnerability="2"/>
+  <ragdoll scalemultiplier="0.5"/>
+  <attack damagemultiplier="0.5" rangemultiplier="0.5" impactmultiplier="0.5"/>
+  <animations folder="Content/Characters/Variants/Tigerthresher_hatchling/Animations/" />
+  <ai combatstrength="120"/>
+  <inventory/>
+</Charactervariant>
+  ```
+
+The example above uses `Inherit` attribute, but you can also use `VariantOf` as a synonym, similarly to [items](../ContentTypes/Item.md).
+
+The following child elements can only be used in character variants. They allow certain modifiers to be applied to the attributes inherited from their base species.
+
+- `Ragdoll`: Allows a `ScaleMultiplier` and `ImpactTolerance` to be defined. You can also override the ragdoll by defining either `Folder` or `Path` here.
+- `Attack`: Allows `DamageMultiplier`, `RangeMultiplier` and `ImpactMultiplier` to be defined.
