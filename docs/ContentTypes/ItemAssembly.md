@@ -16,6 +16,7 @@
 | Description      | LocalizedString | ""                |             |
 | AllowedUpgrades  | string          | ""                |             |
 | HideInMenus      | bool            | false             |             |
+| HideInEditors    | bool            | false             |             |
 | Subcategory      | string          | ""                |             |
 | Linkable         | bool            | false             |             |
 | SpriteColor      | Color           | "1.0,1.0,1.0,1.0" |             |

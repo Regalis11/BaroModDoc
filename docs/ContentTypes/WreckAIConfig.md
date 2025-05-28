@@ -14,7 +14,7 @@
 | DefensiveAgent                      | Identifier | ""            |             |
 | OffensiveAgent                      | string     | ""            |             |
 | Brain                               | string     | ""            |             |
-| Spawner                             | string     | ""            |             |
+| Spawner                             | Identifier | ""            |             |
 | BrainRoomBackground                 | string     | ""            |             |
 | BrainRoomVerticalWall               | string     | ""            |             |
 | BrainRoomHorizontalWall             | string     | ""            |             |
