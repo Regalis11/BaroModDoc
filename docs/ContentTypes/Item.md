@@ -175,7 +175,7 @@ On top of the previously mentioned child elements, items also consist of one or 
 
 If you are familiar with Unity, you can think of items as Unity's GameObjects, and item components as the Components attached to the GameObjects.
 
-As of v1.0.9.0, the game supports the following item component types:
+As of v1.9.3.0, the game supports the following item component types:
 - [ItemComponent](../ItemComponents/ItemComponent.md)
 - [AdderComponent](../ItemComponents/AdderComponent.md)
 - [DivideComponent](../ItemComponents/DivideComponent.md)
@@ -185,8 +185,11 @@ As of v1.0.9.0, the game supports the following item component types:
 - [OrComponent](../ItemComponents/OrComponent.md)
 - [XorComponent](../ItemComponents/XorComponent.md)
 - [ButtonTerminal](../ItemComponents/ButtonTerminal.md)
+- [CircuitBox](../ItemComponents/CircuitBox.md)
 - [ColorComponent](../ItemComponents/ColorComponent.md)
 - [ConnectionPanel](../ItemComponents/ConnectionPanel.md)
+- [DemultiplexerComponent](../ItemComponents/DemultiplexerComponent.md)
+- [MultiplexerComponent](../ItemComponents/MultiplexerComponent.md)
 - [Controller](../ItemComponents/Controller.md)
 - [CustomInterface](../ItemComponents/CustomInterface.md)
 - [DelayComponent](../ItemComponents/DelayComponent.md)
@@ -228,6 +231,7 @@ As of v1.0.9.0, the game supports the following item component types:
 - [OxygenGenerator](../ItemComponents/OxygenGenerator.md)
 - [PowerContainer](../ItemComponents/PowerContainer.md)
 - [PowerTransfer](../ItemComponents/PowerTransfer.md)
+- [PowerDistributor](../ItemComponents/PowerDistributor.md)
 - [RelayComponent](../ItemComponents/RelayComponent.md)
 - [Pump](../ItemComponents/Pump.md)
 - [Reactor](../ItemComponents/Reactor.md)
