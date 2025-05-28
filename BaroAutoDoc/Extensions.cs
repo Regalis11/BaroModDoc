@@ -313,11 +313,31 @@ public static class Extensions
                     : "";
             }
 
+            string description = string.Empty;
+            try
+            {
+                description = cleanupDescription(getArgument("description"));
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine($"Failed to parse description for property {property.Identifier.Text}: {e.Message}");
+            }
+
+            string defaultValue = string.Empty;
+            try
+            {
+                defaultValue = cleanupDefaultValue(getArgument("defaultValue"));
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine($"Failed to parse default value for property {property.Identifier.Text}: {e.Message}");
+            }
+
             yield return new SerializableProperty(
                 Name: property.Identifier.Text,
                 Type: property.Type.ToString(),
-                DefaultValue: cleanupDefaultValue(getArgument("defaultValue")),
-                Description: cleanupDescription(getArgument("description")));
+                DefaultValue: defaultValue,
+                Description: description);
         }
     }
 
