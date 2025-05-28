@@ -18,13 +18,14 @@ This component also supports the attributes defined in: [Powered](Powered.md), [
 
 ## Example
 ```xml
-<Item identifier="dischargecoil" tags="dischargecoil" category="Machine,Weapon" Scale="0.5">
+<Item identifier="dischargecoil" tags="dischargecoil" category="Machine,Weapon" subcategory="subweapons" Scale="0.5">
   <ElectricalDischarger duration="0.25" outdoorsonly="true" powerconsumption="10000">
     <Attack targetimpulse="50">
       <Affliction identifier="stun" strength="8" />
+      <Affliction identifier="electricshock" strength="80" />
       <Affliction identifier="burn" strength="10" />
     </Attack>
-    <StatusEffect type="OnUse">
+    <StatusEffect type="OnUse" target="This">
       <sound file="Content/Items/Weapons/WEAPONS_electricalDischarge1.ogg" range="20000" selectionmode="random" />
       <sound file="Content/Items/Weapons/WEAPONS_electricalDischarge2.ogg" range="20000" />
       <ParticleEmitter particle="risingbubbles" anglemin="0" anglemax="360" particleamount="50" velocitymin="50" velocitymax="100" scalemin="1" scalemax="2" />

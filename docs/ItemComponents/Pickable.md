@@ -8,8 +8,13 @@ This component supports the attributes defined in: [ItemComponent](ItemComponent
 
 ## Example
 ```xml
-<Item identifier="stungundartfulgurium" category="Weapon" maxstacksize="8" interactthroughwalls="true" allowasextracargo="true" cargocontaineridentifier="metalcrate" tags="smallitem,stungunammo" Scale="0.5" impactsoundtag="impact_metal_light">
-  <Pickable slots="Any" msg="ItemMsgPickUpSelect" />
+<Item nameidentifier="defensebotspawner" identifier="placeabledefensebotspawner" descriptionidentifier="" category="Machine">
+  <Pickable slots="Any">
+    <StatusEffect type="Always" targettype="This">
+      <RemoveItem />
+      <SpawnCharacter speciesname="Defensebot" totalmaxcount="2" inheritteam="true" />
+    </StatusEffect>
+  </Pickable>
   [...]
 </Item>
 ```

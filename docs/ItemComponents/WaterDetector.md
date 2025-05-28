@@ -14,7 +14,7 @@ This component also supports the attributes defined in: [ItemComponent](ItemComp
 
 ## Example
 ```xml
-<Item identifier="waterdetector" category="Electrical" Tags="smallitem,sensor" maxstacksize="8" cargocontaineridentifier="metalcrate" scale="0.5" impactsoundtag="impact_metal_light" isshootable="true">
+<Item identifier="waterdetector" category="Electrical" Tags="smallitem,sensor" maxstacksize="32" maxstacksizecharacterinventory="8" cargocontaineridentifier="metalcrate" scale="0.5" impactsoundtag="impact_metal_light" isshootable="true" GrabWhenSelected="true">
   <WaterDetector canbeselected="true" />
   <ConnectionPanel selectkey="Action" canbeselected="true" msg="ItemMsgRewireScrewdriver" hudpriority="10">
     <GuiFrame relativesize="0.2,0.32" minsize="400,350" maxsize="480,420" anchor="Center" style="ConnectionPanel" />

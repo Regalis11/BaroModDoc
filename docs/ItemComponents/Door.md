@@ -3,25 +3,27 @@
 
 ## Attributes
 
-| Attribute                | Type      | Default value     | Description                                                                                                                                           |
-|--------------------------|-----------|-------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Stuck                    | float     | 0                 | How badly stuck the door is (in percentages). If the percentage reaches 100, the door needs to be cut open to make it usable again.                   |
-| OpeningSpeed             | float     | 3                 | How quickly the door opens.                                                                                                                           |
-| ClosingSpeed             | float     | 3                 | How quickly the door closes.                                                                                                                          |
-| ToggleCoolDown           | float     | 1                 | The door cannot be opened/closed during this time after it has been opened/closed by another character.                                               |
-| Window                   | Rectangle | "0.0,0.0,0.0,0.0" | Position and size of the window on the door. The upper left corner is 0,0. Set the width and height to 0 if you don't want the door to have a window. |
-| IsOpen                   | bool      | false             | Is the door currently open.                                                                                                                           |
-| HasIntegratedButtons     | bool      | false             | If the door has integrated buttons, it can be opened by interacting with it directly (instead of using buttons wired to it).                          |
-| Impassable               | bool      | false             | Characters and items cannot pass through impassable doors. Useful for things such as ducts that should only let water and air through.                |
-| UseBetweenOutpostModules | bool      | true              |                                                                                                                                                       |
-| BotsShouldKeepOpen       | bool      | false             | If true, bots won't try to close this door behind them.                                                                                               |
+| Attribute                | Type      | Default value     | Description                                                                                                                                                                                                                                                            |
+|--------------------------|-----------|-------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| IsStuck                  | bool      | false             |                                                                                                                                                                                                                                                                        |
+| Stuck                    | float     | 0                 | How badly stuck the door is (in percentages). If the percentage reaches 100, the door needs to be cut open to make it usable again.                                                                                                                                    |
+| OpeningSpeed             | float     | 3                 | How quickly the door opens.                                                                                                                                                                                                                                            |
+| ClosingSpeed             | float     | 3                 | How quickly the door closes.                                                                                                                                                                                                                                           |
+| ToggleCoolDown           | float     | 1                 | The door cannot be opened/closed during this time after it has been opened/closed by another character.                                                                                                                                                                |
+| Window                   | Rectangle | "0.0,0.0,0.0,0.0" | Position and size of the window on the door. The upper left corner is 0,0. Set the width and height to 0 if you don't want the door to have a window.                                                                                                                  |
+| IsOpen                   | bool      | false             | Is the door currently open.                                                                                                                                                                                                                                            |
+| HasIntegratedButtons     | bool      | false             | If the door has integrated buttons, it can be opened by interacting with it directly (instead of using buttons wired to it).                                                                                                                                           |
+| ToggleWhenClicked        | bool      | true              | If the door has integrated buttons, should clicking on it perform the default action of opening the door? Can be used in conjunction with the "activate_out" output to pass a signal to a circuit without toggling the door when someone tries to open/close the door. |
+| Impassable               | bool      | false             | Characters and items cannot pass through impassable doors. Useful for things such as ducts that should only let water and air through.                                                                                                                                 |
+| UseBetweenOutpostModules | bool      | true              |                                                                                                                                                                                                                                                                        |
+| BotsShouldKeepOpen       | bool      | false             | If true, bots won't try to close this door behind them.                                                                                                                                                                                                                |
 
 This component also supports the attributes defined in: [Pickable](Pickable.md), [ItemComponent](ItemComponent.md)
 
 
 ## Example
 ```xml
-<Item identifier="door" tags="door" scale="0.5" health="100" damagedbyrepairtools="true" damagedbymonsters="true" damagedbyexplosions="true" damagedbyprojectiles="true" damagedbymeleeweapons="true" ShowNameInHealthBar="false" explosiondamagemultiplier="0.1" allowrotatingineditor="false" allowedlinks="structure,item" ondamagedthreshold="10" linkable="true">
+<Item identifier="door" tags="door,weldable" category="misc" subcategory="doorsandhatches" scale="0.5" health="100" damagedbyrepairtools="true" damagedbymonsters="true" damagedbyexplosions="true" damagedbyprojectiles="true" damagedbymeleeweapons="true" ShowNameInHealthBar="false" explosiondamagemultiplier="0.1" allowrotatingineditor="false" allowedlinks="structure,item" ondamagedthreshold="2" linkable="true">
   <Door canbeselected="true" canbepicked="true" pickkey="Action" msg="ItemMsgForceOpenCrowbar" PickingTime="7.5" shadowscale="0.7,1">
     <Upgrade gameversion="0.22.0.0" PickingTime="7.5" />
     <RequiredItem items="crowbar" type="Equipped" />
@@ -54,6 +56,7 @@ This component also supports the attributes defined in: [Pickable](Pickable.md),
     <input name="set_state" displayname="connection.setstate" />
     <output name="state_out" displayname="connection.stateout" fallbackdisplayname="connection.signalout" />
     <output name="condition_out" displayname="connection.conditionout" />
+    <output name="activate_out" displayname="connection.activateout" />
   </ConnectionPanel>
   [...]
 </Item>

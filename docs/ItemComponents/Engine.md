@@ -14,7 +14,7 @@ This component also supports the attributes defined in: [Powered](Powered.md), [
 
 ## Example
 ```xml
-<Item identifier="shuttleengine" tags="engine" category="Machine" Scale="0.5" damagedbyexplosions="true" explosiondamagemultiplier="0.2">
+<Item identifier="shuttleengine" tags="engine" category="Machine" Scale="0.5" damagedbyexplosions="true" explosiondamagemultiplier="0.2" GrabWhenSelected="true">
   <Engine minvoltage="0.5" powerconsumption="500.0" maxforce="300" canbeselected="true" propellerpos="-200,0" msg="ItemMsgInteractSelect">
     <Upgrade gameversion="0.11.0.9" propellerpos="-200,0" />
     <GuiFrame relativesize="0.2,0.18" minsize="450,200" anchor="Center" style="ItemUI" />
@@ -31,8 +31,10 @@ This component also supports the attributes defined in: [Powered](Powered.md), [
     <StatusEffect type="OnFailure" target="Character" targetlimbs="LeftHand,RightHand" AllowWhenBroken="true">
       <Sound file="Content/Sounds/Damage/Electrocution1.ogg" range="1000" />
       <Explosion range="100.0" force="1.0" flames="false" shockwave="false" sparks="true" underwaterbubble="false" />
-      <Affliction identifier="stun" strength="4" />
+      <Affliction identifier="stun" strength="4" probability="0.5" />
+      <Affliction identifier="electricshock" strength="60" />
       <Affliction identifier="burn" strength="5" />
+      <ParticleEmitter particle="ElectricShock" DistanceMin="10" DistanceMax="25" ParticleAmount="5" ScaleMin="0.1" ScaleMax="0.12" />
     </StatusEffect>
     <RequiredItem items="screwdriver" type="Equipped" />
     <input name="power_in" displayname="connection.powerin" />
@@ -43,9 +45,9 @@ This component also supports the attributes defined in: [Powered](Powered.md), [
     <GuiFrame relativesize="0.2,0.16" minsize="400,200" maxsize="480,280" anchor="Center" relativeoffset="0.0,0.27" style="ItemUI" />
     <RequiredSkill identifier="mechanical" level="55" />
     <RequiredItem items="wrench" type="equipped" />
-    <ParticleEmitter particle="damagebubbles" particleburstamount="2" particleburstinterval="2.0" particlespersecond="2" scalemin="0.5" scalemax="1.5" anglemin="0" anglemax="359" velocitymin="-10" velocitymax="10" mincondition="0.0" maxcondition="50.0" />
-    <ParticleEmitter particle="DarkSmoke" particleburstamount="3" particleburstinterval="0.5" particlespersecond="8" scalemin="1.8" scalemax="2.5" anglemin="0" anglemax="359" velocitymin="-50" velocitymax="50" mincondition="0.0" maxcondition="50.0" />
-    <ParticleEmitter particle="heavysmoke" particleburstinterval="0.25" particlespersecond="2" scalemin="2.5" scalemax="5.0" mincondition="0.0" maxcondition="15.0" />
+    <ParticleEmitter particle="damagebubbles" particlespersecond="2" scalemin="0.5" scalemax="1.5" anglemax="360" distancemax="100" velocitymin="-10" velocitymax="10" mincondition="0.0" maxcondition="50.0" />
+    <ParticleEmitter particle="DarkSmoke" particlespersecond="8" scalemin="1.8" scalemax="2.5" anglemax="360" distancemax="100" velocitymin="-50" velocitymax="50" mincondition="0.0" maxcondition="50.0" />
+    <ParticleEmitter particle="heavysmoke" particlespersecond="2" scalemin="1.0" scalemax="2.5" anglemax="360" distancemax="100" maxcondition="15.0" />
     <StatusEffect type="OnFailure" target="Character" targetlimbs="LeftHand,RightHand" AllowWhenBroken="true">
       <Sound file="Content/Items/MechanicalRepairFail.ogg" range="1000" />
       <Affliction identifier="lacerations" strength="5" />

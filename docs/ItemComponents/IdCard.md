@@ -10,6 +10,7 @@
 | OwnerTags                | string            | ""            |             |
 | Description              | string            | ""            |             |
 | OwnerName                | string            | ""            |             |
+| OwnerNameLocalized       | string            | ""            |             |
 | OwnerJobId               | Identifier        | ""            |             |
 | OwnerHairIndex           | int               | -1            |             |
 | OwnerBeardIndex          | int               | -1            |             |

@@ -3,11 +3,11 @@
 
 ## Attributes
 
-| Attribute    | Type   | Default value | Description                                              |
-|--------------|--------|---------------|----------------------------------------------------------|
-| Target       | string | ""            | Tag or identifier of the item that should be controlled. |
-| OnlyInOwnSub | bool   | false         |                                                          |
-| Range        | float  | 10000         |                                                          |
+| Attribute    | Type       | Default value | Description                                              |
+|--------------|------------|---------------|----------------------------------------------------------|
+| Target       | Identifier | ""            | Tag or identifier of the item that should be controlled. |
+| OnlyInOwnSub | bool       | false         |                                                          |
+| Range        | float      | 10000         |                                                          |
 
 This component also supports the attributes defined in: [ItemComponent](ItemComponent.md)
 

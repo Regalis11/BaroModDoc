@@ -27,11 +27,13 @@ This component also supports the attributes defined in: [ItemComponent](ItemComp
     <StatusEffect type="OnFailure" target="Character" targetlimbs="LeftHand,RightHand" AllowWhenBroken="true">
       <Sound file="Content/Sounds/Damage/Electrocution1.ogg" range="1000" />
       <Explosion range="100.0" stun="0" force="1.0" flames="false" shockwave="false" sparks="true" underwaterbubble="false" />
-      <Affliction identifier="stun" strength="4" />
+      <Affliction identifier="stun" strength="4" probability="0.5" />
+      <Affliction identifier="electricshock" strength="60" />
       <Affliction identifier="burn" strength="5" />
+      <ParticleEmitter particle="ElectricShock" DistanceMin="10" DistanceMax="25" ParticleAmount="5" ScaleMin="0.1" ScaleMax="0.12" />
     </StatusEffect>
     <RequiredItem items="screwdriver" type="Equipped" />
-    <ParticleEmitter particle="spark" particleburstamount="5" particleburstinterval="1.05" scalemin="0.5" scalemax="1" mincondition="0.0" maxcondition="15.0" />
+    <ParticleEmitter particle="spark" particleamount="5" emitinterval="1.05" anglemax="360" distancemax="20" scalemin="0.5" scalemax="1" mincondition="0.0" maxcondition="15.0" />
     <ParticleEmitter particle="fleshsmoke" particlespersecond="2" scalemin="1" scalemax="2" mincondition="0.0" maxcondition="50.0" />
     <input name="power_in" displayname="connection.powerin" />
   </ConnectionPanel>

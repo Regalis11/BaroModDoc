@@ -24,13 +24,14 @@ This component also supports the attributes defined in: [Powered](Powered.md), [
 
 ## Example
 ```xml
-<Item identifier="shuttlebattery" tags="battery,batterycellrecharger" category="Electrical,Machine" Scale="0.5" damagedbyexplosions="false">
+<Item identifier="shuttlebattery" tags="battery,batterycellrecharger" category="Electrical,Machine" Scale="0.5" damagedbyexplosions="false" GrabWhenSelected="true">
   <PowerContainer capacity="2000.0" maxrechargespeed="500.0" maxoutput="1000.0" canbeselected="true" indicatorposition="21,12" indicatorsize="54,35" ishorizontal="true" msg="ItemMsgInteractSelect">
     <GuiFrame relativesize="0.25,0.23" minsize="350,200" anchor="Center" style="ItemUI" />
     <!--minsize="350,250" maxsize="420,300"-->
-    <StatusEffect type="OnActive" targettype="Contained" targets="loadable" Condition="2.0">
+    <StatusEffect type="OnActive" targettype="Contained" targets="loadable" Condition="2.0" comparison="and">
       <!-- the statuseffect targets the contained item (a battery cell that's being charged), but the conditional targets the container (this battery) -->
       <Conditional ChargePercentage="gt 0.01" targetcontainer="true" targetitemcomponent="PowerContainer" />
+      <Conditional OutputDisabled="false" targetcontainer="true" targetitemcomponent="PowerContainer" />
     </StatusEffect>
   </PowerContainer>
   <ConnectionPanel selectkey="Action" canbeselected="true" msg="ItemMsgRewireScrewdriver" hudpriority="10">
@@ -39,8 +40,10 @@ This component also supports the attributes defined in: [Powered](Powered.md), [
     <StatusEffect type="OnFailure" target="Character" targetlimbs="LeftHand,RightHand" AllowWhenBroken="true">
       <Sound file="Content/Sounds/Damage/Electrocution1.ogg" range="1000" />
       <Explosion range="100.0" force="1.0" flames="false" shockwave="false" sparks="true" underwaterbubble="false" />
-      <Affliction identifier="stun" strength="4" />
+      <Affliction identifier="stun" strength="4" probability="0.5" />
+      <Affliction identifier="electricshock" strength="60" />
       <Affliction identifier="burn" strength="5" />
+      <ParticleEmitter particle="ElectricShock" DistanceMin="10" DistanceMax="25" ParticleAmount="5" ScaleMin="0.1" ScaleMax="0.12" />
     </StatusEffect>
     <RequiredItem items="screwdriver" type="Equipped" />
     <output name="power_out" displayname="connection.powerout" />
@@ -52,6 +55,7 @@ This component also supports the attributes defined in: [Powered](Powered.md), [
     <output name="condition_out" displayname="connection.conditionout" />
     <output name="load_value_out" displayname="connection.loadvalueout" />
     <output name="power_value_out" displayname="connection.powervalueout" />
+    <input name="disable_output" displayname="connection.disableoutput" />
   </ConnectionPanel>
   [...]
 </Item>

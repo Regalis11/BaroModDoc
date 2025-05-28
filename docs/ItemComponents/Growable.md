@@ -3,27 +3,29 @@
 
 ## Attributes
 
-| Attribute           | Type    | Default value        | Description                                                                   |
-|---------------------|---------|----------------------|-------------------------------------------------------------------------------|
-| GrowthSpeed         | float   | 1                    | How fast the plant grows.                                                     |
-| MaxHealth           | float   | 100                  | How long the plant can go without watering.                                   |
-| FloodTolerance      | float   | 1                    | How much damage the plant takes while in water.                               |
-| Hardiness           | float   | 1                    | How much damage the plant takes while growing.                                |
-| SeedRate            | float   | 0.01                 | How often a seed is produced.                                                 |
-| ProductRate         | float   | 0.01                 | How often a product item is produced.                                         |
-| MutationProbability | float   | 0.5                  | Probability of an attribute being randomly modified in a newly produced seed. |
-| FlowerTint          | Color   | "1.0,1.0,1.0,1.0"    | Color of the flowers.                                                         |
-| FlowerQuantity      | int     | 3                    | Number of flowers drawn when fully grown                                      |
-| BaseFlowerScale     | float   | 0.25                 | Size of the flower sprites.                                                   |
-| BaseLeafScale       | float   | 0.5                  | Size of the leaf sprites.                                                     |
-| LeafTint            | Color   | "1.0,1.0,1.0,1.0"    | Color of the leaves.                                                          |
-| LeafProbability     | float   | 0.33                 | Chance of a leaf appearing behind a branch.                                   |
-| VineTint            | Color   | "1.0,1.0,1.0,1.0"    | Color of the vines.                                                           |
-| MaximumVines        | int     | 32                   | Maximum number of vine tiles the plant can grow.                              |
-| VineScale           | float   | 0.25                 | Size of the vine sprites.                                                     |
-| DeadTint            | Color   | "0.26,0.27,0.29,1.0" | Tint of a dead plant.                                                         |
-| GrowthWeights       | Vector4 | "1,1,1,1"            | Probability for the plant to grow in a direction.                             |
-| FireVulnerability   | float   | 0                    | How much damage is taken from fires.                                          |
+| Attribute                                      | Type    | Default value        | Description                                                                                                                                                                                                                           |
+|------------------------------------------------|---------|----------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| GrowthSpeed                                    | float   | 1                    | How fast the plant grows. Value of 1 means a vine attempts to grow every 10 seconds while 2 and 0.5 mean every 5 and 20 seconds respectively.                                                                                         |
+| MaxWater                                       | float   | 100                  | How much water the plant can hold. Affects how long the plant can survive without water.                                                                                                                                              |
+| ExtraWaterUsedPerSecondWhileFlooded            | float   | 1                    | How much extra water the plant uses per second while it is submerged in a flooded hull.                                                                                                                                               |
+| WaterUsedPerSecond                             | float   | 1                    | How much water the plant consumes passively per second.                                                                                                                                                                               |
+| SeedSpawnChance                                | float   | 0.01                 | Percentage chance of a seed item being produced on growth ticks (every 10 seconds without a multiplier). 0.01 means 1% chance. Not used in vanilla plants.                                                                            |
+| ProductSpawnChance                             | float   | 0.01                 | How often a product item is produced on growth ticks (every 10 seconds without a multiplier). 0.01 means 1% chance.                                                                                                                   |
+| MutationProbability                            | float   | 0.5                  | Completely unused property that was added on the first design pass but due to the first pass being too complex was never used and now it is used by mods so it cannot be removed.                                                     |
+| FlowerTint                                     | Color   | "1.0,1.0,1.0,1.0"    | Color of the flowers.                                                                                                                                                                                                                 |
+| FlowerQuantity                                 | int     | 3                    | Number of flowers drawn.                                                                                                                                                                                                              |
+| BaseFlowerScale                                | float   | 0.25                 | Size of the flower sprites.                                                                                                                                                                                                           |
+| BaseLeafScale                                  | float   | 0.5                  | Size of the leaf sprites.                                                                                                                                                                                                             |
+| LeafTint                                       | Color   | "1.0,1.0,1.0,1.0"    | Color of the leaves.                                                                                                                                                                                                                  |
+| LeafProbability                                | float   | 0.33                 | Chance of a leaf appearing behind a branch.                                                                                                                                                                                           |
+| VineTint                                       | Color   | "1.0,1.0,1.0,1.0"    | Color of the vines.                                                                                                                                                                                                                   |
+| MaximumVines                                   | int     | 32                   | Maximum number of vine tiles the plant can grow.                                                                                                                                                                                      |
+| VineScale                                      | float   | 0.25                 | Size of the vine sprites.                                                                                                                                                                                                             |
+| DeadTint                                       | Color   | "0.26,0.27,0.29,1.0" | Tint of a dead plant.                                                                                                                                                                                                                 |
+| GrowthWeights                                  | Vector4 | "1,1,1,1"            | Probability for the plant to grow in a direction.                                                                                                                                                                                     |
+| FireVulnerability                              | float   | 0                    | How much water is lost due to fires every 10 seconds.                                                                                                                                                                                 |
+| LinearProductAndSeedMultiplierBeforeFullyGrown | Vector2 | "0.0, 0.0"           | Modifier to the percentage of product and seed items produced before the plant is fully grown based on how many vines have been grown. 0 would mean no products or seeds are produced while 0.5 would mean half of the normal amount. |
+| Health                                         | float   | 100                  |                                                                                                                                                                                                                                       |
 
 This component also supports the attributes defined in: [ItemComponent](ItemComponent.md)
 
@@ -41,8 +43,8 @@ This component also supports the attributes defined in: [ItemComponent](ItemComp
       <FlowerSprite texture="Content/Items/Gardening/GrowablePlants_Temp.png" sourcerect="640,768,128,128" />
       <VineSprite type="Stem" sourcerect="640,640,128,128" />
       <VineSprite type="CrossJunction" sourcerect="512,640,128,128" />
-      <VineSprite type="VerticalLane" sourcerect="512,512,128,128" />
-      <VineSprite type="HorizontalLane" sourcerect="640,512,128,128" />
+      <VineSprite type="HorizontalLine" sourcerect="512,512,128,128" />
+      <VineSprite type="VerticalLine" sourcerect="640,512,128,128" />
       <VineSprite type="TurnTopRight" sourcerect="0,512,128,128" />
       <VineSprite type="TurnTopLeft" sourcerect="384,512,128,128" />
       <VineSprite type="TurnBottomLeft" sourcerect="256,512,128,128" />

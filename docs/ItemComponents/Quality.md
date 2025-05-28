@@ -17,7 +17,7 @@ This component also supports the attributes defined in: [ItemComponent](ItemComp
     <QualityStat stattype="StrikingPowerMultiplier" value="0.1" />
   </Quality>
   <MeleeWeapon slots="Any,RightHand+LeftHand" aimpos="50,0" handle1="-22,2" handle2="-32,5" holdangle="30" aimangle="10" reload="1.2" range="155" combatPriority="40" msg="ItemMsgPickUpSelect">
-    <Attack targetimpulse="5" severlimbsprobability="7.5" itemdamage="30" structuredamage="25">
+    <Attack targetimpulse="5" severlimbsprobability="7.5" itemdamage="30" structuredamage="15">
       <Affliction identifier="lacerations" strength="36" />
       <Affliction identifier="bleeding" strength="10" />
       <Affliction identifier="stun" strength="0.5" />

@@ -14,7 +14,7 @@ This component also supports the attributes defined in: [ItemComponent](ItemComp
 
 ## Example
 ```xml
-<Item identifier="paralyxis" category="Material" maxstacksize="8" Tags="smallitem,ore" scale="0.5" cargocontaineridentifier="metalcrate" canbepicked="true">
+<Item identifier="paralyxis" category="Material" maxstacksize="32" maxstacksizecharacterinventory="8" Tags="smallitem,ore" scale="0.5" cargocontaineridentifier="metalcrate" canbepicked="true">
   <LevelResource deattachduration="4" randomoffsetfromwall="20">
     <Commonness commonness="0" cavecommonness="0" abysscommonness="0" />
     <Commonness commonness="0.1" cavecommonness="0" abysscommonness="25" leveltype="europanridge" />

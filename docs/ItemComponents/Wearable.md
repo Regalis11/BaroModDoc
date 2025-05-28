@@ -12,7 +12,7 @@ This component also supports the attributes defined in: [Pickable](Pickable.md),
 
 ## Example
 ```xml
-<Item identifier="toolbelt" category="Equipment" tags="mediumitem,mobilecontainer,tool" cargocontaineridentifier="metalcrate" showcontentsintooltip="true" Scale="0.5" fireproof="true" impactsoundtag="impact_soft">
+<Item identifier="toolbelt" category="Equipment" tags="mediumitem,mobilecontainer,tool" showcontentsintooltip="true" Scale="0.5" fireproof="true" impactsoundtag="impact_soft">
   <Wearable slots="Bag" msg="ItemMsgEquipSelect" canbeselected="false" canbepicked="true" pickkey="Select">
     <sprite name="ToolBelt" texture="Content/Items/Tools/tools.png" sourcerect="256,102,112,54" limb="Torso" inherittexturescale="true" origin="0.5,-0.2" />
   </Wearable>

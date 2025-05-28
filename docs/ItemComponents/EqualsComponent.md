@@ -7,7 +7,7 @@
 |-----------------|--------|---------------|----------------------------------------------------------------------------------------------------------------------|
 | MaxOutputLength | int    | 200           | The maximum length of the output strings. Warning: Large values can lead to large memory usage or networking issues. |
 | Output          | string | "1"           | The signal sent when the condition is met.                                                                           |
-| FalseOutput     | string | ""            | The signal sent when the condition is met (if empty, no signal is sent).                                             |
+| FalseOutput     | string | "0"           | The signal sent when the condition is met (if empty, no signal is sent).                                             |
 | TimeFrame       | float  | 0             | The maximum amount of time between the received signals. If set to 0, the signals must be received at the same time. |
 
 This component also supports the attributes defined in: [ItemComponent](ItemComponent.md)
@@ -15,7 +15,7 @@ This component also supports the attributes defined in: [ItemComponent](ItemComp
 
 ## Example
 ```xml
-<Item identifier="equalscomponent" category="Electrical" Tags="smallitem,logic" maxstacksize="8" linkable="false" cargocontaineridentifier="metalcrate" scale="0.5" impactsoundtag="impact_metal_light" isshootable="true">
+<Item identifier="equalscomponent" category="Electrical" Tags="smallitem,logic,circuitboxcomponent" maxstacksize="32" maxstacksizecharacterinventory="8" linkable="false" cargocontaineridentifier="metalcrate" scale="0.5" impactsoundtag="impact_metal_light" isshootable="true" GrabWhenSelected="true" signalcomponentcolor="#694341">
   <EqualsComponent canbeselected="true" />
   <ConnectionPanel selectkey="Action" canbeselected="true" msg="ItemMsgRewireScrewdriver" hudpriority="10">
     <GuiFrame relativesize="0.2,0.32" minsize="400,350" maxsize="480,420" anchor="Center" style="ConnectionPanel" />

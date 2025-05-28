@@ -18,7 +18,7 @@ This component also supports the attributes defined in: [ItemComponent](ItemComp
 
 ## Example
 ```xml
-<Item identifier="textdisplay" category="Electrical" scale="0.5" Tags="mediumitem,logic" impactsoundtag="impact_metal_light" cargocontaineridentifier="metalcrate" isshootable="true">
+<Item identifier="textdisplay" category="Electrical" scale="0.5" Tags="mediumitem,logic" impactsoundtag="impact_metal_light" cargocontaineridentifier="metalcrate" isshootable="true" AllowRotatingInEditor="false">
   <ItemLabel scrollable="true" padding="10,5,10,12" textcolor="1,1,1,1">
     <Upgrade gameversion="0.12.0.0" padding="10,5,10,12" />
   </ItemLabel>

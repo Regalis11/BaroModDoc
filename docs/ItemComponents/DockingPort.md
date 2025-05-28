@@ -17,7 +17,7 @@ This component also supports the attributes defined in: [ItemComponent](ItemComp
 
 ## Example
 ```xml
-<Item identifier="dockingport" tags="dock" linkable="true" indestructible="true" scale="0.5" requirecursorinsidetrigger="true" requirebodyinsidetrigger="false">
+<Item identifier="dockingport" tags="dock" category="misc" subcategory="doorsandhatches" linkable="true" indestructible="true" scale="0.5" requirecursorinsidetrigger="true" requirebodyinsidetrigger="false">
   <DockingPort IsHorizontal="true" DistanceTolerance="200,64" DockedDistance="172">
     <StatusEffect type="OnSecondaryUse" target="This">
       <sound file="Content/Items/Door/DockingPort2.ogg" type="OnSecondaryUse" range="15000.0" />
@@ -39,6 +39,8 @@ This component also supports the attributes defined in: [ItemComponent](ItemComp
     <output name="power" displayname="connection.power" maxwires="6" maxplayerconnectablewires="5" />
     <output name="state_out" displayname="connection.stateout" fallbackdisplayname="connection.signalout" />
     <output name="proximity_sensor" displayname="connection.dockingproximitysensor" fallbackdisplayname="label.readytodock" />
+    <output name="on_dock" displayname="connection.ondock" />
+    <output name="on_undock" displayname="connection.onundock" />
   </ConnectionPanel>
   [...]
 </Item>

@@ -64,7 +64,7 @@ This component also supports the attributes defined in: [Powered](Powered.md), [
     <StatusEffect type="OnBroken" target="This" FissionRate="0.0" disabledeltatime="true">
       <sound file="Content/Items/Weapons/ExplosionLarge2.ogg" type="OnUse" volume="10" selectionmode="Random" range="50000" dontmuffle="true" />
       <sound file="Content/Items/Weapons/ExplosionDebris5.ogg" range="8000" />
-      <Explosion range="750" ballastfloradamage="1000" structuredamage="300" itemdamage="500" force="25.0" camerashake="0" flashrange="10000" flashduration="5.0" screencolor="255,255,255,255" screencolorrange="5000" screencolorduration="3.0" decal="explosion" decalsize="1">
+      <Explosion range="750" ballastfloradamage="1000" structuredamage="300" itemdamage="500" force="25.0" camerashake="0" debris="true" flashrange="10000" flashduration="5.0" screencolor="255,255,255,255" screencolorrange="5000" screencolorduration="3.0" decal="explosion" decalsize="1">
         <Affliction identifier="explosiondamage" strength="500" />
         <Affliction identifier="burn" strength="500" />
         <Affliction identifier="stun" strength="15" />
@@ -83,8 +83,10 @@ This component also supports the attributes defined in: [Powered](Powered.md), [
     <StatusEffect type="OnFailure" target="Character" targetlimbs="LeftHand,RightHand" AllowWhenBroken="true">
       <Sound file="Content/Sounds/Damage/Electrocution1.ogg" range="1000" />
       <Explosion range="100.0" force="1.0" flames="false" shockwave="false" sparks="true" underwaterbubble="false" />
-      <Affliction identifier="stun" strength="4" />
+      <Affliction identifier="stun" strength="4" probability="0.5" />
+      <Affliction identifier="electricshock" strength="60" />
       <Affliction identifier="burn" strength="5" />
+      <ParticleEmitter particle="ElectricShock" DistanceMin="10" DistanceMax="25" ParticleAmount="5" ScaleMin="0.1" ScaleMax="0.12" />
     </StatusEffect>
     <RequiredItem items="screwdriver" type="Equipped" />
     <output name="power_out" displayname="connection.powerout" maxwires="1" />
@@ -94,7 +96,7 @@ This component also supports the attributes defined in: [Powered](Powered.md), [
     <input name="set_turbineoutput" displayname="connection.setturbineoutput" />
     <output name="meltdown_warning" displayname="connection.meltdownwarning">
       <StatusEffect type="OnUse" target="This">
-        <ParticleEmitter particle="smoke" particleburstamount="3" particleburstinterval="0.5" particlespersecond="2" scalemin="1" scalemax="2.5" anglemin="0" anglemax="359" velocitymin="-50" velocitymax="50" mincondition="15.0" maxcondition="50.0" />
+        <ParticleEmitter particle="smoke" particlespersecond="2" scalemin="1" scalemax="2.5" anglemax="360" velocitymin="-50" velocitymax="50" mincondition="15.0" maxcondition="50.0" />
         <ParticleEmitter particle="swirlysmoke" particlespersecond="3" scalemin="1" scalemax="2" anglemin="0" anglemax="360" velocitymin="0" velocitymax="10" />
         <sound file="Content/Items/Reactor/ReactorOverheatAlarm.ogg" type="OnUse" range="10000.0" loop="true" volume="1.0" />
       </StatusEffect>
@@ -106,6 +108,10 @@ This component also supports the attributes defined in: [Powered](Powered.md), [
     <output name="fuel_percentage_left" displayname="connection.fuelpercentageout" />
   </ConnectionPanel>
   <ItemContainer capacity="4" maxstacksize="1" canbeselected="true" hudpos="0.5,0.15" slotsperrow="1" uilabel="FuelRods">
+    <SlotIcon slotindex="0" texture="Content/UI/StatusMonitorUI.png" sourcerect="192,448,64,64" origin="0.5,0.5" />
+    <SlotIcon slotindex="1" texture="Content/UI/StatusMonitorUI.png" sourcerect="192,448,64,64" origin="0.5,0.5" />
+    <SlotIcon slotindex="2" texture="Content/UI/StatusMonitorUI.png" sourcerect="192,448,64,64" origin="0.5,0.5" />
+    <SlotIcon slotindex="3" texture="Content/UI/StatusMonitorUI.png" sourcerect="192,448,64,64" origin="0.5,0.5" />
     <RequiredItem items="idcard" type="Picked" msg="ItemMsgUnauthorizedAccess" ignoreineditor="true" />
     <Containable items="fuelrod">
       <StatusEffect type="OnContaining" target="This" AvailableFuel="80.0" disabledeltatime="true" />
@@ -118,6 +124,9 @@ This component also supports the attributes defined in: [Powered](Powered.md), [
     </Containable>
     <Containable items="fulguriumfuelrodvolatile">
       <StatusEffect type="OnContaining" target="This" AvailableFuel="150.0" disabledeltatime="true" />
+    </Containable>
+    <Containable items="huskfigurine">
+      <StatusEffect type="OnContaining" target="This" AvailableFuel="0" disabledeltatime="true" />
     </Containable>
   </ItemContainer>
   [...]

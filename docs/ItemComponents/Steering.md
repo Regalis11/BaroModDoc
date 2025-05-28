@@ -5,15 +5,19 @@
 
 | Attribute              | Type  | Default value | Description                                                                                                                                                                                               |
 |------------------------|-------|---------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| AutoPilot              | bool  | false         | Is autopilot currently on or not?                                                                                                                                                                         |
 | NeutralBallastLevel    | float | 0.5           | How full the ballast tanks should be when the submarine is not being steered upwards/downwards. Can be used to compensate if the ballast tanks are too large/small relative to the size of the submarine. |
 | DockingAssistThreshold | float | 1000          | How close the docking port has to be to another docking port for the docking mode to become active.                                                                                                       |
+| LevelStartSelected     | bool  | false         |                                                                                                                                                                                                           |
+| LevelEndSelected       | bool  | false         |                                                                                                                                                                                                           |
+| MaintainPos            | bool  | false         |                                                                                                                                                                                                           |
 
 This component also supports the attributes defined in: [Powered](Powered.md), [ItemComponent](ItemComponent.md)
 
 
 ## Example
 ```xml
-<Item identifier="shuttlenavterminal" tags="command,navterminal,secondarynavterminal" linkable="true" allowedlinks="statusmonitor" category="Machine,Electrical" scale="0.5" damagedbyexplosions="true" explosiondamagemultiplier="0.2">
+<Item identifier="shuttlenavterminal" tags="command,navterminal,secondarynavterminal" linkable="true" allowedlinks="statusmonitor" category="Machine,Electrical" scale="0.5" damagedbyexplosions="true" explosiondamagemultiplier="0.2" GrabWhenSelected="true">
   <Steering minvoltage="0.5" canbeselected="true" powerconsumption="10" linkuitocomponent="Sonar" msg="ItemMsgInteractSelect" allowuioverlap="true" hudlayer="-1">
     <GuiFrame relativesize="0.55,0.59" anchor="Center" style="OuterGlow" color="0,0,0,0.8" relativeoffset="0.1,-0.05" draggable="false" />
     <StatusEffect type="InWater" target="This" condition="-0.5" />
@@ -26,7 +30,7 @@ This component also supports the attributes defined in: [Powered](Powered.md), [
     <GuiFrame relativesize="0.55,0.59" anchor="Center" relativeoffset="0.1,-0.05" draggable="false" />
     <sound file="Content/Items/Command/SonarPing.ogg" type="OnUse" range="1000.0" />
     <sound file="Content/Items/Command/SonarPing2.ogg" type="OnUse" range="1000.0" />
-    <StatusEffect type="OnUse">
+    <StatusEffect type="OnUse" target="This">
       <sound file="Content/Items/Command/SonarPingFar.ogg" type="OnUse" range="6000.0" volume="0.8" />
       <sound file="Content/Items/Command/SonarPingFar2.ogg" type="OnUse" range="6000.0" volume="0.8" />
     </StatusEffect>
@@ -54,8 +58,10 @@ This component also supports the attributes defined in: [Powered](Powered.md), [
     <StatusEffect type="OnFailure" target="Character" targetlimbs="LeftHand,RightHand" AllowWhenBroken="true">
       <Sound file="Content/Sounds/Damage/Electrocution1.ogg" range="1000" />
       <Explosion range="100.0" force="1.0" flames="false" shockwave="false" sparks="true" underwaterbubble="false" />
-      <Affliction identifier="stun" strength="4" />
+      <Affliction identifier="stun" strength="4" probability="0.5" />
+      <Affliction identifier="electricshock" strength="60" />
       <Affliction identifier="burn" strength="5" />
+      <ParticleEmitter particle="ElectricShock" DistanceMin="10" DistanceMax="25" ParticleAmount="5" ScaleMin="0.1" ScaleMax="0.12" />
     </StatusEffect>
     <requireditem items="screwdriver" type="Equipped" />
     <input name="power_in" displayname="connection.powerin" />

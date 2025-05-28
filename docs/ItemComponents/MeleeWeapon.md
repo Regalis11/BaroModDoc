@@ -18,21 +18,26 @@ This component also supports the attributes defined in: [Holdable](Holdable.md),
 
 ## Example
 ```xml
-<Item identifier="toolbox" category="Equipment" tags="mediumitem,mobilecontainer,tool" cargocontaineridentifier="" showcontentsintooltip="true" Scale="0.5" fireproof="true" impactsoundtag="impact_metal_heavy" RequireAimToUse="True">
-  <MeleeWeapon slots="RightHand,LeftHand" controlpose="true" aimpos="45,10" handle1="0,18" holdangle="90" reload="1" range="50" combatpriority="6" msg="ItemMsgPickUpSelect">
-    <Attack structuredamage="0" itemdamage="1" targetimpulse="2">
-      <Affliction identifier="blunttrauma" strength="2" />
-      <Affliction identifier="stun" strength="0.6" />
+<Item identifier="spinelingspikeloot" category="Weapon" tags="smallitem" cargocontaineridentifier="metalcrate" impactsoundtag="impact_metal_light" scale="0.5" allowasextracargo="true" RequireAimToUse="True" nameidentifier="spinelingspike" translationidentifier="spinelingspike">
+  <MeleeWeapon slots="Any,RightHand,LeftHand" aimpos="30,5" handle1="-20,0" holdangle="65" reload="1.0" range="50" combatpriority="10" msg="ItemMsgPickUpSelect">
+    <Attack targetimpulse="2" severlimbsprobability="0.1" itemdamage="2" structuredamage="2" structuresoundtype="StructureSlash">
+      <Affliction identifier="lacerations" strength="5" />
+      <Affliction identifier="bleeding" strength="10" />
+      <Affliction identifier="stun" strength="0.2" />
       <StatusEffect type="OnUse" target="UseTarget">
         <Conditional entitytype="eq Character" />
-        <Sound file="Content/Items/Weapons/Smack1.ogg" selectionmode="random" range="500" />
-        <Sound file="Content/Items/Weapons/Smack2.ogg" range="500" />
+        <Sound file="Content/Sounds/Damage/LimbSlash1.ogg" selectionmode="random" range="500" />
+        <Sound file="Content/Sounds/Damage/LimbSlash2.ogg" range="500" />
+        <Sound file="Content/Sounds/Damage/LimbSlash3.ogg" range="500" />
+        <Sound file="Content/Sounds/Damage/LimbSlash4.ogg" range="500" />
+        <Sound file="Content/Sounds/Damage/LimbSlash5.ogg" range="500" />
+        <Sound file="Content/Sounds/Damage/LimbSlash6.ogg" range="500" />
       </StatusEffect>
     </Attack>
   </MeleeWeapon>
-  <ItemContainer capacity="12" keepopenwhenequipped="true" movableframe="true">
-    <Containable items="smallitem" />
-  </ItemContainer>
+  <LightComponent range="200" castshadows="False" drawbehindsubs="False" ison="True" blinkfrequency="0" lightcolor="200,200,255,20" isactive="True" minvoltage="0" powerconsumption="0" vulnerabletoemp="False" pickingtime="0" canbepicked="False" allowingameediting="False" msg="">
+    <Sprite texture="Content/Characters/Spineling/Spineling.png" sourcerect="0,230,180,23" origin="0.5,0.6" alpha="0.5" />
+  </LightComponent>
   [...]
 </Item>
 ```

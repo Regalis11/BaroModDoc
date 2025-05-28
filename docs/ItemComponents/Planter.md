@@ -13,13 +13,13 @@ This component also supports the attributes defined in: [Pickable](Pickable.md),
 
 ## Example
 ```xml
-<Item identifier="smallplanter" category="Misc" Tags="planter,mediumitem" scale="0.5" isshootable="true">
+<Item identifier="smallplanter" category="Misc" Tags="planter,mediumitem,dontsellitems" scale="0.5" isshootable="true">
   <Planter selectkey="Select" canbepicked="true" pickingtime="5.0" msg="ItemMsgPlantSeed">
     <PlantSlot slot="0" offset="0,32" size="0.25" />
     <SuitableFertilizer items="fertilizer" />
     <SuitableSeed items="seed" />
   </Planter>
-  <Holdable selectkey="Select" pickkey="Use" slots="Any,RightHand,LeftHand" msg="ItemMsgDetach" PickingTime="5.0" aimpos="85,-10" handle1="0,0" attachable="true" aimable="true" />
+  <Holdable selectkey="Select" pickkey="Use" slots="Any,RightHand,LeftHand" msg="ItemMsgDetach" MsgWhenDropped="ItemMsgPickupSelect" PickingTime="5.0" aimpos="85,-10" handle1="0,0" attachable="true" aimable="true" />
   <ItemContainer capacity="1" maxstacksize="1" hideitems="true" drawinventory="false" uilabel="" allowuioverlap="true" allowdraganddrop="false" showcontainedstateindicator="false">
     <Containable items="seed" />
   </ItemContainer>

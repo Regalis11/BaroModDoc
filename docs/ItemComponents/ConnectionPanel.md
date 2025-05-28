@@ -12,15 +12,20 @@ This component also supports the attributes defined in: [ItemComponent](ItemComp
 
 ## Example
 ```xml
-<Item identifier="button" category="Electrical" tags="smallitem,button" allowedlinks="door" linkable="true" cargocontaineridentifier="metalcrate" scale="0.5" impactsoundtag="impact_metal_light" isshootable="true" maxstacksize="8">
+<Item identifier="detonator" health="30" category="Equipment,Weapon" Tags="smallitem,detonator" DamagedByContainedItemExplosions="true" explosiondamagemultiplier="0.3" Scale="0.5" cargocontaineridentifier="explosivecrate" impactsoundtag="impact_metal_light" isshootable="true">
   <ConnectionPanel selectkey="Action" canbeselected="true" msg="ItemMsgRewireScrewdriver" hudpriority="10">
     <GuiFrame relativesize="0.2,0.32" minsize="400,350" maxsize="480,420" anchor="Center" style="ConnectionPanel" />
-    <RequiredItem identifier="screwdriver" type="Equipped" />
-    <output name="signal_out" displayname="connection.signalout" />
+    <RequiredItem items="screwdriver" type="Equipped" />
+    <input name="activate" displayname="connection.activate">
+      <StatusEffect type="OnUse" target="This" IsOn="true" charge="3.402823466E+38" setvalue="true">
+        <Conditional IsOn="false" />
+      </StatusEffect>
+    </input>
   </ConnectionPanel>
-  <Holdable selectkey="Select" pickkey="Use" slots="Any,RightHand,LeftHand" msg="ItemMsgDetachWrench" PickingTime="10.0" aimpos="35,-10" handle1="0,0" attachable="true" attachedbydefault="true" aimable="true">
-    <requireditem identifier="wrench" type="Equipped" />
+  <Holdable selectkey="Action" pickkey="Use" slots="Any,RightHand,LeftHand" msg="ItemMsgDetachWrench" aimpos="35,-10" handle1="0,0" attachable="true" aimable="true">
+    <RequiredItem items="wrench,deattachtool" excludeditems="multitool" type="Equipped" />
   </Holdable>
+  <PowerContainer capacity="2.0" charge="3.402823466E+38" canbeselected="false" />
   [...]
 </Item>
 ```
