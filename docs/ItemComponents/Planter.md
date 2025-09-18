@@ -19,7 +19,7 @@ This component also supports the attributes defined in: [Pickable](Pickable.md),
     <SuitableFertilizer items="fertilizer" />
     <SuitableSeed items="seed" />
   </Planter>
-  <Holdable selectkey="Select" pickkey="Use" slots="Any,RightHand,LeftHand" msg="ItemMsgDetach" MsgWhenDropped="ItemMsgPickupSelect" PickingTime="5.0" aimpos="85,-10" handle1="0,0" attachable="true" aimable="true" />
+  <Holdable selectkey="Select" pickkey="Use" slots="Any,RightHand,LeftHand" msg="ItemMsgDetach" MsgWhenDropped="ItemMsgPickupSelect" PickingTime="5.0" aimpos="85,-10" handle1="0,0" attachable="true" aimable="true" AttachesToFloor="true" DisallowAttachingOverTags="container,planter" />
   <ItemContainer capacity="1" maxstacksize="1" hideitems="true" drawinventory="false" uilabel="" allowuioverlap="true" allowdraganddrop="false" showcontainedstateindicator="false">
     <Containable items="seed" />
   </ItemContainer>

@@ -22,7 +22,7 @@
 | SpriteWidth                     | int     | 5                 |                                                                                                                                                  |
 | SpriteColor                     | Color   | "255,255,255,255" |                                                                                                                                                  |
 | Tile                            | bool    | false             |                                                                                                                                                  |
-| Origin                          | Vector2 | "0.5,0.5)"        |                                                                                                                                                  |
+| Origin                          | Vector2 | "0.5,0.5"         |                                                                                                                                                  |
 | BreakFromMiddle                 | bool    | true              |                                                                                                                                                  |
 | ReelSoundPitchSlide             | Vector2 | "1.0, 1.0"        | When reeling in, the pitch slides from X to Y, depending on the length of the rope.                                                              |
 

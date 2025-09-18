@@ -13,7 +13,7 @@ This component also supports the attributes defined in: [Holdable](Holdable.md),
 ## Example
 ```xml
 <Item identifier="rituallantern" category="Equipment" maxstacksize="12" cargocontaineridentifier="metalcrate" Scale="0.5" tags="smallitem,light,huskcult" impactsoundtag="impact_soft" isshootable="true">
-  <Throwable slots="Any,RightHand,LeftHand" holdpos="70,-70" handle1="-5,10" holdangle="0" throwforce="4.0" aimpos="30,-30" msg="ItemMsgPickUpSelect" />
+  <Throwable slots="Any,RightHand,LeftHand" holdpos="70,-70" handle1="-5,10" holdangle="0" throwforce="3.5" aimpos="30,-30" msg="ItemMsgPickUpSelect" />
   <LightComponent LightColor="219,100,239,80" Flicker="0.2" pulsefrequency="0.2" pulseamount="0.5" range="600" IsOn="false">
     <StatusEffect type="OnUse" targettype="This" IsOn="true" />
     <StatusEffect type="OnActive" targettype="This" Condition="-0.25" />

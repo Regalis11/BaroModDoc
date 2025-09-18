@@ -10,4 +10,5 @@
 ## Child elements
 - `icon`
 - `description`
+- `migrations`
 

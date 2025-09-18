@@ -3,20 +3,24 @@
 
 ## Attributes
 
-| Attribute                         | Type    | Default value | Description                                                                                    |
-|-----------------------------------|---------|---------------|------------------------------------------------------------------------------------------------|
-| Force                             | float   | 0             | The maximum amount of force applied to the triggering entitites.                               |
-| DistanceBasedForce                | bool    | false         | Determines if the force gets higher the closer the triggerer is to the center of the trigger.  |
-| ForceFluctuation                  | bool    | false         | Determines if the force fluctuates over time or if it stays constant.                          |
-| ForceFluctuationStrength          | float   | 1             | How much the fluctuation affects the force. 1 is the maximum fluctuation, 0 is no fluctuation. |
-| ForceFluctuationFrequency         | float   | 1             | How fast (cycles per second) the force fluctuates.                                             |
-| ForceFluctuationInterval          | float   | 0.01          | How often (in seconds) the force fluctuation is calculated.                                    |
-| Radius                            | float   | 0             |                                                                                                |
-| Width                             | float   | 0             |                                                                                                |
-| Height                            | float   | 0             |                                                                                                |
-| BodyOffset                        | Vector2 | "0,0"         |                                                                                                |
-| ApplyEffectsToCharactersInsideSub | bool    | false         |                                                                                                |
-| MoveOutsideSub                    | bool    | false         |                                                                                                |
+| Attribute                         | Type    | Default value | Description                                                                                                                                                                                      |
+|-----------------------------------|---------|---------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Force                             | float   | 0             | The maximum amount of force applied to the triggering entitites.                                                                                                                                 |
+| DirectionalForce                  | Vector2 | "0,0"         | The maximum amount of directional force applied to the triggering entitites.                                                                                                                     |
+| RelativeDirectionalForce          | bool    | false         | If true, DirectionalForce is relative to the angle between the target and the item, Similar to Force.<br/>If false, it always pushes in the same direction, with respect to the item's rotation. |
+| VerticalForce                     | bool    | true          | If false, no vertical force will be applied.                                                                                                                                                     |
+| HorizontalForce                   | bool    | true          | If false, no horizontal force will be applied.                                                                                                                                                   |
+| DistanceBasedForce                | bool    | false         | Determines if the force gets higher the closer the triggerer is to the center of the trigger.                                                                                                    |
+| ForceFluctuation                  | bool    | false         | Determines if the force fluctuates over time or if it stays constant.                                                                                                                            |
+| ForceFluctuationStrength          | float   | 1             | How much the fluctuation affects the force. 1 is the maximum fluctuation, 0 is no fluctuation.                                                                                                   |
+| ForceFluctuationFrequency         | float   | 1             | How fast (cycles per second) the force fluctuates.                                                                                                                                               |
+| ForceFluctuationInterval          | float   | 0.01          | How often (in seconds) the force fluctuation is calculated.                                                                                                                                      |
+| Radius                            | float   | 0             |                                                                                                                                                                                                  |
+| Width                             | float   | 0             |                                                                                                                                                                                                  |
+| Height                            | float   | 0             |                                                                                                                                                                                                  |
+| BodyOffset                        | Vector2 | "0,0"         |                                                                                                                                                                                                  |
+| ApplyEffectsToCharactersInsideSub | bool    | false         |                                                                                                                                                                                                  |
+| MoveOutsideSub                    | bool    | false         |                                                                                                                                                                                                  |
 
 This component also supports the attributes defined in: [ItemComponent](ItemComponent.md)
 

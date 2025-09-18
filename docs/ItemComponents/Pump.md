@@ -3,11 +3,13 @@
 
 ## Attributes
 
-| Attribute      | Type  | Default value | Description                                                                                                                                                                            |
-|----------------|-------|---------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| FlowPercentage | float | 0             | How fast the item is currently pumping water (-100 = full speed out, 100 = full speed in). Intended to be used by StatusEffect conditionals (setting this value in XML has no effect). |
-| MaxFlow        | float | 80            | How fast the item pumps water in/out when operating at 100%.                                                                                                                           |
-| IsOn           | bool  | true          |                                                                                                                                                                                        |
+| Attribute              | Type  | Default value | Description                                                                                                                                                                            |
+|------------------------|-------|---------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| FlowPercentage         | float | 0             | How fast the item is currently pumping water (-100 = full speed out, 100 = full speed in). Intended to be used by StatusEffect conditionals (setting this value in XML has no effect). |
+| MaxFlow                | float | 80            | How fast the item pumps water in/out when operating at 100%.                                                                                                                           |
+| Disabled               | bool  | false         | If true, the pump is unable to pump water.                                                                                                                                             |
+| IsOn                   | bool  | true          |                                                                                                                                                                                        |
+| CanCauseLethalPressure | bool  | false         |                                                                                                                                                                                        |
 
 This component also supports the attributes defined in: [Powered](Powered.md), [ItemComponent](ItemComponent.md)
 

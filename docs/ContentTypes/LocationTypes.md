@@ -14,4 +14,5 @@
 - `changeto`
 - `portrait`
 - `store`
+- `areasettings`
 

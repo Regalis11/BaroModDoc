@@ -9,6 +9,7 @@ Changes the state of a specific active mission. The way the states are used depe
 | MissionIdentifier | Identifier    | ""            | Identifier of the mission whose state to change.                                                          |
 | Operation         | OperationType | Set           | Should the value be added to the state of the mission, or should the state be set to the specified value. |
 | State             | int           | 0             | The state to set the mission to, or how much to add to the state of the mission.                          |
+| ForceFailure      | bool          | false         | If set to true, the mission is forced to fail without a chance of retrying it.                            |
 
 
 

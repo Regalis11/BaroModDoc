@@ -9,7 +9,7 @@ This component supports the attributes defined in: [PowerTransfer](PowerTransfer
 ## Example
 ```xml
 <Item identifier="powerdistributor" tags="junctionbox" category="Electrical,Machine" scale="0.5" linkable="true" allowedlinks="reactor" damagedbyexplosions="true" explosiondamagemultiplier="0.2" GrabWhenSelected="true">
-  <PowerDistributor canbeselected="true" vulnerabletoemp="true" canbeoverloaded="true">
+  <PowerDistributor canbeselected="true" vulnerabletoemp="true" canbeoverloaded="true" msg="ItemMsgInteractSelect">
     <GuiFrame relativesize="0.2,0.5" minsize="450,250" anchor="Center" style="ItemUI" />
     <StatusEffect type="InWater" target="This" condition="-0.25">
       <Conditional voltage="gt 0.1" />
