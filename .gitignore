@@ -6,3 +6,8 @@ riderModule.iml
 .idea
 *.DotSettings.user
 .vs/
+# Jekyll
+docs/_site/
+docs/.jekyll-cache/
+docs/.sass-cache/
+docs/Gemfile.lock
