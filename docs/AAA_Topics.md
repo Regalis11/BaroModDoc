@@ -20,5 +20,8 @@
   - [Attack](Misc/Attack.md)
   - [Explosion](Misc/Explosion.md)
 
+- Plugins
+  - [Getting started with plugins](Plugins/GettingStarted.md)
+
 - [Publishing to Steam Workshop](Intro/Publishing.md)
 - [Troubleshooting](Misc/Troubleshooting.md)
