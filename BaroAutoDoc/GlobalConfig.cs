@@ -12,7 +12,7 @@ public sealed class ConfigValue : Attribute { }
 internal static class GlobalConfig
 {
     [ConfigValue]
-    public static readonly string RepoPath = Constants.DefaultRepoPath;
+    public static readonly string RepoPath = "";
 
     private static readonly ImmutableDictionary<Type, Func<string, object>> ConfigValueParsers = new Dictionary<Type, Func<string, object>>
     {
@@ -22,22 +22,15 @@ internal static class GlobalConfig
         [typeof(bool)] = static s => bool.Parse(s)
     }.ToImmutableDictionary();
 
-    private readonly static string ConfigPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config.xml");
+    private const string ConfigFileName = "config.xml";
 
     static GlobalConfig()
     {
-        if (string.IsNullOrEmpty(RepoPath))
-        {
-            throw new Exception("Constants.DefaultRepoPath not defined! Please define the path to your local repository of Barotrauma here!");
-        }
-        
-        if (!File.Exists(ConfigPath))
-        {
-            CreateConfigFile(ConfigPath);
-            Console.WriteLine($"No config file found, creating a new one in {ConfigPath}");
-        }
+        string configPath = FindConfigFile()
+            ?? throw new FileNotFoundException(
+                $"Could not find {ConfigFileName}. Copy {ConfigFileName}.example to {ConfigFileName} in the root folder of the repository and edit it.");
 
-        XElement config = XElement.Load(ConfigPath);
+        XElement config = XElement.Load(configPath);
 
         foreach (FieldInfo field in GetConfigFields())
         {
@@ -62,34 +55,28 @@ internal static class GlobalConfig
 
             field.SetValue(null, parsedValue);
         }
+
+        if (string.IsNullOrWhiteSpace(RepoPath))
+        {
+            throw new InvalidOperationException($"\"repoPath\" is empty in {configPath}, set it to the path of your local Barotrauma repository.");
+        }
     }
 
-    private static void CreateConfigFile(string filePath)
+    /// <summary>
+    /// Looks for the config file in the working directory and the executable's directory, and in their parent directories.
+    /// </summary>
+    private static string? FindConfigFile()
     {
-        XElement root = new XElement("Config");
-
-        foreach (FieldInfo field in GetConfigFields())
+        foreach (string start in new[] { Directory.GetCurrentDirectory(), AppContext.BaseDirectory })
         {
-            object? defaultValue = field.GetValue(null);
-            if (defaultValue is null)
+            for (DirectoryInfo? dir = new(start); dir is not null; dir = dir.Parent)
             {
-                throw new InvalidOperationException($"Config file option \"{field.Name}\" has no default value.");
+                string path = Path.Combine(dir.FullName, ConfigFileName);
+                if (File.Exists(path)) { return path; }
             }
-
-            root.Add(new XAttribute(field.Name.ToLower(), defaultValue));
         }
 
-        XmlWriterSettings settings = new XmlWriterSettings
-        {
-            Indent = true,
-            OmitXmlDeclaration = true,
-            NewLineOnAttributes = true
-        };
-
-        using XmlWriter writer = XmlWriter.Create(filePath, settings);
-
-        root.WriteTo(writer);
-        writer.Flush();
+        return null;
     }
 
     private static ImmutableArray<FieldInfo> GetConfigFields() =>
