@@ -21,6 +21,7 @@
   - [Explosion](Misc/Explosion.md)
 
 - Plugins
+  - [What are plugins?](Plugins/WhatArePlugins.md)
   - [Getting started with plugins](Plugins/GettingStarted.md)
   - [Creating item components](Plugins/CreatingItemComponents.md)
   - [Plugin services](Plugins/Services/Services.md)
