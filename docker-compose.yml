@@ -12,7 +12,7 @@ services:
       - sh
       - -c
       - |
-        echo 'url: http://localhost:${DOCS_PORT:-4000}' > /tmp/override.yml
+        echo 'url: ${DOCS_URL:-http://localhost:${DOCS_PORT:-4000}}' > /tmp/override.yml
         bundle install
         bundle exec jekyll build --config _config.yml,/tmp/override.yml --destination /tmp/_site
         (bundle exec jekyll build --watch --force_polling --config _config.yml,/tmp/override.yml --destination /tmp/_site &)
