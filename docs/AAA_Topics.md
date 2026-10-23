@@ -10,6 +10,7 @@
   - [XML and how Barotrauma uses it](Intro/XML.md)
   - [Content packages](Intro/ContentPackages.md)
     - [Content types](Intro/ContentTypes.md)
+    - [Dependencies](Intro/ContentPackageDependencies.md)
   - [Overrides](Intro/Overrides.md)
   - [Performance](Misc/Performance.md)
   - [Status effects](Misc/StatusEffect.md)

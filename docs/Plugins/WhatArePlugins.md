@@ -16,7 +16,7 @@ If you want to start writing one, see [Getting started with plugins](GettingStar
 
 ### What protects you
 
-The game does not prevent a plugin from doing harm. It only makes sure you are asked first:
+The game does not prevent a plugin from doing harm. Instead it makes sure you are asked first.
 
 - The first time you enable a package with a plugin, the game shows a **warning** listing the risks, and you have to confirm before the mod is enabled. The same warning is shown when you join a server that uses code mods you haven't enabled yet.
 - The game remembers the plugin assemblies you have approved, by file and by hash. If an assembly is **new** or has been **modified** since you approved it (for example after a Workshop update), the warning is shown again and a warning icon appears next to the mod.
