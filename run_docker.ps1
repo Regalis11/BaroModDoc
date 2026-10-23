@@ -1,1 +1,7 @@
-docker run --rm -it -p 4000:4000 -e PAGES_REPO_NWO=regalis11/BaroModDoc -v baro-gems:/usr/local/bundle -v "${PWD}/docs:/srv/jekyll" jekyll/jekyll:4 sh -c "echo 'url: http://localhost:4000' > /tmp/override.yml && bundle install && bundle exec jekyll build --config _config.yml,/tmp/override.yml --destination /tmp/_site && (bundle exec jekyll build --watch --force_polling --config _config.yml,/tmp/override.yml --destination /tmp/_site &) && ruby -run -e httpd /tmp/_site -p 4000 -b 0.0.0.0"
+param(
+    [int] $Port = 4000
+)
+
+$env:DOCS_PORT = $Port
+docker compose --file (Join-Path $PSScriptRoot "docker-compose.yml") up
+exit $LASTEXITCODE

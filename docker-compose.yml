@@ -1,0 +1,22 @@
+services:
+  docs:
+    image: jekyll/jekyll:4
+    ports:
+      - "${DOCS_PORT:-4000}:4000"
+    environment:
+      PAGES_REPO_NWO: regalis11/BaroModDoc
+    volumes:
+      - baro-gems:/usr/local/bundle
+      - ./docs:/srv/jekyll
+    command:
+      - sh
+      - -c
+      - |
+        echo 'url: http://localhost:${DOCS_PORT:-4000}' > /tmp/override.yml
+        bundle install
+        bundle exec jekyll build --config _config.yml,/tmp/override.yml --destination /tmp/_site
+        (bundle exec jekyll build --watch --force_polling --config _config.yml,/tmp/override.yml --destination /tmp/_site &)
+        ruby -run -e httpd /tmp/_site -p 4000 -b 0.0.0.0
+
+volumes:
+  baro-gems:
