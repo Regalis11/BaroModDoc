@@ -20,7 +20,7 @@ There are two ways to obtain the project.
 
 ### Option 1: Use the GitHub template (recommended)
 
-<img width="400" alt="The Use this template button on GitHub" src="https://github.com/user-attachments/assets/fbd5fb22-04cb-471f-9c4d-456736487b35" />
+<img width="400" alt="The Use this template button on GitHub" src="../assets/images/plugins/use-this-template.png" />
 
 1. Create or sign in to a GitHub account.
 2. Click the **Use this template** button in the top-right corner of the [BaseBaroPlugin repository](https://github.com/FakeFishGames/BaseBaroPlugin).
@@ -31,7 +31,7 @@ There are two ways to obtain the project.
 
 ### Option 2: Download directly
 
-<img width="429" alt="Downloading the repository as a ZIP file" src="https://github.com/user-attachments/assets/ce9acc22-b516-46aa-af85-7501ed8d942a" />
+<img width="429" alt="Downloading the repository as a ZIP file" src="../assets/images/plugins/download-zip.png" />
 
 You can also download the repository as a ZIP file from GitHub and extract it locally. This option does not include version control.
 
@@ -80,7 +80,7 @@ If you add new XML content, make sure to update the file list located at `Conten
 
 ## Testing your mod
 
-<img width="1920" alt="The Launch Barotrauma button in the IDE toolbar" src="https://github.com/user-attachments/assets/56ba8402-7f1e-4f36-a28b-bca48c785c17" />
+<img width="1920" alt="The Launch Barotrauma button in the IDE toolbar" src="../assets/images/plugins/launch-barotrauma.png" />
 
 You can test your mod by pressing the **Launch Barotrauma** button in the toolbar. This launches Barotrauma with the debugger attached and your plugin built.
 
@@ -94,7 +94,7 @@ You can also manually right-click **WindowsClient** and **WindowsServer** in the
 
 Change the launch option from **Launch Barotrauma** to **Build Release**:
 
-<img width="1920" alt="Selecting the Build Release launch option" src="https://github.com/user-attachments/assets/94c8e5f1-2438-4d81-97c7-2c4ca7fc1d39" />
+<img width="1920" alt="Selecting the Build Release launch option" src="../assets/images/plugins/build-release.png" />
 
 Now click **Build Release** and the plugin will be built in release mode.
 
