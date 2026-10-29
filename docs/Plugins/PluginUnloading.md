@@ -21,7 +21,7 @@ If something in the game, or in the plugin itself, still holds a reference to th
 
 ## How you can tell an unload was successful
 
-After a plugin is unloaded the game waits briefly, then forces garbage collections a few times and checks whether the assembly is gone. if the console prints a green message, "Plugin was successfully unloaded after N seconds", with the name of the content package, then the unload was successful. if The game prints a warning: *the plugin could not be fully unloaded and is still active in memory after cleanup attempts*, it means immediate unloading has failed.
+After a plugin is unloaded the game waits briefly, then forces garbage collections a few times and checks whether the assembly is gone. if the console prints a green message, **"Plugin was successfully unloaded after N seconds"**, then the unload was successful. if The game prints a warning: **"the plugin could not be fully unloaded and is still active in memory after cleanup attempts"**, it means immediate unloading has failed.
 
 ## Writing a plugin that unloads cleanly
 
