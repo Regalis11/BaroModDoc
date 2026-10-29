@@ -1,6 +1,6 @@
 # Getting started with plugins
 
-Plugins let you write C# code that runs inside Barotrauma, for changes that can't be done with XML alone. This page explains how to set up a plugin project using the [Base Barotrauma Plugin](https://github.com/FakeFishGames/BaseBaroPlugin) template, which is the starting point used by most Barotrauma plugins.
+This page explains how to set up a plugin project using the [Base Barotrauma Plugin](https://github.com/FakeFishGames/BaseBaroPlugin) template, which is the starting point used by most Barotrauma plugins.
 
 ## Requirements
 

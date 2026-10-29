@@ -50,7 +50,7 @@ public float MyProperty { get; private set; }
 `IsPropertySaveable` - `Yes` if the value should be written to save files and submarine files, `No` if it only comes from the XML prefab.
 `description` - A description of the property.
 
-The XML attribute name matches the property name, so the property above is set with `SpinForce="10"` in the item component XML.
+The XML attribute name matches the property name, so the property above is set with `MyProperty="10"` in the item component XML.
 
 ### Overriding behavior
 
