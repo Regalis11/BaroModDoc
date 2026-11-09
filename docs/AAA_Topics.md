@@ -27,6 +27,7 @@
   - [Creating item components](Plugins/CreatingItemComponents.md)
   - [Plugin unloading](Plugins/PluginUnloading.md)
   - [Plugin services](Plugins/Services/Services.md)
+  - [Hooks](Plugins/Services/Hooks.md)
 
 - [Publishing to Steam Workshop](Intro/Publishing.md)
 - [Troubleshooting](Misc/Troubleshooting.md)
