@@ -6,6 +6,14 @@ public interface IDebugConsole : IPluginService
 
 Provides an interface to `DebugConsole` for plugins. Allows registering commands and writing messages to F3 debug console.
 
+## Remarks
+
+The methods are instance methods. The examples assume an instance has been retrieved and stored, e.g.:
+
+```csharp
+public static readonly IDebugConsole DebugConsole = PluginServiceProvider.GetService<IDebugConsole>();
+```
+
 ## Members
 
 | Member                                      | Description                                                                                                                                                                                                                                              |
@@ -15,7 +23,7 @@ Provides an interface to `DebugConsole` for plugins. Allows registering commands
 | [`AddWarning()`](#addwarning)               | Writes a warning message to the debug console. The message will always be displayed in yellow.                                                                                                                                                           |
 | [`RegisterCommand()`](#registercommand)     | Registers a command with the debug console.                                                                                                                                                                                                              |
 | [`StartTestMaps()`](#starttestmaps)         | Starts the map testing coroutine used by the testmap/testmaps commands. Generates maps with validation, and optionally calls callbacks for each generated map. Useful for plugins that want to run additional analysis or simulations on generated maps. |
-| [`DeregisterCommand()`](#deregistercommand) | Unregisters a command from the debug console.                                                                                                                                                                                                            |
+| [`DeregisterCommand()`](#deregistercommand) | Deregisters a command from the debug console.                                                                                                                                                                                                            |
 | [`RegisterCommand()`](#registercommand-1)   | Registers a command with the debug console.                                                                                                                                                                                                              |
 
 ## Methods
@@ -96,7 +104,7 @@ Registers a command with the debug console.
 **Example**
 
 ```csharp
-IDebugConsole.RegisterCommand(
+DebugConsole.RegisterCommand(
     command: "hello|helloworld",
     helpMessage: "Prints 'Hello, World!' to the console.",
     flags: CommandFlags.None,
@@ -128,7 +136,7 @@ Starts the map testing coroutine used by the testmap/testmaps commands. Generate
 void DeregisterCommand(string command)
 ```
 
-Unregisters a command from the debug console.
+Deregisters a command from the debug console.
 
 | Parameter | Type     | Description                                                                                                                                                            |
 |-----------|----------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -141,9 +149,9 @@ Only the plugin that registered the command can unregister it, so you do not nee
 **Example**
 
 ```csharp
-IDebugConsole.UnregisterCommand("hello");
-IDebugConsole.UnregisterCommand("helloworld");
-IDebugConsole.UnregisterCommand("hello|helloworld");
+DebugConsole.DeregisterCommand("hello");
+DebugConsole.DeregisterCommand("helloworld");
+DebugConsole.DeregisterCommand("hello|helloworld");
 ```
 
 ### RegisterCommand
@@ -174,7 +182,7 @@ Registers a command with the debug console.
 **Example**
 
 ```csharp
-IDebugConsole.RegisterCommand(
+DebugConsole.RegisterCommand(
     command: "hello|helloworld",
     helpMessage: "Prints 'Hello, World!' to the console.",
     flags: CommandFlags.None,

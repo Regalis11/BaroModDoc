@@ -6,6 +6,14 @@ public interface IContentFileRegistrar : IPluginService
 
 Interface that allows registering custom XML content in your mod.
 
+## Remarks
+
+The methods are instance methods. The examples assume an instance has been retrieved and stored, e.g.:
+
+```csharp
+public static readonly IContentFileRegistrar ContentFileRegistrar = PluginServiceProvider.GetService<IContentFileRegistrar>();
+```
+
 ## Members
 
 | Member                                             | Description                                                                                                                                                                                                    |
@@ -60,5 +68,5 @@ public class MyPrefab : Barotrauma.Prefab
 <br/> Plugin init:
 
 ```csharp
-IContentFile.RegisterContentFile<MyContentFile>();
+ContentFileRegistrar.RegisterContentFile<MyContentFile>();
 ```

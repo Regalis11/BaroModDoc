@@ -6,6 +6,14 @@ public interface IItemComponentRegistrar : IPluginService
 
 Provides methods for registering custom implementations of `ItemComponent` that can be added to items.
 
+## Remarks
+
+The methods are instance methods. The examples assume an instance has been retrieved and stored, e.g.:
+
+```csharp
+public static readonly IItemComponentRegistrar ItemComponentRegistrar = PluginServiceProvider.GetService<IItemComponentRegistrar>();
+```
+
 ## Members
 
 | Member                                                      | Description                                                             |
@@ -44,7 +52,7 @@ public class MyItemComponent(Item item, ContentXElement element) : ItemComponent
 Plugin init:
 
 ```csharp
-IItemComponentRegistrar.RegisterItemComponent<MyItemComponent>();
+ItemComponentRegistrar.RegisterItemComponent<MyItemComponent>();
 ```
 
 ### RegisterItemComponents
@@ -84,7 +92,7 @@ public class AnotherItemComponent(Item item, ContentXElement element) : ItemComp
 Plugin init:
 
 ```csharp
-IItemComponentRegistrar.RegisterItemComponents(typeof(MyItemComponent), typeof(AnotherItemComponent));
+ItemComponentRegistrar.RegisterItemComponents(typeof(MyItemComponent), typeof(AnotherItemComponent));
 ```
 
 ### RegisterAllItemComponents
@@ -104,7 +112,7 @@ The method will find all types in the calling assembly that inherit `ItemCompone
 Plugin init:
 
 ```csharp
-IItemComponentRegistrar.RegisterAllItemComponents();
+ItemComponentRegistrar.RegisterAllItemComponents();
 ```
 
 ### AddItemComponentToItem
@@ -125,5 +133,5 @@ Adds a custom item component to an already existing item.
 Plugin init:
 
 ```csharp
-IItemComponentRegistrar.AddItemComponentToItem("planter".ToIdentifier(), prefabElement));
+ItemComponentRegistrar.AddItemComponentToItem("planter".ToIdentifier(), prefabElement);
 ```

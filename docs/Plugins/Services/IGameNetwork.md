@@ -6,6 +6,14 @@ public interface IGameNetwork : IPluginService
 
 Provides a service to allow client and server side network communication in multiplayer.
 
+## Remarks
+
+The methods are instance methods. The examples assume an instance has been retrieved and stored, e.g.:
+
+```csharp
+public static readonly IGameNetwork GameNetwork = PluginServiceProvider.GetService<IGameNetwork>();
+```
+
 ## Members
 
 | Member                                                                             | Description                                                                                                                                                                                                                     |
@@ -55,7 +63,7 @@ public enum MyNetworkHeaders
 ```
 
 ```csharp
-IGameNetwork.RegisterNetworkHeaders<MyNetworkHeaders>();
+GameNetwork.RegisterNetworkHeaders<MyNetworkHeaders>();
 ```
 
 ### RegisterAllStaticHandlers
@@ -102,7 +110,7 @@ public static readonly MyNetworkHandlers MyHandlers = new();
 Plugin init:
 
 ```csharp
-IGameNetwork.RegisterHandlers(MyHandlers);
+GameNetwork.RegisterHandlers(MyHandlers);
 ```
 
 ### CreateEntityEvent
@@ -128,7 +136,7 @@ Creates a network event for an entity. Write and read methods for the entity eve
 
 ```csharp
 item.GetExtraField<MyCustomData>("CustomData").Foo = Bar;
-IGameNetwork.CreateEntityEvent(item);
+GameNetwork.CreateEntityEvent(item, null);
 ```
 
 ### CreateVanillaEntityEvent
@@ -174,18 +182,18 @@ Client project:
 ```csharp
 public class CustomItemHandler : ICustomSerializable<Item>
 {
-    public void ClientWrite(Item entity, IWriteMessage msg, NetEntityEvent.IData? extraData)
+    public void ClientWrite(Item item, IWriteMessage msg, NetEntityEvent.IData? extraData)
     {
-        CustomData data = item.GetExtraField<MyCustomData>("CustomData");
+        MyCustomData data = item.GetExtraField<MyCustomData>("CustomData");
         msg.WriteInt32(data.Foo);
     }
 
-    public void ClientRead(Item entity, IReadMessage msg, float sendingTime)
+    public void ClientRead(Item item, IReadMessage msg, float sendingTime)
     {
-        CustomData data = item.GetExtraField<MyCustomData>("CustomData");
+        MyCustomData data = item.GetExtraField<MyCustomData>("CustomData");
         data.Foo = msg.ReadInt32();
     }
-{
+}
 ```
 
 Server project:
@@ -193,15 +201,15 @@ Server project:
 ```csharp
 public class CustomItemHandler : ICustomSerializable<Item>
 {
-    public void ServerWrite(Item entity, IWriteMessage msg, Client client, NetEntityEvent.IData? extraData)
+    public void ServerWrite(Item item, IWriteMessage msg, Client client, NetEntityEvent.IData? extraData)
     {
-        CustomData data = item.GetExtraField<MyCustomData>("CustomData");
+        MyCustomData data = item.GetExtraField<MyCustomData>("CustomData");
         msg.WriteInt32(data.Foo);
     }
 
-    public void ServerRead(Item entity, IReadMessage msg, Client client)
+    public void ServerRead(Item item, IReadMessage msg, Client client)
     {
-        CustomData data = item.GetExtraField<MyCustomData>("CustomData");
+        MyCustomData data = item.GetExtraField<MyCustomData>("CustomData");
         data.Foo = msg.ReadInt32();
     }
 }
@@ -210,7 +218,7 @@ public class CustomItemHandler : ICustomSerializable<Item>
 Register the handler in shared project:
 
 ```csharp
-IGameNetwork.RegisterCustomEntityEventHandler<Item>(new CustomItemHandler());
+GameNetwork.RegisterCustomEntityEventHandler<Item>(new CustomItemHandler());
 ```
 
 ### RegisterEntityClientWrite
@@ -239,9 +247,9 @@ The server must have corresponding ServerRead handler registered for the entity.
 **Example**
 
 ```csharp
-IGameNetwork.RegisterEntityClientWrite<Item>((item, msg, extraData) =>
+GameNetwork.RegisterEntityClientWrite<Item>((item, msg, extraData) =>
 {
-    CustomData data = item.GetExtraField<MyCustomData>("CustomData");
+    MyCustomData data = item.GetExtraField<MyCustomData>("CustomData");
     msg.WriteInt32(data.Foo);
 });
 ```
@@ -249,13 +257,13 @@ IGameNetwork.RegisterEntityClientWrite<Item>((item, msg, extraData) =>
 or with a method:
 
 ```csharp
-IGameNetwork.RegisterEntityClientWrite<Item>(WriteItem);
+GameNetwork.RegisterEntityClientWrite<Item>(WriteItem);
 ```
 
 ```csharp
 public void WriteItem(Item item, IWriteMessage msg, NetEntityEvent.IData? extraData)
 {
-    CustomData data = item.GetExtraField<MyCustomData>("CustomData");
+    MyCustomData data = item.GetExtraField<MyCustomData>("CustomData");
     msg.WriteInt32(data.Foo);
 }
 ```
@@ -286,9 +294,9 @@ The server should have corresponding ServerWrite handler registered for the enti
 **Example**
 
 ```csharp
-IGameNetwork.RegisterEntityClientRead<Item>((item, msg, sendingTime) =>
+GameNetwork.RegisterEntityClientRead<Item>((item, msg, sendingTime) =>
 {
-    CustomData data = item.GetExtraField<MyCustomData>("CustomData");
+    MyCustomData data = item.GetExtraField<MyCustomData>("CustomData");
     data.Foo = msg.ReadInt32();
 });
 ```
@@ -296,13 +304,13 @@ IGameNetwork.RegisterEntityClientRead<Item>((item, msg, sendingTime) =>
 or with a method:
 
 ```csharp
-IGameNetwork.RegisterEntityClientRead<Item>(ReadItem);
+GameNetwork.RegisterEntityClientRead<Item>(ReadItem);
 ```
 
 ```csharp
 public void ReadItem(Item item, IReadMessage msg, float sendingTime)
 {
-    CustomData data = item.GetExtraField<MyCustomData>("CustomData");
+    MyCustomData data = item.GetExtraField<MyCustomData>("CustomData");
     data.Foo = msg.ReadInt32();
 }
 ```
@@ -336,7 +344,7 @@ Manually register a client side handler for a specific network header.
 **Example**
 
 ```csharp
-IGameNetwork.RegisterHandler(MyNetworkHeaders.ExampleHeader1, (MyData myData) =>
+GameNetwork.RegisterHandler(MyNetworkHeaders.ExampleHeader1, (MyData myData) =>
 {
     // read data from MyData
 });
@@ -345,7 +353,7 @@ IGameNetwork.RegisterHandler(MyNetworkHeaders.ExampleHeader1, (MyData myData) =>
 or with a method:
 
 ```csharp
-IGameNetwork.RegisterHandler(MyNetworkHeaders.ExampleHeader1, MyHandler);
+GameNetwork.RegisterHandler(MyNetworkHeaders.ExampleHeader1, MyHandler);
 ```
 
 ```csharp
@@ -391,7 +399,7 @@ public readonly record struct MyData(int Foo) : INetSerializableStruct;
 ```
 
 ```csharp
-IGameNetwork.Send(MyNetworkHeaders.ExampleHeader1, new MyData(42);
+GameNetwork.Send(MyNetworkHeaders.ExampleHeader1, new MyData(42));
 ```
 
 ### RegisterEntityServerWrite
@@ -420,9 +428,9 @@ The client must have corresponding ClientRead handler registered for the entity.
 **Example**
 
 ```csharp
-IGameNetwork.RegisterEntityServerWrite<Item>((item, msg, client, extraData) =>
+GameNetwork.RegisterEntityServerWrite<Item>((item, msg, client, extraData) =>
 {
-    CustomData data = item.GetExtraField<MyCustomData>("CustomData");
+    MyCustomData data = item.GetExtraField<MyCustomData>("CustomData");
     msg.WriteInt32(data.Foo);
 });
 ```
@@ -430,13 +438,13 @@ IGameNetwork.RegisterEntityServerWrite<Item>((item, msg, client, extraData) =>
 or with a method:
 
 ```csharp
-IGameNetwork.RegisterEntityServerWrite<Item>(WriteItem);
+GameNetwork.RegisterEntityServerWrite<Item>(WriteItem);
 ```
 
 ```csharp
 public void WriteItem(Item item, IWriteMessage msg, Client client, NetEntityEvent.IData? extraData)
 {
-    CustomData data = item.GetExtraField<MyCustomData>("CustomData");
+    MyCustomData data = item.GetExtraField<MyCustomData>("CustomData");
     msg.WriteInt32(data.Foo);
 }
 ```
@@ -467,10 +475,10 @@ The client should have corresponding ClientWrite handler registered for the enti
 **Example**
 
 ```csharp
-IGameNetwork.RegisterEntityServerRead<Item>((item, msg, client) =>
+GameNetwork.RegisterEntityServerRead<Item>((item, msg, client) =>
 {
     // check if the client is allowed to do this first
-    CustomData data = item.GetExtraField<MyCustomData>("CustomData");
+    MyCustomData data = item.GetExtraField<MyCustomData>("CustomData");
     data.Foo = msg.ReadInt32();
 });
 ```
@@ -478,14 +486,14 @@ IGameNetwork.RegisterEntityServerRead<Item>((item, msg, client) =>
 or with a method:
 
 ```csharp
-IGameNetwork.RegisterEntityServerRead<Item>(ReadItem);
+GameNetwork.RegisterEntityServerRead<Item>(ReadItem);
 ```
 
 ```csharp
 public void ReadItem(Item item, IReadMessage msg, Client client)
 {
     // check if the client is allowed to do this first
-    CustomData data = item.GetExtraField<MyCustomData>("CustomData");
+    MyCustomData data = item.GetExtraField<MyCustomData>("CustomData");
     data.Foo = msg.ReadInt32();
 }
 ```
@@ -519,7 +527,7 @@ Manually register a server side handler for a specific network header.
 **Example**
 
 ```csharp
-IGameNetwork.RegisterHandler(MyNetworkHeaders.ExampleHeader1, (MyData myData, Client client) =>
+GameNetwork.RegisterHandler(MyNetworkHeaders.ExampleHeader1, (MyData myData, Client client) =>
 {
     // read data from MyData
 });
@@ -528,7 +536,7 @@ IGameNetwork.RegisterHandler(MyNetworkHeaders.ExampleHeader1, (MyData myData, Cl
 or with a method:
 
 ```csharp
-IGameNetwork.RegisterHandler(MyNetworkHeaders.ExampleHeader1, MyHandler);
+GameNetwork.RegisterHandler(MyNetworkHeaders.ExampleHeader1, MyHandler);
 ```
 
 ```csharp
@@ -574,7 +582,7 @@ public readonly record struct MyData(int Foo) : INetSerializableStruct;
 ```
 
 ```csharp
-IGameNetwork.Broadcast(MyNetworkHeaders.ExampleHeader1, new MyData(42);
+GameNetwork.Broadcast(MyNetworkHeaders.ExampleHeader1, new MyData(42));
 ```
 
 ### SendToClient
@@ -622,10 +630,10 @@ public readonly record struct MyResponse(int Bar) : INetSerializableStruct;
 Respond to client in a network handler:
 
 ```csharp
-IGameNetwork.RegisterHandler(MyNetworkHeaders.ExampleHeader1, (MyRequest request, Client client) =>
+GameNetwork.RegisterHandler(MyNetworkHeaders.ExampleHeader1, (MyRequest request, Client client) =>
 {
     MyResponse response = new(request.Foo * 2);
-    IGameNetwork.SendToClient(client, MyNetworkHeaders.ExampleHeader2, response);
+    GameNetwork.SendToClient(client, MyNetworkHeaders.ExampleHeader2, response);
 });
 ```
 

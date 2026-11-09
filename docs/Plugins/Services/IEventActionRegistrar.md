@@ -6,6 +6,14 @@ public interface IEventActionRegistrar : IPluginService
 
 Provides methods for registering custom event actions to be loaded in `ScriptedEvent`.
 
+## Remarks
+
+The methods are instance methods. The examples assume an instance has been retrieved and stored, e.g.:
+
+```csharp
+public static readonly IEventActionRegistrar EventActionRegistrar = PluginServiceProvider.GetService<IEventActionRegistrar>();
+```
+
 ## Members
 
 | Member                                                  | Description                                                                  |
@@ -54,7 +62,7 @@ public class MyEventAction(ScriptedEvent parentEvent, ContentXElement element) :
 Plugin init:
 
 ```csharp
-IEventActionRegistrar.RegisterEventAction<MyEventAction>();
+EventActionRegistrar.RegisterEventAction<MyEventAction>();
 ```
 
 ### RegisterEventActions
@@ -99,7 +107,7 @@ public class MyEventAction(ScriptedEvent parentEvent, ContentXElement element) :
 Plugin init:
 
 ```csharp
-IEventActionRegistrar.RegisterEventActions(typeof(MyEventAction), typeof(MyOtherEventAction));
+EventActionRegistrar.RegisterEventActions(typeof(MyEventAction), typeof(MyOtherEventAction));
 ```
 
 ### RegisterAllEventActions
@@ -119,5 +127,5 @@ The method will find all types in the calling assembly that inherit `EventAction
 Plugin init:
 
 ```csharp
-IEventActionRegistrar.RegisterAllEventActions();
+EventActionRegistrar.RegisterAllEventActions();
 ```

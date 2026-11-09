@@ -6,6 +6,14 @@ public interface ISimpleHookService : IPluginService
 
 Allows plugins to register callback functions that get called at specific points in the game.
 
+## Remarks
+
+The methods are instance methods. The examples assume an instance has been retrieved and stored, e.g.:
+
+```csharp
+public static readonly ISimpleHookService HookService = PluginServiceProvider.GetService<ISimpleHookService>();
+```
+
 ## Members
 
 | Member                                   | Description                                                                                |
@@ -40,7 +48,7 @@ Make sure to specify the correct delegate type for the hook you want to register
 To register a hook, you need to specify the delegate type and the method you want to call.
 
 ```csharp
-ISimpleHookService.RegisterHook<PluginOnPreUpdateDelegate>(MyOnPreUpdate);
+HookService.RegisterHook<PluginOnPreUpdateDelegate>(MyOnPreUpdate);
 
 public static void MyOnPreUpdate(float deltaTime) { /* Do something */ }
 ```
@@ -48,7 +56,7 @@ public static void MyOnPreUpdate(float deltaTime) { /* Do something */ }
 You may also use a lambda expression to register a hook:
 
 ```csharp
-ISimpleHookService.RegisterHook<PluginOnPreUpdateDelegate>(deltaTime => { /* Do something */ });
+HookService.RegisterHook<PluginOnPreUpdateDelegate>(deltaTime => { /* Do something */ });
 ```
 
 Using a lambda this way doesn't allow you to manually deregister the hook on your own using [`DeregisterHook<T>`](#deregisterhook) unless you store a reference to the lambda in a variable, but at that point you might as well use a method. Regardless the game will still automatically deregister everything when your plugin is unloaded.
@@ -78,7 +86,7 @@ You do not need to manually deregister hooks when your plugin is unloaded, this 
 To deregister a hook:
 
 ```csharp
-ISimpleHookService.DeregisterHook(MyOnPreUpdate);
+HookService.DeregisterHook(MyOnPreUpdate);
 ```
 
 You may omit the generic type as the reference to the callback is used to find and deregister it.

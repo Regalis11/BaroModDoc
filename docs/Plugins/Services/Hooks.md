@@ -10,6 +10,7 @@ Hooks are callbacks that get called at specific points in the game. Register one
 | [`PluginRoundEndedDelegate`](#pluginroundendeddelegate)                                                   | Called when a round ends.                                                                                                                                                                                                                                            |
 | [`PluginCampaignLoadDelegate`](#plugincampaignloaddelegate)                                               | Called when a new campaign is started or loaded.                                                                                                                                                                                                                     |
 | [`PluginCampaignSaveDelegate`](#plugincampaignsavedelegate)                                               | Called when the campaign is saved.                                                                                                                                                                                                                                   |
+| [`PluginCampaignEndDelegate`](#plugincampaignenddelegate)                                                 | Called when the end of the campaign is reached, before the campaign map and metadata are reset for the next loop. Called both server-side and client-side in multiplayer.                                                                                            |
 | [`PluginGameModeUpdateDelegate`](#plugingamemodeupdatedelegate)                                           | Called when the game mode is updated. Only called when the game mode is running and not paused.                                                                                                                                                                      |
 | [`PluginShouldDisableJovianRadiation`](#pluginshoulddisablejovianradiation)                               |                                                                                                                                                                                                                                                                      |
 | [`PluginGameModeAddToGUIUpdateListDelegate`](#plugingamemodeaddtoguiupdatelistdelegate)                   | Called when adding game mode specific GUI elements to the update list. Can be used to add custom GUI elements to the list.                                                                                                                                           |
@@ -26,6 +27,7 @@ Hooks are callbacks that get called at specific points in the game. Register one
 | [`PluginCampaignItemBuyPriceMultiplier`](#plugincampaignitembuypricemultiplier)                           | Called when calculating the item buy price in a location, can be used to add a custom multiplier to the price.                                                                                                                                                       |
 | [`PluginCampaignItemSellPriceMultiplier`](#plugincampaignitemsellpricemultiplier)                         | Called when calculating the item sell price in a location, can be used to add a custom multiplier to the price.                                                                                                                                                      |
 | [`PluginCampaignItemModifyAvailability`](#plugincampaignitemmodifyavailability)                           | Called when determining the item availability in a location, can be used to modify the item availability.                                                                                                                                                            |
+| [`PluginLoadStoreDelegate`](#pluginloadstoredelegate)                                                     | Called when loading a store from a save. Can be used to load a store with custom behavior, see `CustomStoreType`. Return null to let the store load normally.                                                                                                        |
 | [`PluginOnItemReplacedDelegate`](#pluginonitemreplaceddelegate)                                           | Called when an item is replaced with a new item.                                                                                                                                                                                                                     |
 | [`PluginCanSwapItemDelegate`](#plugincanswapitemdelegate)                                                 | Called when checking if a submarine item can be swapped to. Return false to disallow the swap. Not called for swaps that have already been purchased, or for swapping back to the item's current prefab.                                                             |
 | [`PluginOnCharacterCreated`](#pluginoncharactercreated)                                                   | Called after the constructor of the character has ran.                                                                                                                                                                                                               |
@@ -113,6 +115,18 @@ Called when the campaign is saved.
 |-----------|----------------|------------------------------------------------------------------------------------------------------------------------|
 | `mode`    | `CampaignMode` | The campaign mode instance.                                                                                            |
 | `save`    | `XElement`     | The XML element that gets written to the save file. If you want to save custom data add it as a child to this element. |
+
+## PluginCampaignEndDelegate
+
+```cs
+public delegate void PluginCampaignEndDelegate(CampaignMode mode)
+```
+
+Called when the end of the campaign is reached, before the campaign map and metadata are reset for the next loop. Called both server-side and client-side in multiplayer.
+
+| Parameter | Type           | Description                 |
+|-----------|----------------|-----------------------------|
+| `mode`    | `CampaignMode` | The campaign mode instance. |
 
 ## PluginGameModeUpdateDelegate
 
@@ -291,6 +305,14 @@ public delegate int PluginCampaignItemModifyAvailability(
 
 Called when determining the item availability in a location, can be used to modify the item availability.
 
+## PluginLoadStoreDelegate
+
+```cs
+public delegate Location.StoreInfo? PluginLoadStoreDelegate(Location location, XElement savedStoreElement)
+```
+
+Called when loading a store from a save. Can be used to load a store with custom behavior, see `CustomStoreType`. Return null to let the store load normally.
+
 ## PluginOnItemReplacedDelegate
 
 ```cs
@@ -414,7 +436,7 @@ Called when the campaign map is updated in `Update`.
 
 **Remarks**
 
-This is different from `PluginCampaignUpdateDelegate` as it is only called when the map is visible and in single player the game is paused when the map is open.
+This is different from [`PluginGameModeUpdateDelegate`](Hooks.md#plugingamemodeupdatedelegate) as it is only called when the map is visible and in single player the game is paused when the map is open.
 
 | Parameter   | Type           | Description                 |
 |-------------|----------------|-----------------------------|

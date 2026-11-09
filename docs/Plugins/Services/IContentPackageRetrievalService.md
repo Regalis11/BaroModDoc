@@ -6,6 +6,14 @@ public interface IContentPackageRetrievalService : IPluginService
 
 Provides a way for plugins to get their own Content Package and check for dependencies.
 
+## Remarks
+
+The members are instance members. The examples assume an instance has been retrieved and stored, e.g.:
+
+```csharp
+public static readonly IContentPackageRetrievalService ContentPackageRetrieval = PluginServiceProvider.GetService<IContentPackageRetrievalService>();
+```
+
 ## Example
 
 ```xml
@@ -15,11 +23,11 @@ Provides a way for plugins to get their own Content Package and check for depend
 ```
 
 ```csharp
-ContentPackage contentPackage = IContentPackageRetrievalService.ContentPackage;
+ContentPackage contentPackage = ContentPackageRetrieval.ContentPackage;
 ```
 
 ```csharp
-if (IContentPackageRetrievalService.IsDependencyPresent("examplemod"))
+if (ContentPackageRetrieval.IsDependencyPresent("examplemod"))
 {
     // Do something
 }

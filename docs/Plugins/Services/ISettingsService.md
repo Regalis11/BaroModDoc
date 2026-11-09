@@ -80,7 +80,7 @@ SettingsService.RegisterSetting(new FloatSetting($"foobar".ToIdentifier(), 5.0f,
     StepValue = 1f,
     Range = (0f, 100f),
     SyncMode = SettingSyncMode.ServerAuthority,
-    IsAllowedToSet = c => c.Permissions.HasFlag(Barotrauma.Networking.ClientPermissions.ManageRound)
+    IsAllowedToSet = (setting, client) => client == null || client.Permissions.HasFlag(Barotrauma.Networking.ClientPermissions.ManageRound)
 });
 ```
 
