@@ -12,6 +12,7 @@
     - [Content types](Intro/ContentTypes.md)
     - [Dependencies](Intro/ContentPackageDependencies.md)
   - [Overrides](Intro/Overrides.md)
+  - [Item extensions](Misc/ItemExtensions.md)
   - [Performance](Misc/Performance.md)
   - [Status effects](Misc/StatusEffect.md)
   - [Scripted events](Misc/ScriptedEvents.md)
