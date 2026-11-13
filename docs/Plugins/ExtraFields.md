@@ -28,5 +28,5 @@ void AddCharge(Item item)
 ## Notes
 
 - Each plugin has its own fields, so two plugins using the same key on the same object don't see each other's values.
-- Extra fields cleared when the plugin unloads, so they won't keep your plugin from [unloading](PluginUnloading.md).
+- Extra fields are cleared when the plugin unloads, so they won't keep your plugin from [unloading](PluginUnloading.md).
 - Extra fields aren't saved, meaning that they are gone after the game is restarted or a save is loaded.

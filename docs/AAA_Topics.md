@@ -29,6 +29,8 @@
   - [Networking](Plugins/Networking.md)
   - [Extra fields](Plugins/ExtraFields.md)
   - [Plugin unloading](Plugins/PluginUnloading.md)
+  - [Publicized assemblies](Plugins/PublicizedAssemblies.md)
+  - [Plugin dependencies](Plugins/PluginDependencies.md)
   - [Plugin services](Plugins/Services/Services.md)
   - [Hooks](Plugins/Services/Hooks.md)
 
