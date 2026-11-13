@@ -6,7 +6,7 @@ Plugins send their own data between the server and clients with the [`IGameNetwo
 
 Barotrauma uses an authoritative server-client network model, meaning that in multiplayer you have a server and multiple client instances that connect to that server, with the server holding the "true" state of the game and having the final say in every action.
 
-This means that net messages must always go to the server or originate from the server, a client can't send net message directly to other clients.
+This means that net messages must always go to the server or originate from the server. A client can't send net messages directly to other clients.
 
 ## Sending network messages
 
@@ -15,12 +15,12 @@ To send network messages in your plugin, you must first create an enum containin
 ```cs
 public enum FooBarHeader 
 { 
-    Foobar, 
+    FooBar, 
     RequestFooBar 
 }
 ```
 
-Then to use this you also need to define the data that the network message is gonna contain:
+Then to use this you also need to define the data that the network message will contain:
 
 ```cs
 [NetworkSerialize]
@@ -33,6 +33,8 @@ public readonly record struct RequestFooBar() : INetSerializableStruct;
 And then to receive these net messages and send them:
 
 ```cs
+public static readonly IGameNetwork GameNetwork = PluginServiceProvider.GetService<IGameNetwork>();
+
 public void Init()
 {
     GameNetwork.RegisterNetworkHeaders<FooBarHeader>();
@@ -54,7 +56,7 @@ private static void OnFooBarRequested(RequestFooBar request, Client client)
     
     DebugConsole.Log($"FooBar requested by {client.Name}");
 
-    GameNetwork.Broadcast(StormHeader.FooBar, new FooBar(42, true));
+    GameNetwork.Broadcast(FooBarHeader.FooBar, new FooBar(42, true));
 }
 #endif
 
@@ -62,6 +64,12 @@ private static void OnFooBarRequested(RequestFooBar request, Client client)
 private static void OnFooBarReceived(FooBar data)
 {
     DebugConsole.Log($"FooBar received {data.Foo} {data.Bar}");
+}
+
+// Call this on the client to ask the server for a FooBar
+public static void RequestFooBarFromServer()
+{
+    GameNetwork.Send(FooBarHeader.RequestFooBar, new RequestFooBar());
 }
 #endif
 
@@ -87,9 +95,12 @@ To refer to an item or a character, send its `ID` and look it up with `Entity.Fi
 If you ever need to sync state to mid-round joining clients, you can use the `PluginClientJoinedRoundDelegate` [hook](Services/Hooks.md):
 
 ```cs
+public static readonly ISimpleHookService HookService = PluginServiceProvider.GetService<ISimpleHookService>();
+
+// In Init()
 #if SERVER
 HookService.RegisterHook<PluginClientJoinedRoundDelegate>(client =>
-    GameNetwork.SendToClient(client, FooBarHeader.FooBar, Storm));
+    GameNetwork.SendToClient(client, FooBarHeader.FooBar, new FooBar(42, true)));
 #endif
 ```
 
