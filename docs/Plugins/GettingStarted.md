@@ -52,6 +52,16 @@ If the `.sln` file does not open, make sure you have a compatible .NET IDE insta
 
 Once the solution is open, start by editing `Plugin.cs`, located in the **SharedProject** in the solution explorer. You may also rename the existing `ExampleMod` namespaces in the code to whatever fits your mod.
 
+## The plugin class
+
+`Plugin.cs` contains the plugin's entry point, a class implementing [`IBarotraumaPlugin`](Services/IBarotraumaPlugin.md). The game calls three of its methods:
+
+- `Init()` when the plugin is loaded, before the rest of your mod's content. Register everything your plugin does here: hooks, item components, commands, settings and so on. Your own mod's XML content isn't loaded yet at this point.
+- `OnContentLoaded()` once the rest of your mod's content has been loaded. Use it for anything that needs your own items or other XML content.
+- `Dispose()` when the plugin is unloaded, for example when the mod is disabled. Clean up anything the game doesn't clean up for you, see [Plugin unloading](PluginUnloading.md).
+
+Get services with `PluginServiceProvider.GetService<T>()` in static fields or in `Init()`. See [Plugin services](Services/Services.md) for what a plugin can register.
+
 ## Project structure
 
 - **Server-side code**: `ServerProject/ServerSource`
@@ -96,7 +106,14 @@ Change the launch option from **Launch Barotrauma** to **Build Release**:
 
 <img width="1920" alt="Selecting the Build Release launch option" src="../assets/images/plugins/build-release.png" />
 
-Now click **Build Release** and the plugin will be built in release mode.
+Now click **Build Release** and the plugin will be built in release mode. Unlike the debug build, this builds the client and the server for Windows, Linux and macOS into your mod's folder in `LocalMods`, so the mod works for every player.
+
+## Publishing
+
+Publish the mod from `LocalMods` as described in [Publishing to Steam Workshop](../Intro/Publishing.md), with a few differences:
+
+- Always run Build Release before publishing
+- Disable the mod before publishing. The game won't change the files of a mod whose plugin is loaded or still unloading.
 
 ## Hot reload
 

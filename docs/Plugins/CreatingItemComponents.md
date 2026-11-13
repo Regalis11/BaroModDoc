@@ -2,7 +2,7 @@
 
 Item components are the building blocks of items: a `Door`, a `Holdable` or a `Reactor` are all item components. Plugins can define new ones in C# and use them in item XML just like the built-in ones. If you haven't set up a plugin project yet, see [Getting started with plugins](GettingStarted.md).
 
-## 1. Creating a new item component class
+## Creating a new item component class
 
 Create a class that inherits from `ItemComponent` and has a constructor taking `(Item item, ContentXElement element)`:
 
@@ -70,7 +70,7 @@ protected override void RemoveComponentSpecific()
 
 You can find more by looking at the overridable methods in the ItemComponent class.
 
-## 2. Register the component
+## Register the component
 
 The game only recognizes component types that have been registered. In your plugin's `Init`, get the `IItemComponentRegistrar` service and register the class:
 
@@ -87,10 +87,10 @@ public partial class Plugin : IBarotraumaPlugin
 }
 ```
 
-Registered components are automatically unregistered when the plugin is unloaded. `IItemComponentRegistrar` provides these methods (see the [full reference](Services/IItemComponentRegistrar.md)):
+Registered components are automatically unregistered when the plugin is unloaded. See the [`IItemComponentRegistrar` reference](Services/IItemComponentRegistrar.md) for its other methods.
 
 
-## 3. Use the item component in an item
+## Using the item component in an item
 
 In the item's XML, use the class name as the element name and set the properties as attributes:
 
@@ -111,3 +111,7 @@ Make sure this file is listed in your plugin's `ContentPackageBuilder/filelist.x
 ```
 
 Start the game with your plugin enabled and spawn the item (for example with the `spawnitem exampleitem` console command) to try it out.
+
+## Syncing the component in multiplayer
+
+Component properties aren't synced automatically. See [Item components](Networking.md#item-components) on the networking page for how to sync them.

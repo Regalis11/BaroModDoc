@@ -25,6 +25,7 @@
   - [What are plugins?](Plugins/WhatArePlugins.md)
   - [Getting started with plugins](Plugins/GettingStarted.md)
   - [Creating item components](Plugins/CreatingItemComponents.md)
+  - [Networking](Plugins/Networking.md)
   - [Plugin unloading](Plugins/PluginUnloading.md)
   - [Plugin services](Plugins/Services/Services.md)
   - [Hooks](Plugins/Services/Hooks.md)
