@@ -8,8 +8,10 @@ When a plugin is unloaded, the game does the following:
 
 1. calls `Dispose()` on the plugin's [`IBarotraumaPlugin`](Services/IBarotraumaPlugin.md),
 2. clears everything the plugin registered through the [plugin services](Services/Services.md) (hooks, item components, extra fields, and so on),
-3. disposes the services that hold on to things for the plugin, which includes undoing the [Harmony](Services/IHarmonyProvider.md) patches made through the service, and
-4. asks .NET to unload the plugin's assembly load context.
+3. asks .NET to unload the plugin's assembly load context, and
+4. disposes the services that hold on to things for the plugin, which includes undoing the [Harmony](Services/IHarmonyProvider.md) patches made through the service.
+
+Step 3 only starts the unload. .NET finishes it later, once nothing references the plugin's code anymore, so the services disposed in step 4 still get cleaned up before then.
 
 All of this is tracked per plugin so that none of it has to be cleaned up by hand. That is the reason to use the services instead of reaching into the game's internals, since anything registered through a service is removed by the game for you.
 
