@@ -35,7 +35,7 @@ The unloading problems come from references that outlive the plugin. The plugin 
 - **Be careful with statics.** Static fields that are filled with game objects, or that other code can reach, are a common way to leak. Clear them in `Dispose()`.
 - **Use the services.** Register hooks, item components and so on through the [plugin services](Services/Services.md) rather than by patching or by storing your own references into the game.
 - **Use the Harmony service.** Patches created via [`IHarmonyProvider`](Services/IHarmonyProvider.md) are removed automatically when the plugin unloads. If you create your own `Harmony` instance, you must call `UnpatchSelf()` on it yourself.
-- **Store per-object data with extra fields.** Instead of keeping your own dictionary keyed by game objects, use the extra fields the game keeps per plugin. They are cleared with the plugin.
+- **Store per-object data with extra fields.** Instead of keeping your own dictionary keyed by game objects, use the [extra fields](ExtraFields.md) the game keeps per plugin. They are cleared with the plugin.
 - **Test unloading.** Enable and disable your mod a few times while testing and check that the console shows the success message each time. The warning is much easier to track down while you still remember what you changed.
 
 ## When a plugin won't unload
