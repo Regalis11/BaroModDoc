@@ -110,10 +110,7 @@ Now click **Build Release** and the plugin will be built in release mode. Unlike
 
 ## Publishing
 
-Publish the mod from `LocalMods` as described in [Publishing to Steam Workshop](../Intro/Publishing.md), with a few differences:
-
-- Always run Build Release before publishing
-- Disable the mod before publishing. The game won't change the files of a mod whose plugin is loaded or still unloading.
+Publish the mod from `LocalMods` as described in [Publishing to Steam Workshop](../Intro/Publishing.md). See [Mods with plugins](../Intro/Publishing.md#mods-with-plugins) on that page.
 
 ## Hot reload
 

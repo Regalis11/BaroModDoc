@@ -8,6 +8,40 @@ Barotrauma uses an authoritative server-client network model, meaning that in mu
 
 This means that net messages must always go to the server or originate from the server. A client can't send net messages directly to other clients.
 
+## Singleplayer, client and server
+
+Your plugin's code can run in three situations:
+
+| Situation | Build that runs | `GameMain.NetworkMember` |
+|---|---|---|
+| Singleplayer | Client| `null`|
+| Multiplayer, on a client | Client | `IsClient` is `true` |
+| Multiplayer, on the server | Server | `IsServer` is `true` |
+
+In multiplayer, the server is always a separate server process, even when a player hosts the game from their own client. That player's game is a client like any other.
+
+In singleplayer, only the client build runs and there is no server. Code inside `#if SERVER` never runs, and `Send` and `Broadcast` do nothing. So don't put game logic only in `#if SERVER` blocks, or it won't work in singleplayer. Put it in shared code, and skip it on multiplayer clients if it's something that should only run on whoever has authority over the logic.
+
+```cs
+public void DoSomething()
+{
+    if (GameMain.NetworkMember is { IsClient: true })
+    {
+        return;
+    }
+
+    // Runs in singleplayer and on the server
+    // ...change the game state...
+
+#if SERVER
+    // Tell the clients about the change
+    GameNetwork.Broadcast(FooBarHeader.FooBar, new FooBar(42, true));
+#endif
+}
+```
+
+The [item component example](#item-components) below follows the same pattern.
+
 ## Sending network messages
 
 To send network messages in your plugin, you must first create an enum containing the different types of messages your plugin can send:

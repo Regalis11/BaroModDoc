@@ -1,6 +1,6 @@
 # Publishing to Steam Workshop
 
-Once you have put together a mod that you wish to share with the world, you can publish it to Steam Workshop through the "Publish" tab in the modding menu. It's worth noting that this isn't required to host servers with mods, as players will be able to download any required mods directly from your server.
+Once you have put together a mod that you wish to share with the world, you can publish it to Steam Workshop through the "Publish" tab in the modding menu. It's worth noting that this isn't required to host servers with mods, as players will be able to download any required mods directly from your server. The exception is mods that contain [plugins](../Plugins/WhatArePlugins.md), see [below](#mods-with-plugins).
 
 ![The Publish tab](img/Publish1.png)
 
@@ -18,3 +18,10 @@ Once you have published a mod, you may notice in the "Installed Mods" tab that t
 ![](img/LocalVsPublished.png)
 
 The reason for this is that you may continue to edit your mod in the `LocalMods` folder, while still being able to host servers with the version you last published to the Workshop. This also makes sure that the game won't accidentally overwrite your work if, for example, you allow other people to submit updates to your item.
+
+## Mods with plugins
+
+Mods that contain plugins are published the same way, with a few differences:
+
+- Build the plugin for release first. Run **Build Release** as described in [Getting started with plugins](../Plugins/GettingStarted.md#building-for-release), so the mod contains the plugin for every platform and for both the client and the server.
+- For safety, players can't download plugin files directly from the server. If a server uses a mod with a plugin that a player doesn't have, the "Download from server" option is disabled and the player has to subscribe to the mod on the Workshop instead. This means a mod with a plugin has to be published to the Workshop before others can play with it.

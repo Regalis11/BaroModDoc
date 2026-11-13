@@ -56,15 +56,20 @@ The XML attribute name matches the property name, so the property above is set w
 
 `ItemComponent` has a number of virtual methods you can override to react to what happens to the item.
 
-For example, if your component creates a physics body, remove it when the component is removed:
+For example, `RemoveComponentSpecific` is called when the item is removed. Use it to undo anything the component set up outside itself, such as adding itself to a list or subscribing to an event:
 
 ```cs
+private static readonly List<ExampleItemComponent> activeComponents = new();
+
+public ExampleItemComponent(Item item, ContentXElement element) : base(item, element)
+{
+    IsActive = true;
+    activeComponents.Add(this);
+}
+
 protected override void RemoveComponentSpecific()
 {
-    if (Pusher != null)
-    {
-        Pusher.Remove();
-    }
+    activeComponents.Remove(this);
 }
 ```
 
@@ -111,6 +116,72 @@ Make sure this file is listed in your plugin's `ContentPackageBuilder/filelist.x
 ```
 
 Start the game with your plugin enabled and spawn the item (for example with the `spawnitem exampleitem` console command) to try it out.
+
+## Drawing and UI
+
+Drawing and UI only exist on the client, so put this code in `#if CLIENT` blocks or in the **ClientProject**.
+
+### Drawing in the world
+
+To draw something on the item in the game world, implement `IDrawableComponent`. `DrawSize` is the size of the area you draw, which the game uses to decide whether the item is on screen:
+
+```cs
+public class ExampleItemComponent : ItemComponent, IDrawableComponent
+{
+    // ...
+
+#if CLIENT
+    public Vector2 DrawSize => new Vector2(64, 64);
+
+    public void Draw(SpriteBatch spriteBatch, bool editing, float itemDepth = -1, Color? overrideColor = null)
+    {
+        Vector2 pos = new Vector2(item.DrawPosition.X, -item.DrawPosition.Y);
+        GUI.DrawRectangle(spriteBatch, pos - DrawSize / 2, DrawSize, Color.Red);
+    }
+#endif
+}
+```
+
+World positions have Y pointing up, so make sure to flip it when drawing.
+
+### Item interfaces
+
+An item's interface is shown when a character selects the item, or when they equip it if the component has `DrawHudWhenEquipped="true"`. For selecting, the component needs `CanBeSelected="true"`:
+
+```xml
+<ExampleItemComponent CanBeSelected="true">
+  <GuiFrame relativesize="0.2,0.15" anchor="Center" style="ItemUI" />
+</ExampleItemComponent>
+```
+
+The `<GuiFrame>` element creates the component's `GuiFrame`, a window you can fill with UI elements. Build the UI by overriding `CreateGUI`:
+
+```cs
+public ExampleItemComponent(Item item, ContentXElement element) : base(item, element)
+{
+#if CLIENT
+    CreateGUI();
+#endif
+}
+
+#if CLIENT
+public override bool RecreateGUIOnResolutionChange => true;
+
+protected override void CreateGUI()
+{
+    if (GuiFrame == null) { return; }
+
+    new GUITextBlock(new RectTransform(Vector2.One, GuiFrame.RectTransform), "Hello from the item!");
+}
+#endif
+```
+
+The game doesn't call `CreateGUI` when the component is created, so call it yourself from the constructor, like the vanilla components do. With `RecreateGUIOnResolutionChange` set to `true`, the game recreates the `GuiFrame` and calls `CreateGUI` again whenever the resolution changes, so the UI keeps the right size.
+
+While the interface is shown, the game also calls these methods every frame, which you can override:
+
+- `UpdateHUDComponentSpecific(Character character, float deltaTime, Camera cam)` to update the UI, for example to refresh a value shown in it.
+- `DrawHUD(SpriteBatch spriteBatch, Character character)` to draw directly on the screen.
 
 ## Syncing the component in multiplayer
 
